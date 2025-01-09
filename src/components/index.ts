@@ -1,6 +1,5 @@
-export * from './utils';
-export * from './stair-transition';
 export * from './layout';
-export * from './page-transition';
-export * from './stair-transition';
+export * from './transtions';
+export * from './utils';
+
 export * from './dynamic-icons';
