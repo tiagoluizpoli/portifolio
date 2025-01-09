@@ -1,0 +1,15 @@
+version: "3"
+
+tasks:
+  docker.up:
+    desc: Starts the docker containers
+    aliases:
+      - up
+    cmds:
+      - docker compose up -d
+  docker.down:
+    desc: Stops the docker containers
+    aliases:
+      - down
+    cmds:
+      - docker compose down
