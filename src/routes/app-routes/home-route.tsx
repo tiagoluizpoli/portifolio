@@ -1,3 +1,5 @@
+import { HomePage } from '@/pages';
+
 export const HomeRoute = () => {
-  return <div>Home</div>;
+  return <HomePage />;
 };

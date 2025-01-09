@@ -1,3 +1,5 @@
+import { ContactPage } from '@/pages';
+
 export const ContactRoute = () => {
-  return <div>Contact</div>;
+  return <ContactPage />;
 };
