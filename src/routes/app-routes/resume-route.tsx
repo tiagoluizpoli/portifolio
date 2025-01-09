@@ -1,5 +1,13 @@
 import { ResumePage } from '@/pages';
+import { Helmet } from 'react-helmet-async';
 
 export const ResumeRoute = () => {
-  return <ResumePage />;
+  return (
+    <>
+      <Helmet>
+        <title>Resume</title>
+      </Helmet>
+      <ResumePage />
+    </>
+  );
 };
