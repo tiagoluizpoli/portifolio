@@ -5,7 +5,6 @@ import { Stairs } from './stairs';
 export const StairTransition = () => {
   const location = useLocation();
 
-  console.log(location);
   return (
     <AnimatePresence mode="wait">
       <div key={location.pathname}>

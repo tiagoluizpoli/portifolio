@@ -4,6 +4,3 @@ export * from './layout';
 export * from './page-transition';
 export * from './stair-transition';
 export * from './dynamic-icons';
-export * from './social';
-export * from './photo';
-export * from './stats';

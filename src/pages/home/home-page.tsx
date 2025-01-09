@@ -1,6 +1,6 @@
-import { Photo, Social, Stats } from '@/components';
 import { Button } from '@/components/ui/button';
 import type { Home } from '@/core';
+import { Photo, Social, Stats } from './components';
 
 import { FiDownload } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
