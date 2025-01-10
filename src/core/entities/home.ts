@@ -11,11 +11,6 @@ export interface SocialType {
   url: string;
 }
 
-export interface File {
-  id: string;
-  filename_download: string;
-}
-
 export interface Home {
   firstName: string;
   lastName: string;
@@ -24,5 +19,5 @@ export interface Home {
   description: string;
   socials: SocialType[];
   JourneyStartedIn: number;
-  cv?: File;
+  cv?: string;
 }

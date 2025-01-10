@@ -6,7 +6,7 @@ export const getHome = async (): Promise<Home> => {
   try {
     const response = await httpClient.get('items/home', {
       params: {
-        fields: '*,socials.*,cv.id,cv.filename_download',
+        fields: '*,socials.*',
         'deep[socials][_filter][status][_eq]': 'published',
       },
     });

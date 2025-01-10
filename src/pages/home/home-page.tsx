@@ -34,7 +34,7 @@ export const HomePage = () => {
             {/* btn and socials */}
 
             <div className="flex flex-col xl:flex-row items-center gap-8">
-              <Link to={`${env.backend.baseUrl}/assets/${data.cv?.id}?download`} target="_blank" download>
+              <Link to={`${env.backend.baseUrl}/assets/${data.cv}?download`} target="_blank" download>
                 <Button variant={'outline'} size={'lg'} className="uppercase flex items-center gap-2">
                   <span>Download CV</span>
                   <FiDownload className="text-xl" />
