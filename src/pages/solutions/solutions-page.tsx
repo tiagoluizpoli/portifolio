@@ -1,39 +1,6 @@
 import { DynamicIcon } from '@/components';
 import { useSolutionsQuery } from '@/core';
 import { easeIn, motion } from 'framer-motion';
-import { FaCode } from 'react-icons/fa';
-import { GrServices } from 'react-icons/gr';
-import { GrConnect } from 'react-icons/gr';
-import { MdOutlineCloud } from 'react-icons/md';
-
-const solutions = [
-  {
-    num: '01',
-    title: 'Frontend Development',
-    description: 'Stunning and responsive interfaces.',
-    icon: FaCode,
-  },
-  {
-    num: '02',
-    title: 'Backend Development',
-    description: 'Scalable and reliable backend solutions for your projects.',
-    icon: GrServices,
-  },
-  {
-    num: '03',
-    title: 'Integrations',
-    description: 'Seamless and effective integrations with other tools and platforms for smooth workflows.',
-    //Connect your projects with top tools and platforms through seamless integrations, optimizing efficiency and ensuring smooth workflows.
-    icon: GrConnect,
-  },
-  {
-    num: '04',
-    title: 'Cloud Based Solutions',
-    description:
-      'Power your projects with cloud-based solutions, enabling scalability, reliability, and cost-effectiveness.',
-    icon: MdOutlineCloud,
-  },
-];
 
 export const SolutionsPage = () => {
   const { data, isFetching, isLoading } = useSolutionsQuery();
