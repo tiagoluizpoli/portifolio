@@ -19,7 +19,7 @@ export const SkillList = ({ title, skills }: Props) => {
                 <Tooltip>
                   <TooltipTrigger className="w-full h-[100px] bg-[#232329] rounded-xl flex justify-center items-center group">
                     <div className="text-4xl group-hover:text-accent transition-all duration-300">
-                      <DynamicIcon lib={skill.icon.lib} name={skill.icon.name} />
+                      <DynamicIcon lib={skill.iconLib} name={skill.iconCode} />
                     </div>
                   </TooltipTrigger>
                   <TooltipContent>

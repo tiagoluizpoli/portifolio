@@ -3,6 +3,8 @@
 import type { Lib } from '@/components';
 
 export interface ResumeExperienceItem {
+  id: string;
+  sort: number | null;
   company: string;
   position: string;
   duration: string;
@@ -23,6 +25,8 @@ export interface ResumeEducationItem {
 }
 
 export interface ResumeEducation {
+  id: string;
+  sort: number | null;
   title: string;
   description: string;
   items: ResumeEducationItem[];
@@ -32,15 +36,13 @@ export interface ResumeEducation {
 const skillListTypes = ['frontend', 'fullstack', 'backend'] as const;
 export type SkillListType = (typeof skillListTypes)[number];
 
-export interface ResumeSkillsItemIcon {
-  lib: Lib;
-  name: string;
-}
-
 export interface ResumeSkillsItem {
+  id: string;
+  sort: number | null;
   type: SkillListType;
   title: string;
-  icon: ResumeSkillsItemIcon;
+  iconLib: Lib;
+  iconCode: string;
 }
 
 export interface ResumeSkills {
@@ -51,6 +53,8 @@ export interface ResumeSkills {
 
 // about
 export interface ResumeAboutInfo {
+  id: string;
+  sort: number | null;
   fieldName: string;
   fieldValue: string;
 }
@@ -62,8 +66,8 @@ export interface ResumeAbout {
 }
 
 export interface Resume {
-  experience: ResumeExperience;
-  education: ResumeEducation;
-  skills: ResumeSkills;
-  about: ResumeAbout;
+  experience: ResumeExperience[];
+  education: ResumeEducation[];
+  skills: ResumeSkills[];
+  about: ResumeAbout[];
 }

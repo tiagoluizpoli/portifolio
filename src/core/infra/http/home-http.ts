@@ -10,7 +10,7 @@ export const getHome = async (): Promise<Home> => {
         'deep[socials][_filter][status][_eq]': 'published',
       },
     });
-    console.log(response.data.data);
+
     return response.data.data;
   } catch (error) {
     if (isAxiosError(error)) {
@@ -18,6 +18,7 @@ export const getHome = async (): Promise<Home> => {
         status: error.response?.status,
         data: error.response?.data,
       });
+
       throw error.response?.data;
     }
 

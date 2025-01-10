@@ -2,12 +2,27 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 // biome-ignore lint/style/useImportType: <explanation>
-import { ResumeSkillsItem, SkillListType } from '@/core';
+import { ResumeSkillsItem, SkillListType, useResumeQuery } from '@/core';
 import { motion } from 'framer-motion';
-import { about, education, experience, skills } from './content';
+
 import { SkillList } from './skill-list';
 
 export const ResumePage = () => {
+  const { data, isLoading, isFetching } = useResumeQuery();
+
+  if (isFetching || isLoading) {
+    return <div className="flex justify-center">Loading...</div>;
+  }
+
+  if (!data) {
+    return <div className="flex justify-center">No Data</div>;
+  }
+
+  const about = data.about[0];
+  const experience = data.experience[0];
+  const education = data.education[0];
+  const skills = data.skills[0];
+
   const filteredSkills: Record<SkillListType, ResumeSkillsItem[]> = skills.items.reduce(
     (acc: Record<SkillListType, ResumeSkillsItem[]>, curr: ResumeSkillsItem) => {
       if (curr.type === 'frontend') {

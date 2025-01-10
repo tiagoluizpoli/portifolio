@@ -13,23 +13,23 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { motion } from 'framer-motion';
-import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt } from 'react-icons/fa';
+import { FaEnvelope, FaMapMarkerAlt, FaWhatsapp } from 'react-icons/fa';
 
 const info = [
   {
-    icon: <FaPhoneAlt />,
-    title: 'Phone',
+    icon: <FaWhatsapp />,
+    title: 'Whatsapp',
     description: '+55 (11) 95206-6489',
   },
   {
     icon: <FaEnvelope />,
     title: 'Email',
-    description: 'tiagoluizpoli@gmail.com',
+    description: 'tiago.seuaciuc@gmail.com',
   },
   {
     icon: <FaMapMarkerAlt />,
     title: 'Address',
-    description: 'Rua josé Teixeira de Oliveira, 620. Agua espraiada, Cotia - SP',
+    description: 'Cotia - SP',
   },
 ];
 
@@ -88,7 +88,7 @@ export const ContactPage = () => {
           </div>
 
           {/* info */}
-          <div className="flex items-center flex-1 order-1 mb-8 xl:justify-end xl:order-none xl:mb-0">
+          <div className="flex items-center flex-1 order-1 mb-8 xl:justify-start xl:order-none xl:mb-0">
             <ul className="flex flex-col gap-10">
               {info.map((item, index) => {
                 return (
