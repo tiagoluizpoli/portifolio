@@ -1,3 +1,5 @@
+import { DynamicIcon } from '@/components';
+import { useSolutionsQuery } from '@/core';
 import { easeIn, motion } from 'framer-motion';
 import { FaCode } from 'react-icons/fa';
 import { GrServices } from 'react-icons/gr';
@@ -34,6 +36,16 @@ const solutions = [
 ];
 
 export const SolutionsPage = () => {
+  const { data, isFetching, isLoading } = useSolutionsQuery();
+
+  if (isFetching || isLoading) {
+    return <div className="flex justify-center">Loading...</div>;
+  }
+
+  if (!data) {
+    return <div className="flex justify-center">No Data</div>;
+  }
+
   return (
     <section className="min-h-[80vh] flex flex-col justify-center py-12 xl:py-0">
       <div className="container mx-auto">
@@ -49,18 +61,18 @@ export const SolutionsPage = () => {
           }}
           className="grid grid-cols-1 md:grid-cols-2 gap-[60px]"
         >
-          {solutions.map((service, index) => {
-            const Icon = service.icon;
+          {data.map((service, index) => {
+            const num = service.sort.toString().padStart(2, '0');
 
             return (
               <div key={index} className="flex-1 flex flex-col justify-center gap-6 group">
                 {/* top */}
                 <div className="w-full flex justify-between items-center">
                   <div className="text-5xl font-extrabold text-outline text-transparent group-hover:text-outline-hover transition-all duration-500">
-                    {service.num}
+                    {num}
                   </div>
                   <div className="w-[70px] h-[70px] rounded-full bg-white group-hover:bg-accent transition-all duration-500 flex justify-center items-center">
-                    <Icon className="text-primary text-3xl " />
+                    <DynamicIcon lib={service.iconLib} name={service.iconCode} className="text-primary text-3xl " />
                   </div>
                 </div>
 
