@@ -13,3 +13,9 @@ tasks:
       - down
     cmds:
       - docker compose down
+  docker.restart:
+    desc: Restarts the docker containers
+    aliases:
+      - restart
+    cmds:
+      - docker compose down && docker compose up -d

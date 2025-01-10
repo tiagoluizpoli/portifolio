@@ -1,7 +1,10 @@
-import picImage from '@/assets/photo.png';
 import { motion } from 'framer-motion';
 
-export const Photo = () => {
+interface Props {
+  picture: string;
+}
+
+export const Photo = ({ picture }: Props) => {
   return (
     <div className="w-full h-full relative">
       <motion.div
@@ -28,7 +31,7 @@ export const Photo = () => {
             },
           }}
         >
-          <img src={picImage} alt="" className="object-contain rounded-full" />
+          <img src={picture} alt="" className="object-contain rounded-full" />
         </motion.div>
 
         {/* circle */}

@@ -1,43 +1,40 @@
 import { Button } from '@/components/ui/button';
-import type { Home } from '@/core';
+import { useHomeQuery } from '@/core';
 import { Photo, Social, Stats } from './components';
 
+import { env } from '@/config/env';
 import { FiDownload } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
 export const HomePage = () => {
-  const data: Home = {
-    name: 'Tiago',
-    lastName: 'Poli',
-    title: 'Fullstack Developer',
-    aboutMeText:
-      "I could be your next great developer—hit the button above, and let's create something amazing together!",
-    socials: [
-      { type: 'twitter', link: 'https://twitter.com/tiagoluizpoli' },
-      { type: 'github', link: 'https://github.com/tiagoluizpoli' },
-      { type: 'linkedin', link: 'https://www.linkedin.com/in/tiagoluizpoli/' },
-    ],
-    journeyStart: 2016,
-  };
+  const { data, isFetching, isLoading } = useHomeQuery();
+
+  if (isFetching || isLoading) {
+    return <div className="flex justify-center">Loading...</div>;
+  }
+
+  if (!data) {
+    return <div className="flex justify-center">No Data</div>;
+  }
 
   return (
     <section className="h-full ">
       <div className="container mx-auto h-full">
-        <div className="flex flex-col xl:flex-row items-center justify-between xl:pt-8 xl:pb-24">
+        <div className="flex flex-col xl:flex-row items-center justify-between xl:pt-8 xl:pb-24 xl:gap-8">
           {/* text */}
           <div className="text-center xl:text-left order-2">
             <span className="text-xl">{data?.title}</span>
             <h1 className="h1 mb-6">
               {"Hello I'm"}
               <br />
-              <span className="text-accent">{`${data?.name} ${data?.lastName}`}</span>
+              <span className="text-accent">{`${data.firstName} ${data?.lastName}`}</span>
             </h1>
-            <p className="max-w-[500px] mb-9 text-white/80">{data?.aboutMeText}</p>
+            <p className="max-w-[500px] mb-9 text-white/80">{data?.description}</p>
 
             {/* btn and socials */}
 
             <div className="flex flex-col xl:flex-row items-center gap-8">
-              <Link to={''} target="_blank" download>
+              <Link to={`${env.backend.baseUrl}/assets/${data.cv?.id}?download`} target="_blank" download>
                 <Button variant={'outline'} size={'lg'} className="uppercase flex items-center gap-2">
                   <span>Download CV</span>
                   <FiDownload className="text-xl" />
@@ -56,11 +53,11 @@ export const HomePage = () => {
 
           {/* photo */}
           <div className="order-1 mb-8 xl:mb-0">
-            <Photo />
+            <Photo picture={`${env.backend.baseUrl}/assets/${data.picture}`} />
           </div>
         </div>
       </div>
-      <Stats yearsOfExperience={data?.journeyStart ?? 0} />
+      <Stats yearsOfExperience={data?.JourneyStartedIn ?? 0} />
     </section>
   );
 };

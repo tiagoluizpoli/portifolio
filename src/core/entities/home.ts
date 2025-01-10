@@ -1,23 +1,28 @@
+import type { Lib } from '@/components';
+
 const socials = ['twitter', 'github', 'linkedin', 'youtube'] as const;
 
 export type SocialOption = (typeof socials)[number];
 
 export interface SocialType {
   type: SocialOption;
-  link: string;
+  iconLib: Lib;
+  iconCode: string;
+  url: string;
 }
 
 export interface File {
-  url: string;
-  name: string;
+  id: string;
+  filename_download: string;
 }
 
 export interface Home {
-  name: string;
+  firstName: string;
   lastName: string;
+  picture: string;
   title: string;
-  aboutMeText: string;
+  description: string;
   socials: SocialType[];
-  journeyStart: number;
+  JourneyStartedIn: number;
   cv?: File;
 }
