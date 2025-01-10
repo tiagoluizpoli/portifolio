@@ -1,10 +1,8 @@
 import { Button } from '@/components/ui/button';
-import { useHomeQuery } from '@/core';
-import { Photo, Social, Stats } from './components';
-
-import { env } from '@/config/env';
+import { buildFileUrl, useHomeQuery } from '@/core';
 import { FiDownload } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import { Photo, Social, Stats } from './components';
 
 export const HomePage = () => {
   const { data, isFetching, isLoading } = useHomeQuery();
@@ -34,7 +32,7 @@ export const HomePage = () => {
             {/* btn and socials */}
 
             <div className="flex flex-col xl:flex-row items-center gap-8">
-              <Link to={`${env.backend.baseUrl}/assets/${data.cv}?download`} target="_blank" download>
+              <Link to={buildFileUrl(data.cv, true)} target="_blank" download>
                 <Button variant={'outline'} size={'lg'} className="uppercase flex items-center gap-2">
                   <span>Download CV</span>
                   <FiDownload className="text-xl" />
@@ -53,7 +51,7 @@ export const HomePage = () => {
 
           {/* photo */}
           <div className="order-1 mb-8 xl:mb-0">
-            <Photo picture={`${env.backend.baseUrl}/assets/${data.picture}`} />
+            <Photo picture={buildFileUrl(data.picture)} />
           </div>
         </div>
       </div>
