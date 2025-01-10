@@ -20,7 +20,7 @@ export const Photo = ({ picture }: Props) => {
       >
         {/* image */}
         <motion.div
-          className="w-[298px] h-[298px] xl:w-[498px] xl:h-[498px] mix-blend-lighten absolute"
+          className="w-[298px] h-[298px] xl:w-[498px] xl:h-[498px] mix-blend-difference absolute border-[6px] border-accent rounded-full "
           initial={{ opacity: 0 }}
           animate={{
             opacity: 1,
@@ -43,7 +43,7 @@ export const Photo = ({ picture }: Props) => {
           xmlns={'http://www.w3.org/2000/svg'}
         >
           <title>turning circle</title>
-          <motion.circle
+          {/* <motion.circle
             cx="253"
             cy="253"
             r={'250'}
@@ -63,7 +63,7 @@ export const Photo = ({ picture }: Props) => {
               repeat: Number.POSITIVE_INFINITY,
               repeatType: 'reverse',
             }}
-          />
+          /> */}
         </motion.svg>
       </motion.div>
     </div>
