@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { useSolutionsQuery } from '@/core';
 import { motion } from 'framer-motion';
 import { FaEnvelope, FaMapMarkerAlt, FaWhatsapp } from 'react-icons/fa';
 
@@ -34,6 +35,16 @@ const info = [
 ];
 
 export const ContactPage = () => {
+  const { data: solutions, isLoading, isFetching } = useSolutionsQuery();
+
+  if (isFetching || isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!solutions) {
+    return <div>No data</div>;
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -64,15 +75,20 @@ export const ContactPage = () => {
               {/* select */}
               <Select>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder={'Select a service'} />
+                  <SelectValue placeholder={'Select a solution you need me for'} />
                 </SelectTrigger>
 
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Select a service</SelectLabel>
-                    <SelectItem value="est">Web Development</SelectItem>
-                    <SelectItem value="cst">UI/UX Design</SelectItem>
-                    <SelectItem value="mst">Logo Design</SelectItem>
+                    <SelectLabel>Select an option below</SelectLabel>
+                    {solutions.map((item) => {
+                      return (
+                        <SelectItem key={item.id} value={item.title}>
+                          {item.title}
+                        </SelectItem>
+                      );
+                    })}
+                    <SelectItem value="other">Other...</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
