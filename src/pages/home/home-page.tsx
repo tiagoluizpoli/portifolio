@@ -15,6 +15,8 @@ export const HomePage = () => {
     return <div className="flex justify-center">No Data</div>;
   }
 
+  const totalCommits = data?.github[0]?.totalCommits ?? 0;
+
   return (
     <section className="h-full ">
       <div className="container mx-auto h-full">
@@ -55,7 +57,7 @@ export const HomePage = () => {
           </div>
         </div>
       </div>
-      <Stats yearsOfExperience={data?.JourneyStartedIn ?? 0} />
+      <Stats yearsOfExperience={data?.JourneyStartedIn ?? 0} totalCommits={totalCommits} />
     </section>
   );
 };

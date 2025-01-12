@@ -3,6 +3,9 @@ import type { Lib } from '@/components';
 const socials = ['twitter', 'github', 'linkedin', 'youtube'] as const;
 
 export type SocialOption = (typeof socials)[number];
+export interface Github {
+  totalCommits: number;
+}
 
 export interface SocialType {
   type: SocialOption;
@@ -18,6 +21,7 @@ export interface Home {
   title: string;
   description: string;
   socials: SocialType[];
+  github: Github[];
   JourneyStartedIn: number;
   cv?: string;
 }

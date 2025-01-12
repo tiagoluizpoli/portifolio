@@ -1,12 +1,12 @@
 'use client';
-
 import CountUp from 'react-countup';
 
 interface Props {
   yearsOfExperience: number;
+  totalCommits: number;
 }
 
-export const Stats = ({ yearsOfExperience }: Props) => {
+export const Stats = ({ yearsOfExperience, totalCommits }: Props) => {
   const stats = [
     {
       num: new Date().getFullYear() - yearsOfExperience,
@@ -21,7 +21,7 @@ export const Stats = ({ yearsOfExperience }: Props) => {
       text: 'Technologies mastered',
     },
     {
-      num: 500,
+      num: totalCommits,
       text: 'Code commits',
     },
   ];
