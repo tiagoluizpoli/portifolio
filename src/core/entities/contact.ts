@@ -1,3 +1,4 @@
+import type { Lib } from '@/components';
 import { z } from 'zod';
 
 export const contactSchema = z.object({
@@ -9,3 +10,11 @@ export const contactSchema = z.object({
 });
 
 export type Contact = z.infer<typeof contactSchema>;
+
+export interface ContactInfo {
+  id: string;
+  type: string;
+  value: string;
+  iconLib: Lib;
+  iconCode: string;
+}

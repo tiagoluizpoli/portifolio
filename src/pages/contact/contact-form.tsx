@@ -18,7 +18,9 @@ import { useForm } from 'react-hook-form';
 
 export const ContactForm = () => {
   const { data: solutions, isLoading, isFetching } = useSolutionsQuery();
+
   const { mutateAsync } = useContactMutation();
+
   const form = useForm({
     resolver: zodResolver(contactSchema),
     defaultValues: {

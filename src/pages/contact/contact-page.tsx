@@ -1,26 +1,20 @@
+import { DynamicIcon } from '@/components';
+import { useContactInfoQuery } from '@/core';
 import { motion } from 'framer-motion';
-import { FaEnvelope, FaMapMarkerAlt, FaWhatsapp } from 'react-icons/fa';
+
 import { ContactForm } from './contact-form';
 
-const info = [
-  {
-    icon: <FaWhatsapp />,
-    title: 'Whatsapp',
-    description: '+55 (11) 95206-6489',
-  },
-  {
-    icon: <FaEnvelope />,
-    title: 'Email',
-    description: 'tiago.seuaciuc@gmail.com',
-  },
-  {
-    icon: <FaMapMarkerAlt />,
-    title: 'Address',
-    description: 'Cotia - SP',
-  },
-];
-
 export const ContactPage = () => {
+  const { data, isLoading, isFetching } = useContactInfoQuery();
+
+  if (!data) {
+    return <div>Loading...</div>;
+  }
+
+  if (isFetching || isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -44,15 +38,17 @@ export const ContactPage = () => {
           {/* info */}
           <div className="flex items-center flex-1 order-1 mb-8 xl:justify-start xl:order-none xl:mb-0">
             <ul className="flex flex-col gap-10">
-              {info.map((item, index) => {
+              {data.map((item, index) => {
                 return (
                   <li key={index} className="flex items-center gap-6">
                     <div className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-[#27272c] text-accent rounded-md flex items-center justify-center">
-                      <div className="text-[28px]">{item.icon}</div>
+                      <div className="text-[28px]">
+                        <DynamicIcon lib={item.iconLib} name={item.iconCode} />
+                      </div>
                     </div>
                     <div className="flex-1">
-                      <p className="text-white/60">{item.title}</p>
-                      <h3 className="text-xl">{item.description}</h3>
+                      <p className="text-white/60 capitalize">{item.type}</p>
+                      <h3 className="text-xl">{item.value}</h3>
                     </div>
                   </li>
                 );
