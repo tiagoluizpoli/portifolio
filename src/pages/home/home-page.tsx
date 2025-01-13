@@ -1,21 +1,24 @@
 import { Button } from '@/components/ui/button';
-import { buildFileUrl, useHomeQuery } from '@/core';
+import { buildFileUrl, useHomeQuery, useResumeQuery } from '@/core';
 import { FiDownload } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { Photo, Social, Stats } from './components';
 
 export const HomePage = () => {
   const { data, isFetching, isLoading } = useHomeQuery();
+  const { data: resume, isLoading: isResumeLoading, isFetching: isResumeFetching } = useResumeQuery();
 
-  if (isFetching || isLoading) {
+  if (isFetching || isLoading || isResumeFetching || isResumeLoading) {
     return <div className="flex justify-center">Loading...</div>;
   }
 
-  if (!data) {
+  if (!data || !resume) {
     return <div className="flex justify-center">No Data</div>;
   }
 
   const totalCommits = data?.github[0]?.totalCommits ?? 0;
+  const totalRepositories = data?.github[0]?.totalRepositories ?? 0;
+  const technologiesMastered = resume.skills[0].items.length;
 
   return (
     <section className="h-full ">
@@ -57,7 +60,12 @@ export const HomePage = () => {
           </div>
         </div>
       </div>
-      <Stats yearsOfExperience={data?.JourneyStartedIn ?? 0} totalCommits={totalCommits} />
+      <Stats
+        yearsOfExperience={data?.JourneyStartedIn ?? 0}
+        totalCommits={totalCommits}
+        totalRepositories={totalRepositories}
+        technologiesMastered={technologiesMastered}
+      />
     </section>
   );
 };

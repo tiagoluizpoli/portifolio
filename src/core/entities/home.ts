@@ -5,6 +5,7 @@ const socials = ['twitter', 'github', 'linkedin', 'youtube'] as const;
 export type SocialOption = (typeof socials)[number];
 export interface Github {
   totalCommits: number;
+  totalRepositories: number;
 }
 
 export interface SocialType {

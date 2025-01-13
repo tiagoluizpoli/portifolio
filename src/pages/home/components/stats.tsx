@@ -4,20 +4,22 @@ import CountUp from 'react-countup';
 interface Props {
   yearsOfExperience: number;
   totalCommits: number;
+  totalRepositories: number;
+  technologiesMastered: number;
 }
 
-export const Stats = ({ yearsOfExperience, totalCommits }: Props) => {
+export const Stats = ({ yearsOfExperience, totalCommits, totalRepositories, technologiesMastered }: Props) => {
   const stats = [
     {
       num: new Date().getFullYear() - yearsOfExperience,
       text: 'Years of Experience',
     },
     {
-      num: 26,
-      text: 'Projects completed',
+      num: totalRepositories,
+      text: `Projects i've worked on`,
     },
     {
-      num: 8,
+      num: technologiesMastered,
       text: 'Technologies mastered',
     },
     {
