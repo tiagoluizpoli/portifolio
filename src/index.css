@@ -8,8 +8,8 @@
 @layer base {
   :root {
     --color-primary: #1c1c22;
-    --color-accent: #00ff99;
-    --color-accent-hover: #00e187;
+    --color-accent: #30ccf7;
+    --color-accent-hover: #24bae4;
     --font-jetbrains-mono: 'JetBrains Mono', serif;
   }
 
