@@ -1,6 +1,10 @@
+import { lazyImport } from '@/lib';
 import { PublicApp } from '@/pages';
 import type { RouteObject } from 'react-router-dom';
-import { ContactRoute, HomeRoute, ResumeRoute, SolutionsRoute } from './app-routes';
+const { HomeRoute } = lazyImport(() => import('@/routes/app-routes'), 'HomeRoute');
+const { SolutionsRoute } = lazyImport(() => import('@/routes/app-routes'), 'SolutionsRoute');
+const { ResumeRoute } = lazyImport(() => import('@/routes/app-routes'), 'ResumeRoute');
+const { ContactRoute } = lazyImport(() => import('@/routes/app-routes'), 'ContactRoute');
 
 export const publicRoutes: RouteObject[] = [
   {
