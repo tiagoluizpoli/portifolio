@@ -29,13 +29,15 @@ jobs:
       - name: Build Vite app
         run: yarn build
 
-      # Step 5: Commit and push the static files to the tag
-      - name: Commit and push built files
+      # Step 5: zip the dist folder
+      - name: Zip dist folder
+        run: zip -r dist.zip dist
+
+      # Step 6: Upload the zipped dist folder storage
+      - name: Upload to MinIO
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{secrets.STORAGE_ACCESS_KEY}}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.STORAGE_SECRET_KEY }}
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add dist
-          git commit -m "Add static files for tag $GITHUB_REF"
-          git push origin HEAD:$GITHUB_REF
+          aws s3 cp dist.zip s3://deploy-bucket/dist.zip \
+            --endpoint-url https://storage.lunalabs.com.br
