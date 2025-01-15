@@ -49,24 +49,24 @@ export const Photo = ({ picture }: Props) => {
             cx="253"
             cy="253"
             r="250"
-            stroke="var(--color-accent)"
-            strokeWidth="4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
             style={{
               transformOrigin: '50% 50%',
             }}
+            stroke={'var(--color-accent)'}
+            strokeWidth={'4'}
+            strokeLinecap={'round'}
+            strokeLinejoin={'round'}
             initial={{
-              strokeDasharray: '15 128 25 25',
-              strokeDashoffset: 0,
+              strokeDasharray: '24 10 0 0',
             }}
             animate={{
-              strokeDashoffset: [0, -1000], // Adjust the value to control the rotation speed
+              strokeDasharray: ['15 128 25 25', '16 25 92 72', '4 250 22 22'],
+              rotate: [120, 360],
             }}
             transition={{
               duration: 20,
               repeat: Number.POSITIVE_INFINITY,
-              ease: 'linear',
+              repeatType: 'reverse',
             }}
           />
         </motion.svg>
