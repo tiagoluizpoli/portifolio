@@ -75,9 +75,9 @@
   resolved "https://registry.yarnpkg.com/@biomejs/cli-win32-x64/-/cli-win32-x64-1.9.4.tgz#4c7afa90e3970213599b4095e62f87e5972b2340"
   integrity sha512-8Y5wMhVIPaWe6jw2H+KlEm4wP/f7EW3810ZLmDlrEEy5KvBsb9ECEfu/kMWD484ijfQ8+nIi0giMgu9g1UAuuA==
 
-"@commitlint/cli@^19.6.1":
+"@commitlint/cli@^19.3.0":
   version "19.6.1"
-  resolved "https://registry.npmjs.org/@commitlint/cli/-/cli-19.6.1.tgz"
+  resolved "https://registry.yarnpkg.com/@commitlint/cli/-/cli-19.6.1.tgz#24edd26595d911cc6b680cdfbb1fb083bfd5f73d"
   integrity sha512-8hcyA6ZoHwWXC76BoC8qVOSr8xHy00LZhZpauiD0iO0VYbVhMnED0da85lTfIULxl7Lj4c6vZgF0Wu/ed1+jlQ==
   dependencies:
     "@commitlint/format" "^19.5.0"
@@ -88,12 +88,11 @@
     tinyexec "^0.3.0"
     yargs "^17.0.0"
 
-"@commitlint/config-conventional@^19.6.0":
-  version "19.6.0"
-  resolved "https://registry.npmjs.org/@commitlint/config-conventional/-/config-conventional-19.6.0.tgz"
-  integrity sha512-DJT40iMnTYtBtUfw9ApbsLZFke1zKh6llITVJ+x9mtpHD08gsNXaIRqHTmwTZL3dNX5+WoyK7pCN/5zswvkBCQ==
+"@commitlint/config-conventional@18.5.0":
+  version "18.5.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-18.5.0.tgz#b50b317dfef81f34ff46ef581a5a4a11dafcae59"
+  integrity sha512-XGmU4u3Z7bCn0H0nTEG9LUn6hMDUIPP4P6dun7PKFhtnt/wwiKAqmPj+QRmFiqWjkOWcmrh7w7xRiDL32cWS5g==
   dependencies:
-    "@commitlint/types" "^19.5.0"
     conventional-changelog-conventionalcommits "^7.0.2"
 
 "@commitlint/config-validator@^19.5.0":
@@ -2196,7 +2195,7 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.2.4.tgz"
   integrity sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==
 
-lint-staged@^15.3.0:
+lint-staged@^15.2.7:
   version "15.3.0"
   resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-15.3.0.tgz#32a0b3f2f2b8825950bd3b9fb093e045353bdfa3"
   integrity sha512-vHFahytLoF2enJklgtOtCtIjZrKD/LoxlaUusd5nh7dWv/dkKQJY74ndFSzxCdv7g0ueGg1ORgTSt4Y9LPZn9A==
