@@ -39,5 +39,5 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{secrets.STORAGE_ACCESS_KEY}}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.STORAGE_SECRET_KEY }}
         run: |
-          aws s3 cp dist.zip s3://deploy-bucket/dist.zip \
+          aws s3 cp dist.zip s3://portifolio/dist.zip \
             --endpoint-url https://storage.lunalabs.com.br
