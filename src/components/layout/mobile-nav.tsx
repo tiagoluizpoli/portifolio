@@ -2,7 +2,7 @@
 
 import { CiMenuFries } from 'react-icons/ci';
 import { Link, useLocation } from 'react-router-dom';
-import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from '../ui/sheet';
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from '../ui/sheet';
 import { links } from './nav-commons';
 
 export const MobileNav = () => {
@@ -33,7 +33,7 @@ export const MobileNav = () => {
               to={link.path}
               className={`${link.path === location.pathname && 'text-accent border-b-2 border-accent'} text-xl capitalize hover:text-accent transition-all`}
             >
-              {link.name}
+              <SheetClose>{link.name}</SheetClose>
             </Link>
           ))}
         </nav>
