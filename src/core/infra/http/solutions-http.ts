@@ -6,6 +6,7 @@ export const getSolutions = async (): Promise<Solution[]> => {
   try {
     const response = await httpClient.get('items/solutions', {
       params: {
+        fields: '*,translations.*,translations.directus_translations_id.*',
         'filter[status][_eq]': 'published',
       },
     });
