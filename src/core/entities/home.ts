@@ -1,5 +1,5 @@
 import type { Lib } from '@/components';
-import type { Translation } from './shared';
+import type { Translatable } from './shared';
 
 const socials = ['twitter', 'github', 'linkedin', 'youtube'] as const;
 
@@ -16,13 +16,13 @@ export interface SocialType {
   url: string;
 }
 
-export interface HomeTranslation {
+export interface HomeTranslation extends Translatable {
   id: number;
   namePresentation: string;
   title: string;
   description: string;
   downloadButtonText: string;
-  directus_translations_id: Translation;
+  cv: string;
 }
 
 export interface Home {

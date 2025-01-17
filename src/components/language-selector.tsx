@@ -1,4 +1,4 @@
-import { type Language, useLangContext } from '@/providers/lang-provider';
+import { type Language, useLangContext } from '@/providers/lang';
 import { Icon } from '@iconify/react';
 import { motion } from 'framer-motion';
 
