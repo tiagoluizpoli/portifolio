@@ -9,8 +9,8 @@ interface LanguageOption {
 }
 
 const languages: LanguageOption[] = [
-  { code: 'en-US', key: 'English', icon: 'circle-flags:us-um' },
-  { code: 'pt-BR', key: 'Português', icon: 'circle-flags:br' },
+  { code: 'en-US', key: 'English', icon: 'flagpack:us' },
+  { code: 'pt-BR', key: 'Português', icon: 'flagpack:br' },
 ];
 
 export const LanguageSelector = () => {
