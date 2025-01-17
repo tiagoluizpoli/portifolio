@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
-import { buildFileUrl, useHomeQuery, useResumeQuery } from '@/core';
-import { useLangContext } from '@/providers/lang-provider';
+import { type HomeTranslation, buildFileUrl, useHomeQuery, useResumeQuery } from '@/core';
+import { useLangContext } from '@/providers/lang';
 import { FiDownload } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { Photo, Social, Stats } from './components';
@@ -9,19 +9,17 @@ export const HomePage = () => {
   const { data, isFetching, isLoading } = useHomeQuery();
   const { data: resume, isLoading: isResumeLoading, isFetching: isResumeFetching } = useResumeQuery();
 
-  const { lang } = useLangContext();
+  const { getTranslation } = useLangContext();
 
   if (isFetching || isLoading || isResumeFetching || isResumeLoading) {
     return <div className="flex justify-center">Loading...</div>;
   }
-  const enTranslation = data?.translations.find((t) => t.directus_translations_id.language === 'en-US');
-  const ptBrTranslation = data?.translations.find((t) => t.directus_translations_id.language === 'pt-BR');
 
-  if (!data || !resume || (!enTranslation && !ptBrTranslation)) {
+  if (!data || !resume) {
     return <div className="flex justify-center">No Data</div>;
   }
 
-  const translated = lang === 'en-US' ? enTranslation : ptBrTranslation;
+  const translated = getTranslation<HomeTranslation>(data.translations);
 
   const totalCommits = data?.github[0]?.totalCommits ?? 0;
   const totalRepositories = data?.github[0]?.totalRepositories ?? 0;
@@ -33,20 +31,20 @@ export const HomePage = () => {
         <div className="flex flex-col xl:flex-row items-center justify-between xl:pt-8 xl:pb-24 xl:gap-8">
           {/* text */}
           <div className="text-center xl:text-left order-2">
-            <span className="text-xl">{translated?.title}</span>
+            <span className="text-xl">{translated.title}</span>
             <h1 className="h1 mb-6">
-              {translated?.namePresentation}
+              {translated.namePresentation}
               <br />
               <span className="text-accent">{`${data.firstName} ${data?.lastName}`}</span>
             </h1>
-            <p className="max-w-[500px] mb-9 text-white/80">{translated?.description}</p>
+            <p className="max-w-[500px] mb-9 text-white/80">{translated.description}</p>
 
             {/* btn and socials */}
 
             <div className="flex flex-col xl:flex-row items-center gap-8">
-              <Link to={buildFileUrl(data.cv, true)} target="_blank" download>
+              <Link to={buildFileUrl(translated.cv, true)} target="_blank" download>
                 <Button variant={'outline'} size={'lg'} className="uppercase flex items-center gap-2">
-                  <span>{translated?.downloadButtonText}</span>
+                  <span>{translated.downloadButtonText}</span>
                   <FiDownload className="text-xl" />
                 </Button>
               </Link>
