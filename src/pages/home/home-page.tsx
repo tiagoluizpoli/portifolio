@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { type HomeTranslation, buildFileUrl, useHomeQuery, useResumeQuery } from '@/core';
+import { type HomeTranslation, type ResumeTranslation, buildFileUrl, useHomeQuery, useResumeQuery } from '@/core';
 import { useLangContext } from '@/providers/lang';
 import { FiDownload } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
@@ -20,10 +20,11 @@ export const HomePage = () => {
   }
 
   const translated = getTranslation<HomeTranslation>(data.translations);
+  const resumeTranslated = getTranslation<ResumeTranslation>(resume.translations);
 
   const totalCommits = data?.github[0]?.totalCommits ?? 0;
   const totalRepositories = data?.github[0]?.totalRepositories ?? 0;
-  const technologiesMastered = resume.skills[0].items.length;
+  const technologiesMastered = resumeTranslated.skills[0].items.length;
 
   return (
     <section className="h-full ">

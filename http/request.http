@@ -1,3 +1,0 @@
-GET https://directus.lunalabs.com.br/items/solutions?fields=*,translations.*,translations.directus_translations_id.*
-Content-Type: application/json
-Authorization: Bearer u9oOauzKFqUvpPriGGsPlWjLc3q9XyY7
