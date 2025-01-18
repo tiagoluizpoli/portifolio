@@ -11,13 +11,84 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { type Contact, contactSchema, useContactMutation, useSolutionsQuery } from '@/core';
+import { type Contact, type SolutionsTranslation, contactSchema, useContactMutation, useSolutionsQuery } from '@/core';
+import { useLangContext } from '@/providers/lang';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useForm } from 'react-hook-form';
 
+const enFormContent = {
+  title: `Let's work together`,
+  description: `Go ahead and send me a message, I'll get back to you as soon as possible.`,
+  inputs: {
+    name: {
+      label: 'Name',
+      placeholder: 'Name',
+    },
+    phoneNumber: {
+      label: 'Phone number',
+      placeholder: 'Phone number',
+    },
+    email: {
+      label: 'Email address',
+      placeholder: 'Email address',
+    },
+  },
+
+  select: {
+    label: 'Select an option below',
+    placeholder: 'Select a solution',
+    options: {
+      other: 'Other...',
+    },
+  },
+
+  textarea: {
+    label: 'Leave me a message here',
+    placeholder: 'leave me a message here',
+  },
+
+  submit: 'Send message',
+};
+
+const ptFormContent = {
+  title: 'Vamos trabalhar juntos',
+  description: 'Envie-me uma mensagem e responderei o mais breve possível.',
+  inputs: {
+    name: {
+      label: 'Nome',
+      placeholder: 'Nome',
+    },
+    phoneNumber: {
+      label: 'Número de telefone',
+      placeholder: 'Número de telefone',
+    },
+    email: {
+      label: 'Endereço de email',
+      placeholder: 'Endereço de email',
+    },
+  },
+
+  select: {
+    label: 'Selecione uma opção abaixo',
+    placeholder: 'Selecione uma solução',
+    options: {
+      other: 'Outro...',
+    },
+  },
+
+  textarea: {
+    label: 'Deixe-me uma mensagem aqui',
+    placeholder: 'Deixe-me uma mensagem aqui',
+  },
+
+  submit: 'Enviar mensagem',
+};
+
 export const ContactForm = () => {
   const { data: solutions, isLoading, isFetching } = useSolutionsQuery();
+
+  const { lang, getTranslation } = useLangContext();
 
   const { mutateAsync } = useContactMutation();
 
@@ -34,7 +105,6 @@ export const ContactForm = () => {
   const { control, handleSubmit, reset } = form;
 
   const onSubmit = async (data: Contact) => {
-    console.log(data);
     await mutateAsync(data);
     reset();
   };
@@ -47,11 +117,16 @@ export const ContactForm = () => {
     return <div>No data</div>;
   }
 
+  const content = lang === 'en-US' ? enFormContent : ptFormContent;
+
+  const { name, email, phoneNumber } = content.inputs;
+  const { label: selectLabel, placeholder: selectPlaceholder, options: selectOptions } = content.select;
+
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 p-10 bg-[#27272c] rounded-xl">
-        <h3 className="text-4xl text-accent">Let's work together</h3>
-        <p className="text-white/60">Go ahead and send me a message, I'll get back to you as soon as possible.</p>
+        <h3 className="text-4xl text-accent">{content.title}</h3>
+        <p className="text-white/60">{content.description}</p>
         {/* inputs */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <FormField
@@ -60,7 +135,7 @@ export const ContactForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input type="name" placeholder="Name" {...field} ref={null} />
+                  <Input type="name" placeholder={name.placeholder} {...field} ref={null} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -72,7 +147,7 @@ export const ContactForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input type="phone" placeholder="Phone number" {...field} ref={null} />
+                  <Input type="phone" placeholder={phoneNumber.placeholder} {...field} ref={null} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -85,7 +160,7 @@ export const ContactForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input type="email" placeholder="Email address" {...field} ref={null} />
+                <Input type="email" placeholder={email.placeholder} {...field} ref={null} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -102,21 +177,22 @@ export const ContactForm = () => {
               <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
                 <FormControl>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder={'Select a solution'} />
+                    <SelectValue placeholder={selectPlaceholder} />
                   </SelectTrigger>
                 </FormControl>
 
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Select an option below</SelectLabel>
+                    <SelectLabel>{selectLabel}</SelectLabel>
                     {solutions.map((item) => {
+                      const translated = getTranslation<SolutionsTranslation>(item.translations);
                       return (
-                        <SelectItem key={item.id} value={item.title}>
-                          {item.title}
+                        <SelectItem key={item.id} value={translated.title}>
+                          {translated.title}
                         </SelectItem>
                       );
                     })}
-                    <SelectItem value="other">Other...</SelectItem>
+                    <SelectItem value="other">{selectOptions.other}</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -132,7 +208,7 @@ export const ContactForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Textarea className="h-[200px]" placeholder="leave me a message here" {...field} ref={null} />
+                <Textarea className="h-[200px]" placeholder={content.textarea.placeholder} {...field} ref={null} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -140,8 +216,8 @@ export const ContactForm = () => {
         />
 
         {/* btn */}
-        <Button size={'md'} className="max-w-40" type="submit">
-          Send message
+        <Button size={'md'} className="w-fit max-w-48" type="submit">
+          {content.submit}
         </Button>
       </form>
     </Form>

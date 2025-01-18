@@ -1,5 +1,6 @@
 import type { Lib } from '@/components';
 import { z } from 'zod';
+import type { Translatable } from './shared';
 
 export const contactSchema = z.object({
   name: z.string().min(2, 'Please provide a valid name'),
@@ -11,10 +12,15 @@ export const contactSchema = z.object({
 
 export type Contact = z.infer<typeof contactSchema>;
 
+export interface ContactTranslantion extends Translatable {
+  type: string;
+}
+
 export interface ContactInfo {
   id: string;
   type: string;
   value: string;
   iconLib: Lib;
   iconCode: string;
+  translations: ContactTranslantion[];
 }
