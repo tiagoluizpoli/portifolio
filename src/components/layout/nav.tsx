@@ -1,12 +1,13 @@
+import { useLangContext } from '@/providers/lang';
 import { Link, useLocation } from 'react-router-dom';
 import { links } from './nav-commons';
 
 export const Nav = () => {
   const location = useLocation();
-
+  const { lang } = useLangContext();
   return (
     <nav className="flex gap-8">
-      {links.map((link, index) => {
+      {links[lang].map((link, index) => {
         return (
           <Link
             key={index}
