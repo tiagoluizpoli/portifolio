@@ -5,7 +5,7 @@ export const PublicApp = () => {
   return (
     <div className="">
       <Header />
-      {/* <StairTransition /> */}
+
       <PageTransition>
         <Outlet />
       </PageTransition>
