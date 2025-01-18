@@ -1,5 +1,6 @@
 'use client';
 
+import { useLangContext } from '@/providers/lang';
 import { CiMenuFries } from 'react-icons/ci';
 import { Link, useLocation } from 'react-router-dom';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from '../ui/sheet';
@@ -7,6 +8,7 @@ import { links } from './nav-commons';
 
 export const MobileNav = () => {
   const location = useLocation();
+  const { lang } = useLangContext();
 
   return (
     <Sheet>
@@ -27,7 +29,7 @@ export const MobileNav = () => {
 
         {/* nav */}
         <nav className="flex flex-col items-center justify-center gap-8">
-          {links.map((link, index) => (
+          {links[lang].map((link, index) => (
             <Link
               key={index}
               to={link.path}

@@ -2,13 +2,16 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 // biome-ignore lint/style/useImportType: <explanation>
-import { ResumeSkillsItem, SkillListType, useResumeQuery } from '@/core';
+import { ResumeSkillsItem, ResumeSkillsJoinItem, ResumeTranslation, SkillListType, useResumeQuery } from '@/core';
 import { motion } from 'framer-motion';
 
+import { useLangContext } from '@/providers/lang';
 import { SkillList } from './skill-list';
 
 export const ResumePage = () => {
   const { data, isLoading, isFetching } = useResumeQuery();
+
+  const { lang, getTranslation } = useLangContext();
 
   if (isFetching || isLoading) {
     return <div className="flex justify-center">Loading...</div>;
@@ -17,22 +20,25 @@ export const ResumePage = () => {
   if (!data) {
     return <div className="flex justify-center">No Data</div>;
   }
+  const translated = getTranslation<ResumeTranslation>(data.translations);
 
-  const about = data.about[0];
-  const experience = data.experience[0];
-  const education = data.education[0];
-  const skills = data.skills[0];
+  console.log({ translated });
+  const about = translated.about[0];
+  const experience = translated.experience[0];
+  const education = translated.education[0];
+  const skills = translated.skills[0];
+  console.log({ skills });
 
   const filteredSkills: Record<SkillListType, ResumeSkillsItem[]> = skills.items.reduce(
-    (acc: Record<SkillListType, ResumeSkillsItem[]>, curr: ResumeSkillsItem) => {
-      if (curr.type === 'frontend') {
-        acc.frontend.push(curr);
+    (acc: Record<SkillListType, ResumeSkillsItem[]>, curr: ResumeSkillsJoinItem) => {
+      if (curr.resume_skills_items_id.type === 'frontend') {
+        acc.frontend.push(curr.resume_skills_items_id);
       }
-      if (curr.type === 'backend') {
-        acc.backend.push(curr);
+      if (curr.resume_skills_items_id.type === 'backend') {
+        acc.backend.push(curr.resume_skills_items_id);
       }
-      if (curr.type === 'fullstack') {
-        acc.fullstack.push(curr);
+      if (curr.resume_skills_items_id.type === 'fullstack') {
+        acc.fullstack.push(curr.resume_skills_items_id);
       }
       return acc;
     },
@@ -51,7 +57,6 @@ export const ResumePage = () => {
       animate={{
         opacity: 1,
         transition: {
-          delay: 2.4,
           duration: 0.4,
           ease: 'easeIn',
         },
@@ -61,10 +66,10 @@ export const ResumePage = () => {
       <div className="container mx-auto">
         <Tabs defaultValue="experience" className="flex flex-col xl:flex-row gap-[60px]">
           <TabsList className="flex flex-col w-full max-w-[380px] mx-auto xl:mx-0 gap-6">
-            <TabsTrigger value={'experience'}>Experience</TabsTrigger>
-            <TabsTrigger value={'education'}>Education</TabsTrigger>
-            <TabsTrigger value={'skills'}>Skills</TabsTrigger>
-            <TabsTrigger value={'about'}>About me</TabsTrigger>
+            <TabsTrigger value={'experience'}>{lang === 'en-US' ? 'Experience' : 'Experiência'}</TabsTrigger>
+            <TabsTrigger value={'education'}>{lang === 'en-US' ? 'Education' : 'Educação'}</TabsTrigger>
+            <TabsTrigger value={'skills'}>{lang === 'en-US' ? 'Skills' : 'Habilidades'}</TabsTrigger>
+            <TabsTrigger value={'about'}>{lang === 'en-US' ? 'About me' : 'Sobre mim'}</TabsTrigger>
           </TabsList>
           <div className="min-h-[70vh] w-full">
             {/* experience */}

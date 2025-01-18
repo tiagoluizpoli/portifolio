@@ -1,4 +1,5 @@
 import { useHomeQuery } from '@/core';
+import { useLangContext } from '@/providers/lang';
 import { Link } from 'react-router-dom';
 import { LanguageSelector } from '../language-selector';
 import { Button } from '../ui/button';
@@ -7,6 +8,7 @@ import { Nav } from './nav';
 
 export const Header = () => {
   const { data, isLoading, isFetching } = useHomeQuery();
+  const { lang } = useLangContext();
   if (isLoading || isFetching) {
     return <div className="flex justify-center">Loading...</div>;
   }
@@ -14,6 +16,7 @@ export const Header = () => {
   if (!data) {
     return <div className="flex justify-center">No Data</div>;
   }
+  const hireMeButton = lang === 'en-US' ? 'Get in touch' : 'Entre em contato';
 
   return (
     <header className="py-8 text-white xl:py-12">
@@ -33,7 +36,7 @@ export const Header = () => {
           <div className="items-center hidden gap-8 xl:flex">
             <Nav />
             <Link to={'/contact'}>
-              <Button>Hire me</Button>
+              <Button>{hireMeButton}</Button>
             </Link>
           </div>
 
