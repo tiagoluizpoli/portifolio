@@ -12,7 +12,6 @@ export const Photo = ({ picture }: Props) => {
         animate={{
           opacity: 1,
           transition: {
-            delay: 2,
             duration: 0.4,
             ease: 'easeIn',
           },
@@ -25,15 +24,26 @@ export const Photo = ({ picture }: Props) => {
           animate={{
             opacity: 1,
             transition: {
-              delay: 2.4,
+              delay: 0.4,
               duration: 0.4,
-              ease: 'easeInOut',
+              ease: 'easeIn',
             },
           }}
         >
-          <div className="border-[6px] border-accent rounded-full">
+          <motion.div
+            className="border-accent rounded-full"
+            initial={{ opacity: 0, border: 'none' }}
+            animate={{
+              opacity: 1,
+              border: '6px solid var(--color-accent)',
+            }}
+            transition={{
+              opacity: { delay: 0.4, duration: 0.4, ease: 'easeIn' },
+              border: { delay: 1, duration: 0.4, ease: 'easeIn' },
+            }}
+          >
             <img src={picture} alt="" className="object-contain rounded-full" />
-          </div>
+          </motion.div>
         </motion.div>
 
         {/* circle */}
