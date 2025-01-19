@@ -86,7 +86,7 @@ const ptFormContent = {
 };
 
 export const ContactForm = () => {
-  const { data: solutions, isLoading, isFetching } = useSolutionsQuery();
+  const { data: solutions } = useSolutionsQuery();
 
   const { lang, getTranslation } = useLangContext();
 
@@ -109,12 +109,8 @@ export const ContactForm = () => {
     reset();
   };
 
-  if (isFetching || isLoading) {
-    return <div>Loading...</div>;
-  }
-
   if (!solutions) {
-    return <div>No data</div>;
+    return <></>;
   }
 
   const content = lang === 'en-US' ? enFormContent : ptFormContent;

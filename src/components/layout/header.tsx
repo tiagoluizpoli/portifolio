@@ -8,17 +8,13 @@ import { MobileNav } from './mobile-nav';
 import { Nav } from './nav';
 
 export const Header = () => {
-  const { data, isLoading, isFetching } = useHomeQuery();
+  const { data } = useHomeQuery();
   const { lang } = useLangContext();
 
   const matches = useMediaQuery('(min-width: 1200px)');
 
-  if (isLoading || isFetching) {
-    return <div className="flex justify-center">Loading...</div>;
-  }
-
   if (!data) {
-    return <div className="flex justify-center">No Data</div>;
+    return <></>;
   }
   const hireMeButton = lang === 'en-US' ? 'Get in touch' : 'Entre em contato';
 

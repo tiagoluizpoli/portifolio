@@ -13,7 +13,6 @@ export const SkillList = ({ title, skills }: Props) => {
       <h3 className="text-4xl font-bold text-center xl:text-left">{title}</h3>
       <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 xl:gap-[30px] gap-4">
         {skills.map((skill, index) => {
-          console.log({ skill });
           return (
             <li key={index}>
               <TooltipProvider delayDuration={100}>

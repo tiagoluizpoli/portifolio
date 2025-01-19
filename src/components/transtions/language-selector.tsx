@@ -18,8 +18,6 @@ export const LanguageSelector = () => {
 
   const handleLanguageChange = (languageCode: Language) => {
     setLang(languageCode);
-    // Here you would typically update the app's language setting
-    console.log(`Language changed to ${languageCode}`);
   };
 
   return (

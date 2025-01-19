@@ -9,12 +9,8 @@ export const ContactPage = () => {
   const { data, isLoading, isFetching } = useContactInfoQuery();
 
   const { getTranslation } = useLangContext();
-  if (!data) {
-    return <div>Loading...</div>;
-  }
-
-  if (isFetching || isLoading) {
-    return <div>Loading...</div>;
+  if (!data || isFetching || isLoading) {
+    return <></>;
   }
 
   return (
@@ -23,6 +19,7 @@ export const ContactPage = () => {
       animate={{
         opacity: 1,
         transition: {
+          delay: 0.4,
           duration: 0.4,
           ease: 'easeIn',
         },
@@ -41,7 +38,7 @@ export const ContactPage = () => {
             <ul className="flex flex-col gap-10">
               {data.map((item, index) => {
                 const translated = getTranslation<ContactTranslantion>(item.translations);
-                console.log({ item, translated });
+
                 return (
                   <li key={index} className="flex items-center gap-6">
                     <div className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-[#27272c] text-accent rounded-md flex items-center justify-center">

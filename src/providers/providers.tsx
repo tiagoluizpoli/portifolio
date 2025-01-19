@@ -1,3 +1,4 @@
+import { Loading } from '@/components';
 import { Suspense } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { LangProvider } from './lang';
@@ -6,7 +7,7 @@ import { RouterProvider } from './router-provider';
 
 export const Providers = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loading />}>
       <ReactQueryProvider>
         <LangProvider>
           <HelmetProvider>
