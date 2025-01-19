@@ -3,31 +3,25 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 // biome-ignore lint/style/useImportType: <explanation>
 import { ResumeSkillsItem, ResumeSkillsJoinItem, ResumeTranslation, SkillListType, useResumeQuery } from '@/core';
-import { motion } from 'framer-motion';
-
 import { useLangContext } from '@/providers/lang';
+import { motion } from 'framer-motion';
 import { SkillList } from './skill-list';
 
 export const ResumePage = () => {
-  const { data, isLoading, isFetching } = useResumeQuery();
+  const { data } = useResumeQuery();
 
   const { lang, getTranslation } = useLangContext();
 
-  if (isFetching || isLoading) {
-    return <div className="flex justify-center">Loading...</div>;
+  if (!data) {
+    return <></>;
   }
 
-  if (!data) {
-    return <div className="flex justify-center">No Data</div>;
-  }
   const translated = getTranslation<ResumeTranslation>(data.translations);
 
-  console.log({ translated });
   const about = translated.about[0];
   const experience = translated.experience[0];
   const education = translated.education[0];
   const skills = translated.skills[0];
-  console.log({ skills });
 
   const filteredSkills: Record<SkillListType, ResumeSkillsItem[]> = skills.items.reduce(
     (acc: Record<SkillListType, ResumeSkillsItem[]>, curr: ResumeSkillsJoinItem) => {
@@ -57,6 +51,7 @@ export const ResumePage = () => {
       animate={{
         opacity: 1,
         transition: {
+          delay: 0.4,
           duration: 0.4,
           ease: 'easeIn',
         },

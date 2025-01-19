@@ -4,16 +4,12 @@ import { useLangContext } from '@/providers/lang';
 import { easeIn, motion } from 'framer-motion';
 
 export const SolutionsPage = () => {
-  const { data, isFetching, isLoading } = useSolutionsQuery();
+  const { data } = useSolutionsQuery();
 
   const { lang, getTranslation } = useLangContext();
 
-  if (isFetching || isLoading) {
-    return <div className="flex justify-center">Loading...</div>;
-  }
-
   if (!data) {
-    return <div className="flex justify-center">No Data</div>;
+    return <></>;
   }
 
   return (
@@ -24,6 +20,7 @@ export const SolutionsPage = () => {
           animate={{
             opacity: 1,
             transition: {
+              delay: 0.4,
               duration: 0.4,
               ease: easeIn,
             },

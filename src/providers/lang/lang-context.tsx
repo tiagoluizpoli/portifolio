@@ -6,7 +6,6 @@ export type Language = 'en-US' | 'pt-BR';
 export type LangContextProps = {
   lang: Language;
   setLang: (lang: Language) => void;
-
   getTranslation: <T>(translations: (T extends Translatable ? T : Translatable)[]) => T;
 };
 
