@@ -8,6 +8,9 @@ export const Nav = () => {
   return (
     <nav className="flex gap-8">
       {links[lang].map((link, index) => {
+        if (link.path === '/contact') {
+          return <></>;
+        }
         return (
           <Link
             key={index}

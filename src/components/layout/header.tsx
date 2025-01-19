@@ -1,7 +1,8 @@
 import { useHomeQuery } from '@/core';
 import { useLangContext } from '@/providers/lang';
+import { useMediaQuery } from '@mantine/hooks';
 import { Link } from 'react-router-dom';
-import { LanguageSelector } from '../language-selector';
+import { LanguageSelector } from '../transtions/language-selector';
 import { Button } from '../ui/button';
 import { MobileNav } from './mobile-nav';
 import { Nav } from './nav';
@@ -9,6 +10,9 @@ import { Nav } from './nav';
 export const Header = () => {
   const { data, isLoading, isFetching } = useHomeQuery();
   const { lang } = useLangContext();
+
+  const matches = useMediaQuery('(min-width: 1200px)');
+
   if (isLoading || isFetching) {
     return <div className="flex justify-center">Loading...</div>;
   }
@@ -28,7 +32,7 @@ export const Header = () => {
               <span className="text-accent">.</span>
             </h1>
           </Link>
-          <LanguageSelector />
+          {matches && <LanguageSelector />}
         </div>
 
         {/* Desktop Nav & Hire me button */}
