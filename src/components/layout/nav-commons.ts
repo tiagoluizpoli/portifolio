@@ -40,10 +40,10 @@ export const ptLinks = [
   //   name: 'trabalho',
   //   path: '/work',
   // },
-  // {
-  //   name: 'contato',
-  //   path: '/contact',
-  // },
+  {
+    name: 'contato',
+    path: '/contact',
+  },
 ];
 
 export const links: Record<Language, typeof engLinks> = {

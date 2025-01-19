@@ -23,7 +23,7 @@ export const LanguageSelector = () => {
   };
 
   return (
-    <div className="flex gap-2 justify-center items-center  p-1">
+    <div className="flex gap-4 justify-center items-center p-1">
       {languages.map((language) => (
         <button
           type="button"
@@ -45,7 +45,7 @@ export const LanguageSelector = () => {
               },
             }}
           >
-            <Icon icon={language.icon} className={'w-4 h-4'} />
+            <Icon icon={language.icon} className={'w-6 h-6'} />
           </motion.div>
         </button>
       ))}
