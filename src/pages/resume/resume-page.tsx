@@ -22,7 +22,7 @@ const ContentWrapper = ({ children, contentKey }: Props) => {
         opacity: 0,
       }}
       transition={{
-        duration: 0.4,
+        duration: 0.3,
         ease: 'easeInOut',
       }}
     >
@@ -207,7 +207,7 @@ export const ResumePage = () => {
             {/* experience */}
             <AnimatePresence mode="wait">
               {content.map(
-                (item, index) =>
+                (item) =>
                   item.tab === activeTab && (
                     <ContentWrapper key={item.tab} contentKey={item.tab}>
                       {item.content}
