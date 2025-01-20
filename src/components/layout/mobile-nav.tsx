@@ -39,7 +39,9 @@ export const MobileNav = () => {
               </Link>
             ))}
           </nav>
-          <LanguageSelector />
+          <SheetClose>
+            <LanguageSelector />
+          </SheetClose>
         </div>
       </SheetContent>
       <SheetDescription />
