@@ -98,15 +98,18 @@ export const ContactForm = () => {
       name: '',
       phoneNumber: '',
       email: '',
-      solution: solutions?.[0].title ?? '',
+      solution: '',
       message: '',
     },
   });
-  const { control, handleSubmit, reset } = form;
+  const { control, handleSubmit, reset, setValue } = form;
 
   const onSubmit = async (data: Contact) => {
     await mutateAsync(data);
     reset();
+    // setValue('solution', '', {
+    //   shouldValidate: false,
+    // });
   };
 
   if (!solutions) {
