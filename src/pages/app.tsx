@@ -1,14 +1,17 @@
-import { Header, PageTransition, StairTransition } from '@/components';
-import { Outlet } from 'react-router-dom';
+import { AnimatePagePresence, Header, Loading } from '@/components';
+import { useIsFetching } from '@tanstack/react-query';
 
 export const PublicApp = () => {
+  const isFetching = useIsFetching();
+
+  if (isFetching > 0) {
+    return <Loading />;
+  }
+
   return (
-    <div className="">
+    <>
       <Header />
-      <StairTransition />
-      <PageTransition>
-        <Outlet />
-      </PageTransition>
-    </div>
+      <AnimatePagePresence />
+    </>
   );
 };

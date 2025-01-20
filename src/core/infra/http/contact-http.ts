@@ -4,8 +4,10 @@ import { isAxiosError } from 'axios';
 
 export const getContactInfo = async (): Promise<ContactInfo[]> => {
   try {
+    const fields = ['*', 'translations.*', 'translations.directus_translations_id.*'];
     const response = await httpClient.get('items/contactInfo', {
       params: {
+        fields: fields.join(','),
         'filter[status][_eq]': 'published',
       },
     });

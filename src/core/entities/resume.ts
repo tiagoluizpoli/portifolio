@@ -1,6 +1,7 @@
 // experience
 
 import type { Lib } from '@/components';
+import type { Translatable } from './shared';
 
 export interface ResumeExperienceItem {
   id: string;
@@ -45,10 +46,14 @@ export interface ResumeSkillsItem {
   iconCode: string;
 }
 
+export interface ResumeSkillsJoinItem {
+  resume_skills_items_id: ResumeSkillsItem;
+}
+
 export interface ResumeSkills {
   title: string;
   description: string;
-  items: ResumeSkillsItem[];
+  items: ResumeSkillsJoinItem[];
 }
 
 // about
@@ -65,9 +70,13 @@ export interface ResumeAbout {
   info: ResumeAboutInfo[];
 }
 
-export interface Resume {
+export interface ResumeTranslation extends Translatable {
   experience: ResumeExperience[];
   education: ResumeEducation[];
   skills: ResumeSkills[];
   about: ResumeAbout[];
+}
+
+export interface Resume {
+  translations: ResumeTranslation[];
 }

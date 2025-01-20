@@ -1,4 +1,5 @@
 import type { Home } from '@/core/entities';
+
 import { useQuery } from '@tanstack/react-query';
 import { getHome } from '../http';
 

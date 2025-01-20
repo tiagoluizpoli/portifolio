@@ -1,12 +1,13 @@
-'use client';
-
+import { useLangContext } from '@/providers/lang';
 import { CiMenuFries } from 'react-icons/ci';
 import { Link, useLocation } from 'react-router-dom';
+import { LanguageSelector } from '../transtions/language-selector';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from '../ui/sheet';
 import { links } from './nav-commons';
 
 export const MobileNav = () => {
   const location = useLocation();
+  const { lang } = useLangContext();
 
   return (
     <Sheet>
@@ -26,17 +27,22 @@ export const MobileNav = () => {
         </div>
 
         {/* nav */}
-        <nav className="flex flex-col items-center justify-center gap-8">
-          {links.map((link, index) => (
-            <Link
-              key={index}
-              to={link.path}
-              className={`${link.path === location.pathname && 'text-accent border-b-2 border-accent'} text-xl capitalize hover:text-accent transition-all`}
-            >
-              <SheetClose>{link.name}</SheetClose>
-            </Link>
-          ))}
-        </nav>
+        <div className="flex flex-col gap-20">
+          <nav className="flex flex-col items-center justify-center gap-8">
+            {links[lang].map((link, index) => (
+              <Link
+                key={index}
+                to={link.path}
+                className={`${link.path === location.pathname && 'text-accent border-b-2 border-accent'} text-xl capitalize hover:text-accent transition-all`}
+              >
+                <SheetClose>{link.name}</SheetClose>
+              </Link>
+            ))}
+          </nav>
+          <SheetClose>
+            <LanguageSelector />
+          </SheetClose>
+        </div>
       </SheetContent>
       <SheetDescription />
     </Sheet>

@@ -1,3 +1,3 @@
-export * from './stair-transition';
 export * from './page-transition';
-export * from './stair-transition';
+export * from './language-selector';
+export * from './loading';

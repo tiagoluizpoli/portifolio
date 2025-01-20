@@ -1,4 +1,5 @@
 'use client';
+import { useLangContext } from '@/providers/lang';
 import CountUp from 'react-countup';
 
 interface Props {
@@ -9,22 +10,24 @@ interface Props {
 }
 
 export const Stats = ({ yearsOfExperience, totalCommits, totalRepositories, technologiesMastered }: Props) => {
+  const { lang } = useLangContext();
+
   const stats = [
     {
       num: new Date().getFullYear() - yearsOfExperience,
-      text: 'Years of Experience',
+      text: lang === 'en-US' ? 'Years of Experience' : 'Anos de Experiência',
     },
     {
       num: totalRepositories,
-      text: `Projects i've worked on`,
+      text: lang === 'en-US' ? 'Total Repositories' : 'Total de Repositórios',
     },
     {
       num: technologiesMastered,
-      text: 'Technologies mastered',
+      text: lang === 'en-US' ? 'Technologies Mastered' : 'Tecnologias Aprendidas',
     },
     {
       num: totalCommits,
-      text: 'Code commits',
+      text: lang === 'en-US' ? 'Total Commits' : 'Total de Commits',
     },
   ];
 

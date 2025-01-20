@@ -1,3 +1,4 @@
+import { PageTransition } from '@/components';
 import { lazyImport } from '@/lib';
 import { PublicApp } from '@/pages';
 import type { RouteObject } from 'react-router-dom';
@@ -13,19 +14,35 @@ export const publicRoutes: RouteObject[] = [
     children: [
       {
         path: '/',
-        element: <HomeRoute />,
+        element: (
+          <PageTransition pageKey="home">
+            <HomeRoute />
+          </PageTransition>
+        ),
       },
       {
         path: '/solutions',
-        element: <SolutionsRoute />,
+        element: (
+          <PageTransition pageKey="solutions">
+            <SolutionsRoute />
+          </PageTransition>
+        ),
       },
       {
         path: '/resume',
-        element: <ResumeRoute />,
+        element: (
+          <PageTransition pageKey="resume">
+            <ResumeRoute />
+          </PageTransition>
+        ),
       },
       {
         path: '/contact',
-        element: <ContactRoute />,
+        element: (
+          <PageTransition pageKey="contact">
+            <ContactRoute />
+          </PageTransition>
+        ),
       },
     ],
   },
