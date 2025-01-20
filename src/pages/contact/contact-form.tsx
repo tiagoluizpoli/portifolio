@@ -102,14 +102,11 @@ export const ContactForm = () => {
       message: '',
     },
   });
-  const { control, handleSubmit, reset, setValue } = form;
+  const { control, handleSubmit, reset } = form;
 
   const onSubmit = async (data: Contact) => {
     await mutateAsync(data);
     reset();
-    // setValue('solution', '', {
-    //   shouldValidate: false,
-    // });
   };
 
   if (!solutions) {
