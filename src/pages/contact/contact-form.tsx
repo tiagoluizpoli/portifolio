@@ -98,7 +98,7 @@ export const ContactForm = () => {
       name: '',
       phoneNumber: '',
       email: '',
-      solution: solutions?.[0].title ?? '',
+      solution: '',
       message: '',
     },
   });
