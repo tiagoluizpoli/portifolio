@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { type HomeTranslation, type ResumeTranslation, buildFileUrl, useHomeQuery, useResumeQuery } from '@/core';
 import { useLangContext } from '@/providers/lang';
-import { motion } from 'framer-motion';
 import { FiDownload } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { Photo, Social, Stats } from './components';
@@ -13,7 +12,7 @@ export const HomePage = () => {
   const { getTranslation } = useLangContext();
 
   if (isFetching || isLoading || isResumeFetching || isResumeLoading || !data || !resume) {
-    return <></>;
+    return null;
   }
 
   const translated = getTranslation<HomeTranslation>(data.translations);
@@ -24,18 +23,7 @@ export const HomePage = () => {
   const technologiesMastered = resumeTranslated.skills[0].items.length;
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{
-        opacity: 1,
-        transition: {
-          delay: 0.4,
-          duration: 0.4,
-          ease: 'easeIn',
-        },
-      }}
-      // className="py-6"
-    >
+    <div className="py-6">
       <section className="h-full ">
         <div className="container mx-auto h-full">
           <div className="flex flex-col xl:flex-row items-center justify-between xl:pt-8 xl:pb-24 xl:gap-8">
@@ -82,6 +70,6 @@ export const HomePage = () => {
           technologiesMastered={technologiesMastered}
         />
       </section>
-    </motion.div>
+    </div>
   );
 };

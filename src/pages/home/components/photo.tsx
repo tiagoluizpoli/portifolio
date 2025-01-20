@@ -39,7 +39,7 @@ export const Photo = ({ picture }: Props) => {
             }}
             transition={{
               opacity: { delay: 0.4, duration: 0.4, ease: 'easeIn' },
-              border: { delay: 1, duration: 0.4, ease: 'easeIn' },
+              border: { delay: 0.5, duration: 0.4, ease: 'easeIn' },
             }}
           >
             <img src={picture} alt="" className="object-contain rounded-full" />

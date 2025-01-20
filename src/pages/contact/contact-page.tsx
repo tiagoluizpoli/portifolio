@@ -1,6 +1,5 @@
 import { DynamicIcon } from '@/components';
 import { type ContactTranslantion, useContactInfoQuery } from '@/core';
-import { motion } from 'framer-motion';
 
 import { useLangContext } from '@/providers/lang';
 import { ContactForm } from './contact-form';
@@ -10,22 +9,11 @@ export const ContactPage = () => {
 
   const { getTranslation } = useLangContext();
   if (!data || isFetching || isLoading) {
-    return <></>;
+    return null;
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{
-        opacity: 1,
-        transition: {
-          delay: 0.4,
-          duration: 0.4,
-          ease: 'easeIn',
-        },
-      }}
-      className="py-6"
-    >
+    <div className="py-6">
       <div className="container mx-auto">
         <div className="flex flex-col xl:flex-row gap-[30px]">
           <div className="xl:w-[54%] order-2 xl:order-none">
@@ -36,7 +24,7 @@ export const ContactPage = () => {
           {/* info */}
           <div className="flex items-center flex-1 order-1 mb-8 xl:justify-start xl:order-none xl:mb-0">
             <ul className="flex flex-col gap-10">
-              {data.map((item, index) => {
+              {data?.map((item, index) => {
                 const translated = getTranslation<ContactTranslantion>(item.translations);
 
                 return (
@@ -57,6 +45,6 @@ export const ContactPage = () => {
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };

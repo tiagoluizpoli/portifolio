@@ -14,7 +14,7 @@ export const Header = () => {
   const matches = useMediaQuery('(min-width: 1200px)');
 
   if (!data) {
-    return <></>;
+    return null;
   }
   const hireMeButton = lang === 'en-US' ? 'Get in touch' : 'Entre em contato';
 

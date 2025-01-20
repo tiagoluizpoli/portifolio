@@ -1,5 +1,3 @@
-'use client';
-
 import { useLangContext } from '@/providers/lang';
 import { CiMenuFries } from 'react-icons/ci';
 import { Link, useLocation } from 'react-router-dom';

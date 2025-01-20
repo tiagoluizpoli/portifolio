@@ -1,7 +1,7 @@
 import { DynamicIcon } from '@/components';
 import { type Solution, useSolutionsQuery } from '@/core';
 import { useLangContext } from '@/providers/lang';
-import { easeIn, motion } from 'framer-motion';
+import {} from 'framer-motion';
 
 export const SolutionsPage = () => {
   const { data } = useSolutionsQuery();
@@ -9,24 +9,13 @@ export const SolutionsPage = () => {
   const { lang, getTranslation } = useLangContext();
 
   if (!data) {
-    return <></>;
+    return null;
   }
 
   return (
     <section className="min-h-[80vh] flex flex-col justify-center py-12 xl:py-0">
       <div className="container mx-auto">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{
-            opacity: 1,
-            transition: {
-              delay: 0.4,
-              duration: 0.4,
-              ease: easeIn,
-            },
-          }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-[60px]"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-[60px]">
           {data.map((service, index) => {
             const translated = getTranslation<Solution>(service.translations);
             const num = service.sort.toString().padStart(2, '0');
@@ -58,7 +47,7 @@ export const SolutionsPage = () => {
               </div>
             );
           })}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

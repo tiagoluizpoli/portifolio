@@ -110,7 +110,7 @@ export const ContactForm = () => {
   };
 
   if (!solutions) {
-    return <></>;
+    return null;
   }
 
   const content = lang === 'en-US' ? enFormContent : ptFormContent;
