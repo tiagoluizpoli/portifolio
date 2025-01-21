@@ -1,8 +1,12 @@
 # Stage 1
-
+ARG VITE_APP_BASE_URL=${VITE_APP_BASE_URL}
+ARG VITE_APP_TOKEN=${VITE_APP_TOKEN}
 FROM node:22-alpine as react-build
 WORKDIR /app
 COPY . ./
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+ARG VITE_APP_BASE_URL
+ARG VITE_APP_TOKEN
 RUN yarn
 RUN yarn build
 
