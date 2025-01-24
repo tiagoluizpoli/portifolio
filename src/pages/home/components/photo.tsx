@@ -19,10 +19,18 @@ export const Photo = ({ picture }: Props) => {
             ease: 'easeIn',
           },
         }}
+        whileHover={{
+          scale: 1.05,
+          rotate: -10,
+          transition: {
+            duration: 0.2,
+            ease: 'easeIn',
+          },
+        }}
       >
         {/* image */}
         <motion.div
-          className="w-[300px] h-[300px] xl:w-[506px] xl:h-[506px] mix-blend-difference absolute p-3"
+          className="w-[300px] h-[300px] xl:w-[506px] xl:h-[506px] absolute p-3"
           initial={{ opacity: 0 }}
           animate={{
             opacity: 1,
