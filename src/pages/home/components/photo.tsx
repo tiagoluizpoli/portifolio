@@ -1,10 +1,13 @@
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 
 interface Props {
   picture: string;
 }
 
 export const Photo = ({ picture }: Props) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
   return (
     <div className="w-full h-full relative flex justify-center items-center">
       <motion.div
@@ -30,19 +33,22 @@ export const Photo = ({ picture }: Props) => {
             },
           }}
         >
+          <img src={picture} alt="" className="hidden" onLoad={() => setIsLoaded(true)} />
           <motion.div
             className="border-accent rounded-full "
             initial={{ opacity: 0, border: 'none' }}
-            animate={{
-              opacity: 1,
-              border: '6px solid var(--color-accent)',
-            }}
+            animate={
+              isLoaded && {
+                opacity: 1,
+                border: '6px solid var(--color-accent)',
+              }
+            }
             transition={{
               opacity: { delay: 0.4, duration: 0.4, ease: 'easeIn' },
               border: { delay: 0.5, duration: 0.4, ease: 'easeIn' },
             }}
           >
-            <img src={picture} alt="" className="object-contain rounded-full w-full h-full" />
+            <motion.img src={picture} className="object-contain rounded-full w-full h-full" />
           </motion.div>
         </motion.div>
 
