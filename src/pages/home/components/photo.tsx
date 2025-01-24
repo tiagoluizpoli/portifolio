@@ -31,7 +31,7 @@ export const Photo = ({ picture }: Props) => {
           }}
         >
           <motion.div
-            className="border-accent rounded-full"
+            className="border-accent rounded-full "
             initial={{ opacity: 0, border: 'none' }}
             animate={{
               opacity: 1,
@@ -42,7 +42,7 @@ export const Photo = ({ picture }: Props) => {
               border: { delay: 0.5, duration: 0.4, ease: 'easeIn' },
             }}
           >
-            <img src={picture} alt="" className="object-contain rounded-full" />
+            <img src={picture} alt="" className="object-contain rounded-full w-full h-full" />
           </motion.div>
         </motion.div>
 
