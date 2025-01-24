@@ -18,7 +18,7 @@ export const MobileNav = () => {
 
       <SheetContent className="flex flex-col">
         {/* logo */}
-        <div className="mt-32 mb-40 text-2xl text-center">
+        <div className="text-2xl text-center h-40 flex items-center justify-center">
           <Link to={'/'}>
             <h1 className="text-4xl font-semibold">
               Tiago<span className="text-accent">.</span>
@@ -27,8 +27,8 @@ export const MobileNav = () => {
         </div>
 
         {/* nav */}
-        <div className="flex flex-col gap-20">
-          <nav className="flex flex-col items-center justify-center gap-8">
+        <div className="flex flex-col gap-20 mb-16">
+          <nav className="flex flex-col items-center justify-center gap-4">
             {links[lang].map((link, index) => (
               <Link
                 key={index}
@@ -39,10 +39,8 @@ export const MobileNav = () => {
               </Link>
             ))}
           </nav>
-          <SheetClose>
-            <LanguageSelector />
-          </SheetClose>
         </div>
+        <LanguageSelector Close={SheetClose} />
       </SheetContent>
       <SheetDescription />
     </Sheet>
