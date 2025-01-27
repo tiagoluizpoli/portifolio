@@ -1,4 +1,3 @@
-import type { Lib } from '@/components';
 import { z } from 'zod';
 import type { Translatable } from './shared';
 
@@ -20,7 +19,6 @@ export interface ContactInfo {
   id: string;
   type: string;
   value: string;
-  iconLib: Lib;
   iconCode: string;
   translations: ContactTranslantion[];
 }

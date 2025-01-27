@@ -1,4 +1,3 @@
-import type { Lib } from '@/components';
 import type { Translatable } from './shared';
 
 const socials = ['twitter', 'github', 'linkedin', 'youtube'] as const;
@@ -11,7 +10,6 @@ export interface Github {
 
 export interface SocialType {
   type: SocialOption;
-  iconLib: Lib;
   iconCode: string;
   url: string;
 }

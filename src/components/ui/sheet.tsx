@@ -5,8 +5,7 @@ import { type VariantProps, cva } from 'class-variance-authority';
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
-
-import { IoMdClose } from 'react-icons/io';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 const Sheet = SheetPrimitive.Root;
 
@@ -61,7 +60,7 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Con
       <SheetPrimitive.Content ref={ref} className={cn(sheetVariants({ side }), className)} {...props}>
         {children}
         <SheetPrimitive.Close className="absolute right-8 top-8 transition-opacity outline-none">
-          <IoMdClose className="text-3xl text-accent" />
+          <Icon icon="mdi:close" className="text-3xl text-accent" />
           <span className="sr-only">Close</span>
         </SheetPrimitive.Close>
       </SheetPrimitive.Content>
