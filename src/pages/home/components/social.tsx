@@ -1,5 +1,5 @@
-import { DynamicIcon } from '@/components';
 import type { SocialType } from '@/core';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 import { Link } from 'react-router-dom';
 
@@ -15,7 +15,7 @@ export const Social = ({ socials, containerStyles, iconStyles }: Props) => {
       {socials?.map((social, index) => {
         return (
           <Link key={index} to={social.url} target="_blank" className={iconStyles}>
-            <DynamicIcon lib={social.iconLib} name={social.iconCode} />
+            <Icon icon={social.iconCode} />
           </Link>
         );
       })}

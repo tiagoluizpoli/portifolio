@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { type HomeTranslation, type ResumeTranslation, buildFileUrl, useHomeQuery, useResumeQuery } from '@/core';
 import { useLangContext } from '@/providers/lang';
-import { FiDownload } from 'react-icons/fi';
+
+import { Icon } from '@iconify/react/dist/iconify.js';
 import { Link } from 'react-router-dom';
 import { Photo, Social, Stats } from './components';
 
@@ -43,7 +44,8 @@ export const HomePage = () => {
                 <Link to={buildFileUrl(translated.cv, true)} target="_blank" download>
                   <Button variant={'outline'} size={'lg'} className="uppercase flex items-center gap-2">
                     <span>{translated.downloadButtonText}</span>
-                    <FiDownload className="text-xl" />
+                    {/* <FiDownload className="text-xl" /> */}
+                    <Icon icon={'heroicons-outline:download'} className="text-xl" />
                   </Button>
                 </Link>
 

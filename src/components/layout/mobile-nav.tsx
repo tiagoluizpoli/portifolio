@@ -1,5 +1,6 @@
 import { useLangContext } from '@/providers/lang';
-import { CiMenuFries } from 'react-icons/ci';
+
+import { Icon } from '@iconify/react/dist/iconify.js';
 import { Link, useLocation } from 'react-router-dom';
 import { LanguageSelector } from '../transtions/language-selector';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from '../ui/sheet';
@@ -12,7 +13,7 @@ export const MobileNav = () => {
   return (
     <Sheet>
       <SheetTrigger className="flex items-center justify-center">
-        <CiMenuFries className="text-[32px] text-accent" />
+        <Icon icon="circum:menu-fries" className="text-[32px] text-accent" />
       </SheetTrigger>
       <SheetTitle />
 

@@ -1,6 +1,5 @@
 // experience
 
-import type { Lib } from '@/components';
 import type { Translatable } from './shared';
 
 export interface ResumeExperienceItem {
@@ -42,7 +41,6 @@ export interface ResumeSkillsItem {
   sort: number | null;
   type: SkillListType;
   title: string;
-  iconLib: Lib;
   iconCode: string;
 }
 

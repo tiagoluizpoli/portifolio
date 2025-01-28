@@ -1,4 +1,3 @@
-import type { Lib } from '@/components';
 import type { Translatable } from './shared';
 
 export interface SolutionsTranslation extends Translatable {
@@ -10,7 +9,6 @@ export interface Solution {
   sort: number;
   title: string;
   description: string;
-  iconLib: Lib;
   iconCode: string;
   translations: SolutionsTranslation[];
 }

@@ -28,7 +28,6 @@ export const SolutionsPage = () => {
                     {num}
                   </div>
                   <div className="w-[70px] h-[70px] rounded-full bg-white group-hover:bg-accent transition-all duration-500 flex justify-center items-center">
-                    {/* <DynamicIcon lib={service.iconLib} name={service.iconCode} className="text-primary text-3xl " /> */}
                     <Icon icon={service.iconCode} className="text-primary text-3xl " />
                   </div>
                 </div>
