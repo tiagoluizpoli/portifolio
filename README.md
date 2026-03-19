@@ -1,50 +1,46 @@
-# React + TypeScript + Vite
+# Portifolio Monorepo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Establish a robust, standard foundation for project development.
 
-Currently, two official plugins are available:
+## 🏗️ Architecture
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This repository is organized as a `pnpm` monorepo:
 
-## Expanding the ESLint configuration
+- **`apps/web`**: Primary frontend application (Feature-based structure).
+- **`apps/admin`**: Administrative dashboard (Feature-based structure).
+- **`apps/migrator`**: Database and infrastructure service (Strict Clean Architecture).
+- **`packages/appwrite-core`**: Shared domain entities and AppWrite infrastructure logic.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Mandatory Folder Patterns
 
-- Configure the top-level `parserOptions` property like this:
+#### Clean Architecture (Migrator)
+Every module must follow: `api/`, `application/`, `domain/`, `infrastructure/`, `main/`.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+#### Feature-Based (Frontend)
+Unified structure: `assets/`, `components/`, `features/`, `domain/`, `infrastructure/`, `hooks/`, `lib/`, `providers/`, `routes/`.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## 📜 Development Standards
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### SOLID Principles
+1. **Single Responsibility (SRP)**: Each workspace and module has one clear purpose.
+2. **Open/Closed (OCP)**: Core entities are extensible without modification.
+3. **Interface Segregation (ISP)**: Shared types are granular.
+4. **Dependency Inversion (DIP)**: High-level modules depend on abstractions in `appwrite-core`.
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+### Quality Gates
+- **Linting**: Unified via Biome (`pnpm lint`).
+- **Commit Messages**: Conventional Commits monitored by Commitlint.
+- **Git Hooks**: Managed via `pre-commit` (initialized by `pnpm install`).
+
+### Restrictions
+- **No Cross-Layer Leakage**: UI components must never access the database directly.
+- **No Cyclical Dependencies**: Dependencies between workspaces must be unidirectional.
+- **Shared Purpose**: `@repo/appwrite-core` is the ONLY place for shared AppWrite schemas.
+
+## 🚀 Getting Started
+
+1. `pnpm install` (initializes hooks and venv).
+2. `pnpm lint` to verify code quality.
+
+---
+*Legacy code archived in `/legacy` folder.*
