@@ -9,6 +9,11 @@
 
 ### Session 2026-03-20
 - **Startup Validation**: If core environment variables are missing, the system MUST display a user-friendly error page listing the missing variables rather than crashing to the terminal.
+- **Startup Error Details**: The startup error page MUST list all missing/invalid keys and include a link to the `.env.example` or setup documentation.
+- **Hydration Safety**: The system MUST provide a global `<ClientOnly />` component wrapper based on the `useHydrated()` hook to safely isolate client-side logic.
+- **Startup Validation Scope**: Fail-fast validation MUST focus on the presence and format of required environment variables; active connectivity pings to external services (AppWrite) should be deferred to a later stage or handled via data-fetching error boundaries.
+- **Domain Model Validation**: All domain models in `@repo/appwrite-core` MUST be defined using Zod schemas to serve as the single source of truth for both TypeScript types and runtime validation.
+- **Theme Tokens**: The system MUST use OKLCH-based CSS variables for the theme palette, following the Tailwind v4 standard for superior color interpolation and maintenance.
 - **Domain Abstraction**: Shared models in `@repo/appwrite-core` MUST be defined as decoupled domain-layer interfaces. The Repository implementation is responsible for mapping AppWrite-specific document structures to these clean domain entities.
 
 ## User Scenarios & Testing *(mandatory)*
@@ -62,16 +67,16 @@ As an architect, I want a secure environment for handling AppWrite secrets so th
 
 - **FR-001**: System MUST use **TanStack Start v1** (RC/Stable) as the core framework.
 - **FR-002**: System MUST use **React 19** (Stable) and adhere to its modern prop-passing patterns.
-- **FR-003**: System MUST use **Tailwind CSS v4** with a CSS-first configuration (no `tailwind.config.js`). Theme extensions MUST reside in `src/index.css`.
+- **FR-003**: System MUST use **Tailwind CSS v4** with a CSS-first configuration (no `tailwind.config.js`). Theme extensions MUST reside in `src/index.css` using **OKLCH-based CSS variables** for all tokens.
 - **FR-004**: System MUST initialize **Shadcn UI** using the stable CLI (`npx shadcn@latest init`) with the `-t start --monorepo` flag.
 - **FR-005**: System MUST implement a `src/infrastructure/appwrite` module that uses `createServerFn({ method: 'POST'|'GET' })` with Zod validation for all privileged operations.
 - **FR-006**: System MUST follow the mandatory monorepo folder pattern and use `defineConfig` from `@tanstack/react-start/config` in `app.config.ts`.
 - **FR-007**: System MUST provide a `.env.example` defining `VITE_` prefixed public variables and secure non-prefixed secret variables (API Keys).
 - **FR-008**: System MUST integrate with the root **Biome** configuration, ensuring NO ESLint or Prettier files exist in the application folder.
-- **FR-009**: System MUST centralize ALL AppWrite CRUD operations and Domain Models in the shared `@repo/appwrite-core` package. Domain Models MUST be decoupled from the AppWrite SDK using the Repository Pattern.
+- **FR-009**: System MUST centralize ALL AppWrite CRUD operations and Domain Models in the shared `@repo/appwrite-core` package. Domain Models MUST be defined using Zod schemas as the source of truth for both types and runtime validation, decoupled from the AppWrite SDK using the Repository Pattern.
 - **FR-010**: System MUST implement a standardized exception mapping system in `@repo/appwrite-core` to handle permissions and errors gracefully.
-- **FR-011**: System MUST perform **Fail-Fast Startup Validation** for mandatory environment variables. If validation fails, the app MUST render a specialized error page listing the missing or invalid keys.
-- **FR-012**: System MUST use the `useHydrated()` pattern to prevent SSR hydration mismatches for any client-side specific components or logic.
+- **FR-011**: System MUST perform **Fail-Fast Startup Validation** for mandatory environment variables (presence and format check only). If validation fails, the app MUST render a specialized error page listing the missing or invalid keys and providing a link to setup documentation.
+- **FR-012**: System MUST use the `useHydrated()` pattern and provide a global `<ClientOnly />` component to prevent SSR hydration mismatches for any client-side specific components or logic.
 
 ### Key Entities
 

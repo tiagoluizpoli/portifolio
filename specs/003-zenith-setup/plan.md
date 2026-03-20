@@ -22,36 +22,40 @@ Initialize `@tanstack/start` with:
 - `react-dom@19`
 - `tailwindcss@4`
 - `@tailwindcss/vite`
+- `zod` (for runtime validation)
+
+#### [NEW] [.env.example](file:///home/tiago/01-dev-env/personal-repos/portifolio/apps/zenith/.env.example)
+Define mandatory `VITE_` public variables and secret `APPWRITE_API_KEY`.
 
 #### [NEW] [app.config.ts](file:///home/tiago/01-dev-env/personal-repos/portifolio/apps/zenith/app.config.ts)
 Vite/Nitro configuration for TanStack Start.
 
 #### [NEW] [src/index.css](file:///home/tiago/01-dev-env/personal-repos/portifolio/apps/zenith/src/index.css)
-Main CSS entry points using Tailwind v4 `@import "tailwindcss";` and `@theme`.
+Main CSS entry points using Tailwind v4 `@import "tailwindcss";` and OKLCH-based `@theme` tokens.
 
 #### [NEW] [src/routes/__root.tsx](file:///home/tiago/01-dev-env/personal-repos/portifolio/apps/zenith/src/routes/__root.tsx)
 Root route with metadata hoisting and global styles.
 
 #### [NEW] [src/infrastructure/appwrite/server.ts](file:///home/tiago/01-dev-env/personal-repos/portifolio/apps/zenith/src/infrastructure/appwrite/server.ts)
-Base server functions for secure AppWrite access. Ensure React 19 compatibility (e.g., direct `ref` usage in UI).
+Base server functions for secure AppWrite access using Zod validation.
 
 #### [NEW] [src/routes/error/startup.tsx](file:///home/tiago/01-dev-env/personal-repos/portifolio/apps/zenith/src/routes/error/startup.tsx)
-Specialized error page to display missing environment variables during fail-fast validation.
+Specialized error page to display missing environment variables and links to setup documentation.
 
-#### [NEW] [src/hooks/use-hydrated.ts](file:///home/tiago/01-dev-env/personal-repos/portifolio/apps/zenith/src/hooks/use-hydrated.ts)
-Implement the `useHydrated` hook to safely handle client-only rendering and prevent hydration errors.
+#### [NEW] [src/components/client-only.tsx](file:///home/tiago/01-dev-env/personal-repos/portifolio/apps/zenith/src/components/client-only.tsx)
+Implement the `<ClientOnly />` wrapper component using the `useHydrated` hook.
 
 ---
 
-### [Phase 1.5: AppWrite Core Enhancement]
+### [Phase 2: AppWrite Core Enhancement]
 #### [NEW] [Repositories](file:///home/tiago/01-dev-env/personal-repos/portifolio/packages/appwrite-core/src/infrastructure/repositories)
-Centralized types, models, and repositories for AppWrite CRUD.
+Centralized types, models, and repositories for AppWrite CRUD. Use **Zod schemas** as the source of truth.
 
 #### [NEW] [Exceptions](file:///home/tiago/01-dev-env/personal-repos/portifolio/packages/appwrite-core/src/domain/exceptions)
 Robust error mapping for permissions and SDK failures.
 
 #### [NEW] [src/config/env.ts](file:///home/tiago/01-dev-env/personal-repos/portifolio/apps/zenith/src/config/env.ts)
-Implement fail-fast validation logic for all required environment variables within the Zenith app.
+Implement fail-fast validation logic (presence/format only) for all required environment variables within the Zenith app.
 
 ---
 
@@ -64,6 +68,6 @@ Implement fail-fast validation logic for all required environment variables with
 
 ### Manual Verification
 - Verify `pnpm --filter zenith dev` starts successfully.
-- Confirm Shadcn `Button` renders with Tailwind 4 styles correctly.
+- Confirm Shadcn `Button` renders with OKLCH Tailwind 4 styles.
 - **Security Audit (SC-004)**: Manually inspect the `zenith` client-side JS bundle for any plaintext AppWrite API keys.
-- **Startup Failure Test**: Temporarily rename `.env` and verify the `startup.tsx` error page displays the missing variables.
+- **Startup Failure Test**: Temporarily rename `.env` and verify the `startup.tsx` error page displays missing variables and doc links.
