@@ -1,0 +1,259 @@
+{
+  "home": {
+    "firstName": "Tiago",
+    "lastName": "Poli",
+    "journeyStartedIn": 2016,
+    "profilePictureId": "1eb8d18b-3d9a-4dcc-9168-82c93c4cd95d",
+    "githubStats": {
+      "totalCommits": 1576,
+      "totalRepositories": 87
+    },
+    "translations": {
+      "en": {
+        "title": "Fullstack Developer",
+        "description": "I could be your next great developer — hit the button above, and let's create something amazing together!",
+        "namePresentation": "Hello I'm",
+        "downloadButtonText": "Download CV",
+        "cvFileId": "296aaaa8-3b32-4d20-96d8-e58d769334fb"
+      },
+      "pt": {
+        "title": "Desenvolvedor Fullstack",
+        "description": "Eu posso ser o próximo grande desenvolvedor do seu time — clique no botão acima e vamos criar algo incrível juntos!",
+        "namePresentation": "Olá, sou o",
+        "downloadButtonText": "Baixar CV",
+        "cvFileId": "296aaaa8-3b32-4d20-96d8-e58d769334fb"
+      }
+    },
+    "socials": [
+      {
+        "type": "WhatsApp",
+        "url": "https://wa.me/5511952066489",
+        "icon": "fa-brands:whatsapp"
+      },
+      {
+        "type": "LinkedIn",
+        "url": "https://www.linkedin.com/in/tiago-seuaciuc/",
+        "icon": "fa6-brands:linkedin-in"
+      },
+      {
+        "type": "GitHub",
+        "url": "https://github.com/tiagoluizpoli",
+        "icon": "fa6-brands:github"
+      },
+      {
+        "type": "X",
+        "url": "https://twitter.com/tiagoluizpoli",
+        "icon": "fa6-brands:x-twitter"
+      }
+    ]
+  },
+  "about": {
+    "en": {
+      "title": "About me",
+      "description": "I am a committed and dedicated professional who is always eager to learn new things and continuously improve my skills. Development is not only work for me, it's my passion.",
+      "info": [
+        { "name": "Nationality", "value": "Brazilian" },
+        { "name": "Languages", "value": "Portuguese, English" }
+      ]
+    },
+    "pt": {
+      "title": "Sobre mim",
+      "description": "Sou um profissional comprometido e dedicado, sempre disposto a aprender coisas novas e aprimorar minhas habilidades continuamente. Desenvolvimento não é apenas trabalho pra mim, é a minha paixão.",
+      "info": [
+        { "name": "Nacionalidade", "value": "Brasileiro" },
+        { "name": "Idiomas", "value": "Português, Inglês" }
+      ]
+    }
+  },
+  "experience": [
+    {
+      "company": "TIVIT",
+      "position": {
+        "en": "Senior Fullstack Analyst",
+        "pt": "Analista Fullstack Senior"
+      },
+      "duration": { "en": "2023 - Present", "pt": "2023 - Atualmente" },
+      "sort": 1
+    },
+    {
+      "company": "Kronus (Freelance)",
+      "position": {
+        "en": "Senior Fullstack Developer",
+        "pt": "Desenvolvedor Fullstack Senior"
+      },
+      "duration": "2022 - 2024",
+      "sort": 2
+    },
+    {
+      "company": "Mobdec",
+      "position": {
+        "en": "Fullstack Developer",
+        "pt": "Desenvolvedor Fullstack"
+      },
+      "duration": "2022 - 2023",
+      "sort": 3
+    },
+    {
+      "company": "Freelance Projects",
+      "position": {
+        "en": "Desktop Software Developer",
+        "pt": "Desenvolvedor de aplicações Desktop"
+      },
+      "duration": "2016 - 2022",
+      "sort": 4
+    }
+  ],
+  "education": [
+    {
+      "institution": "Uniasselvi",
+      "degree": {
+        "en": "System development and analysis",
+        "pt": "Análise e desenvolvimento de sistemas"
+      },
+      "duration": { "en": "2024 - Present", "pt": "2024 - Atualmente" },
+      "sort": 1
+    }
+  ],
+  "skills": [
+    { "title": "node.js", "icon": "logos:nodejs-icon", "type": "backend" },
+    { "title": "express.js", "icon": "logos:express", "type": "backend" },
+    { "title": "fastify.js", "icon": "logos:fastify-icon", "type": "backend" },
+    { "title": "nest.js", "icon": "logos:nestjs", "type": "backend" },
+    { "title": ".net", "icon": "logos:dotnet", "type": "backend" },
+    { "title": "prisma", "icon": "logos:prisma", "type": "backend" },
+    { "title": "drizzle.js", "icon": "logos:drizzle-icon", "type": "backend" },
+    { "title": "postgresql", "icon": "logos:postgresql", "type": "backend" },
+    { "title": "Mysql", "icon": "logos:mysql", "type": "backend" },
+    {
+      "title": "sql server",
+      "icon": "logos:microsoft-sql-server",
+      "type": "backend"
+    },
+    { "title": "sqlite", "icon": "logos:sqlite", "type": "backend" },
+    {
+      "title": "amazon dynamodb",
+      "icon": "logos:aws-dynamodb",
+      "type": "backend"
+    },
+    { "title": "aws", "icon": "logos:aws", "type": "fullstack" },
+    {
+      "title": "digital ocean",
+      "icon": "logos:digital-ocean",
+      "type": "fullstack"
+    },
+    {
+      "title": "terraform",
+      "icon": "logos:terraform-icon",
+      "type": "fullstack"
+    },
+    {
+      "title": "typescript",
+      "icon": "logos:typescript-icon",
+      "type": "fullstack"
+    },
+    { "title": "next.js", "icon": "logos:nextjs-icon", "type": "fullstack" },
+    { "title": "git", "icon": "logos:git-icon", "type": "fullstack" },
+    { "title": "html 5", "icon": "logos:html-5", "type": "frontend" },
+    { "title": "css 3", "icon": "logos:css-3", "type": "frontend" },
+    { "title": "javascript", "icon": "logos:javascript", "type": "frontend" },
+    { "title": "react.js", "icon": "logos:react", "type": "frontend" },
+    { "title": "vite.js", "icon": "logos:vitejs", "type": "frontend" },
+    {
+      "title": "tanstack query",
+      "icon": "logos:react-query-icon",
+      "type": "frontend"
+    },
+    { "title": "Material UI", "icon": "logos:material-ui", "type": "frontend" },
+    { "title": "shadcn UI", "icon": "logos:shadcn-ui", "type": "frontend" },
+    {
+      "title": "tailwind.css",
+      "icon": "logos:tailwindcss-icon",
+      "type": "frontend"
+    },
+    { "title": "gitlab", "icon": "logos:gitlab", "type": "fullstack" },
+    { "title": "github", "icon": "logos:github-icon", "type": "fullstack" },
+    { "title": "bitbucket", "icon": "logos:bitbucket", "type": "fullstack" },
+    { "title": "firebase", "icon": "logos:firebase", "type": "backend" },
+    { "title": "vitest", "icon": "logos:vitest", "type": "fullstack" },
+    { "title": "axios.js", "icon": "logos:axios", "type": "fullstack" },
+    { "title": "s3 - storage", "icon": "logos:aws-s3", "type": "backend" },
+    { "title": "docker", "icon": "logos:docker-icon", "type": "backend" },
+    { "title": "ec2", "icon": "logos:aws-ec2", "type": "backend" },
+    { "title": "lambda", "icon": "logos:aws-lambda", "type": "backend" },
+    { "title": "Zod", "icon": "logos:zod", "type": "fullstack" }
+  ],
+  "solutions": [
+    {
+      "icon": "code",
+      "translations": {
+        "en": {
+          "title": "Frontend Development",
+          "description": "Stunning and responsive interfaces."
+        },
+        "pt": {
+          "title": "Desenvolvimento Frontend",
+          "description": "Interfaces elegantes e responsivas"
+        }
+      }
+    },
+    {
+      "icon": "settings",
+      "translations": {
+        "en": {
+          "title": "Backend Development",
+          "description": "Robust and scalable backend solutions tailored to elevate your projects."
+        },
+        "pt": {
+          "title": "Desenvolvimento Backend",
+          "description": "Criação de soluções backend escaláveis e confiáveis para impulsionar seus projetos."
+        }
+      }
+    },
+    {
+      "icon": "link",
+      "translations": {
+        "en": {
+          "title": "Integrations",
+          "description": "Seamless and effective integrations with other tools and platforms to enhance your workflows."
+        },
+        "pt": {
+          "title": "Integrações",
+          "description": "Integrações eficazes e fluídas com outras ferramentas e plataformas para otimizar seus fluxos de trabalho."
+        }
+      }
+    },
+    {
+      "icon": "cloud",
+      "translations": {
+        "en": {
+          "title": "Cloud Based Solutions",
+          "description": "Empower your projects with cloud solutions designed for scalability, reliability, and cost efficiency."
+        },
+        "pt": {
+          "title": "Soluções Baseadas em Nuvem",
+          "description": "Potencialize seus projetos com soluções na nuvem, garantindo escalabilidade, confiabilidade e eficiência de custos."
+        }
+      }
+    }
+  ],
+  "contactInfo": [
+    {
+      "type": "WhatsApp",
+      "value": "+55 (11) 95206-6489",
+      "icon": "logos:whatsapp-icon",
+      "sort": 1
+    },
+    {
+      "type": "Email",
+      "value": "tiago.seuaciuc@gmail.com",
+      "icon": "material-symbols:mail",
+      "sort": 2
+    },
+    {
+      "type": "Location",
+      "value": "Cotia - SP",
+      "icon": "material-symbols:location-on",
+      "sort": 3
+    }
+  ]
+}
