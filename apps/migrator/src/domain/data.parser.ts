@@ -99,11 +99,13 @@ export class DataParser {
           position:
             typeof exp.position === 'string'
               ? exp.position
-              : (exp.position as Record<string, string>)?.[lang] || (exp.position as Record<string, string>)?.en,
+              : (exp.position as Record<string, string>)?.[lang] ||
+                (exp.position as Record<string, string>)?.en,
           duration:
             typeof exp.duration === 'string'
               ? exp.duration
-              : (exp.duration as Record<string, string>)?.[lang] || (exp.duration as Record<string, string>)?.en,
+              : (exp.duration as Record<string, string>)?.[lang] ||
+                (exp.duration as Record<string, string>)?.en,
           sort: exp.sort,
           locale: lang,
         });
@@ -119,11 +121,13 @@ export class DataParser {
           degree:
             typeof edu.degree === 'string'
               ? edu.degree
-              : (edu.degree as Record<string, string>)?.[lang] || (edu.degree as Record<string, string>)?.en,
+              : (edu.degree as Record<string, string>)?.[lang] ||
+                (edu.degree as Record<string, string>)?.en,
           duration:
             typeof edu.duration === 'string'
               ? edu.duration
-              : (edu.duration as Record<string, string>)?.[lang] || (edu.duration as Record<string, string>)?.en,
+              : (edu.duration as Record<string, string>)?.[lang] ||
+                (edu.duration as Record<string, string>)?.en,
           sort: edu.sort,
           locale: lang,
         });
@@ -137,7 +141,9 @@ export class DataParser {
       for (const lang of locales) {
         solutionsRows.push({
           title: sol.translations?.[lang]?.title || sol.translations?.en?.title,
-          description: sol.translations?.[lang]?.description || sol.translations?.en?.description,
+          description:
+            sol.translations?.[lang]?.description ||
+            sol.translations?.en?.description,
           iconCode: sol.icon,
           sort: sol.sort || solIdx,
           locale: lang,
@@ -156,15 +162,13 @@ export class DataParser {
       }),
     );
 
-    const skillsRows = (data.skills || []).map(
-      (s: SkillItem, idx: number) => ({
-        title: s.title,
-        iconCode: s.icon, // Map icon to iconCode
-        type: s.type,
-        sort: idx + 1,
-        locale: 'en',
-      }),
-    );
+    const skillsRows = (data.skills || []).map((s: SkillItem, idx: number) => ({
+      title: s.title,
+      iconCode: s.icon, // Map icon to iconCode
+      type: s.type,
+      sort: idx + 1,
+      locale: 'en',
+    }));
 
     const contactRows = (data.contactInfo || []).map(
       (c: ContactItem, idx: number) => ({

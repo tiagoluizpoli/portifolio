@@ -1,0 +1,14 @@
+- [x] Shared Infrastructure (packages/appwrite-core) <!-- id: 0 -->
+    - [x] Implement zod-validated environment loader <!-- id: 1 -->
+    - [x] Configure team-based Appwrite client provider <!-- id: 2 -->
+- [x] Infrastructure Layer (apps/migrator) <!-- id: 3 -->
+    - [x] Implement SchemaManager with explicit table/column sync <!-- id: 4 -->
+    - [x] Implement StorageManager with "Mark-and-Sweep" lifecycle <!-- id: 5 -->
+- [x] High-Fidelity Migration Logic <!-- id: 6 -->
+    - [x] Extract master dataset from Directus Admin (38+ Skills) <!-- id: 7 -->
+    - [x] Implement DataParser for bilingual flattening and slug IDs <!-- id: 8 -->
+    - [x] Implement transactional ingestion with atomic rollback <!-- id: 9 -->
+- [x] Validation & Handover <!-- id: 10 -->
+    - [x] Verify idempotency with `--skip` flag <!-- id: 11 -->
+    - [x] Perform semantic commit split into 6 units <!-- id: 12 -->
+    - [/] Final verification with `speckit.analyze` <!-- id: 13 -->
