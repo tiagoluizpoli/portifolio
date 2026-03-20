@@ -11,4 +11,4 @@
 - [x] Validation & Handover <!-- id: 10 -->
     - [x] Verify idempotency with `--skip` flag <!-- id: 11 -->
     - [x] Perform semantic commit split into 6 units <!-- id: 12 -->
-    - [/] Final verification with `speckit.analyze` <!-- id: 13 -->
+    - [x] Final verification with `speckit.analyze` <!-- id: 13 -->

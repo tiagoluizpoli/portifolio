@@ -1,19 +1,14 @@
 {
-  "name": "@repo/root",
+  "name": "portifolio",
   "private": true,
-  "engines": {
-    "node": ">=22",
-    "pnpm": ">=9.0.0"
-  },
-  "packageManager": "pnpm@9.0.0",
   "scripts": {
-    "prepare": "bash scripts/setup-hooks.sh",
     "lint": "biome check .",
-    "clean:hooks": "rm -rf .venv .git/hooks/*"
+    "lint:write": "biome check --write .",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.3.12",
-    "@commitlint/cli": "^17.7.1",
-    "@commitlint/config-conventional": "^17.7.0"
+    "@biomejs/biome": "1.8.3",
+    "typescript": "^5.6.2"
   }
 }
