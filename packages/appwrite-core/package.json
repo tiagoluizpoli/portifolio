@@ -5,6 +5,20 @@
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
+    },
+    "./domain/exceptions": {
+      "import": "./src/domain/exceptions/index.ts",
+      "types": "./src/domain/exceptions/index.ts"
+    },
+    "./domain/repositories": {
+      "import": "./src/domain/repositories/interfaces.ts",
+      "types": "./src/domain/repositories/interfaces.ts"
+    }
+  },
   "scripts": {
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
