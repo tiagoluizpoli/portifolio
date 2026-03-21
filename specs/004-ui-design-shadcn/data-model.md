@@ -1,32 +1,25 @@
-# Data Model: Zenith UI Components
+# Data Model: Zenith Portfolio Hub
 
-This model defines the UI-specific entities and their attributes for the Zenith Management Hub.
+## Appwrite Collections
 
-## 1. DashboardMetric
-**Attributes**:
-- `label`: string (e.g., "Total Users")
-- `value`: string/number (e.g., "1,234")
-- `trend`: "up" | "down" | "neutral"
-- `percentage`: number (e.g., 12.5)
+### `projects`
+Stores metadata for portfolio entries.
+- `id` (string): Unique identifier.
+- `title` (string): Project name.
+- `description` (markdown): Detailed description.
+- `mediaUrl` (url): Link to primary image/video.
+- `tags` (string[]): Categorization tags.
+- `status` (enum: `DRAFT`, `PUBLISHED`): Visibility status.
+- `updatedAt` (datetime): Last modification time.
 
-## 2. ActivityItem
-**Attributes**:
-- `id`: string
-- `type`: "user" | "system" | "security" | "portfolio"
-- `message`: string
-- `timestamp`: date/time
-- `user`: string (initiator)
+### `analytics`
+Stores aggregate visitor interactions.
+- `sessionId` (string): Anonymous session tracker.
+- `path` (string): Page visited (e.g., `/projects/zenith`).
+- `timestamp` (datetime): Time of visit.
+- `duration` (integer): Seconds spent on page.
+- `country` (string): ISO country code (e.g., `US`).
+- `state` (string): Region/State (e.g., `CA`).
 
-## 3. NavigationItem
-**Attributes**:
-- `title`: string
-- `path`: string
-- `icon`: IconComponent (Lucide)
-- `permission`: string (required role)
-
-## 4. SystemSetting
-**Attributes**:
-- `key`: string
-- `value`: any
-- `type`: "string" | "boolean" | "number" | "json"
-- `category`: "appearance" | "engine" | "portfolio"
+## Relationships
+- A `Project` entry is tracked in `analytics` via the `path` field.

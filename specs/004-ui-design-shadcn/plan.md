@@ -1,55 +1,71 @@
-# Implementation Plan: Zenith UI Design Phase (Shadcn First)
+# Implementation Plan: Zenith Portfolio Hub (Phase 1)
 
-**Branch**: `004-ui-design-shadcn` | **Date**: 2026-03-21 | **Spec**: [spec.md](file:///home/tiago/01-dev-env/personal-repos/portifolio/specs/004-ui-design-shadcn/spec.md)
+**Branch**: `004-ui-design-shadcn` | **Date**: 2026-03-21 | **Spec**: [004-ui-design-shadcn/spec.md](file:///home/tiago/01-dev-env/personal-repos/portifolio/specs/004-ui-design-shadcn/spec.md)
 
 ## Summary
-Build the Zenith Management Hub (Admin Dashboard) using TanStack Start and Shadcn UI. This phase focuses on establishing a premium, high-density administrative layout and visual language across 5 core screens.
+Implementing the Zenith Portfolio Hub shell and analytics dashboard. Focuses on an interactive, high-density layout with a collapsible sidebar and a personal visitor tracking system. The architecture adheres to **Principle VIII (SOLID)** by decoupling the UI (`apps/zenith`) from the persistence layer via a `Use Case` and `Repository` system in `packages/appwrite-core`.
 
 ## Technical Context
 
-**Language/Version**: TypeScript / React 19 / TanStack Start v1 (RC)  
-**Primary Dependencies**: Shadcn UI, Tailwind 4+, Lucide React  
-**Storage**: AppWrite (integrated via shared core)  
-**Testing**: Biome (Linting) / Vitest (if added later)  
-**Target Platform**: Zenith Management Hub (`apps/zenith`)
-**Project Type**: Administrative Web Application  
-**Performance Goals**: <200ms initial render / Immediate state updates  
-**Constraints**: Shadcn FIRST / Pure Style Phase / Premium Admin Aesthetic  
-**Scale/Scope**: 5 Management Screens + Global Shell
+**Language/Version**: TypeScript 5.x / React 19 (RC)  
+**Primary Dependencies**: TanStack Start v1 (RC), Lucide React, Shadcn UI, `@repo/appwrite-core`  
+**Storage**: Appwrite TablesDB (Collections: `projects`, `analytics`)  
+**Testing**: Vitest (Unit), Playwright (E2E)  
+**Target Platform**: Web (Desktop-First, 1,920x1,080 optimized)
+**Project Type**: Admin Dashboard (Personal Utility)  
+**Performance Goals**: < 200ms TBT, 60fps animations for sidebar transitions.  
+**Constraints**: Biome-only linting, Root-level Git only, Zero PII analytics.  
+**Scale/Scope**: 3 Core Screens (Analytics Dashboard, Portfolio Manager, Settings).
 
 ## Constitution Check
 
-| Clause | Pass/Fail | Rationale |
-|--------|-----------|-----------|
-| I. Simplicity First | Pass | Pure style focus avoid over-engineering. |
-| III. Monorepo Architecture | Pass | Project located in `apps/zenith`. |
-| V. Design Source of Truth | Pass | Adhering to "Premium Admin Hub" and Shadcn standards. |
-| XVI. TanStack RC Standards | Pass | Using TanStack Start v1 RC in `apps/zenith`. |
+1. **Principle VIII (SOLID)**: Use Cases and Repository patterns used in `@repo/appwrite-core`.
+2. **Principle XVI (TanStack RC)**: Native latest synchronization for all `@tanstack` libraries.
+3. **Principle II (Appwrite-Centric)**: Single authority for data via Appwrite TablesDB.
+4. **Principle IX (Tooling)**: Biome enforcement; no ESLint/Prettier.
 
-## Phased Implementation
+## Project Structure
 
-### Phase 1: Shell & Core Hub
-- **Target**: `__root.tsx` (Layout), `index.tsx` (Dashboard).
-- **Goal**: Establish navigation and global style.
-- **Stitch Prompt**: Layout-centric, Sidebar, Topbar, KPI Grid.
+### Documentation
+```text
+specs/004-ui-design-shadcn/
+├── plan.md              # Restored Technical Plan
+├── research.md          # Layout Density & Analytics Research
+├── data-model.md        # Analytics & Project Entities
+├── checklists/          # Requirements Quality Audit
+└── tasks.md             # Implementation Phase Breakdown
+```
 
-### Phase 2: Administrative Control
-- **Target**: `/users` (User Management), `/logs` (Audit Logs).
-- **Goal**: Implement data-heavy administrative views.
-- **Stitch Prompt**: Table-centric, Filter/Search, Row Actions.
+### Source Code
+```text
+apps/zenith/
+├── app/
+│   ├── routes/
+│   │   ├── __root.tsx    # Layout with Sidebar Trigger & Interactive Sidebar
+│   │   ├── index.tsx      # Analytics Dashboard (KPIs, Geo list)
+│   │   ├── manager.tsx    # Portfolio Content Manager
+│   │   └── settings.tsx   # Appearance & System Config
+│   └── components/
+│       ├── sidebar/       # Custom Shadcn Sidebar component
+│       └── dashboard/     # Metric Cards & Activity Streams
+packages/appwrite-core/
+├── src/
+│   ├── use-cases/         # Business Logic (e.g., GetAnalyticsSummary)
+│   └── repositories/      # Appwrite TablesDB Connectors
+```
 
-### Phase 3: Content & Config
-- **Target**: `/manager` (Portfolio Manager), `/settings` (System Settings).
-- **Goal**: Implement dynamic configuration and content management.
-- **Stitch Prompt**: Form-centric, Tabs, Sheet sidebars for editing.
+**Structure Decision**: Monorepo with a decoupled business layer to ensure clean code and testability.
 
-## StitchMCP Prompt Strategy
-
-> [!IMPORTANT]
-> The prompts below are designed to be robust and component-specific to ensure Shadcn compliance and high-density premium layouts.
+## Phase 3+ Prompts
 
 ### [PROMPT: Phase 1 Layout]
-"A premium administrative layout for the Zenith Management Hub. Use Shadcn Sidebar navigation with collapsible items. Navigation items: Dashboard, User Management, Portfolio Manager, System Settings, Audit Logs. Global topbar with Breadcrumb, Command-K Search input showing hierarchical results (Pages, Users, Projects), and User Profile dropdown. Aesthetic: Clean, dark mode by default, brand-violet accents. High-density, intelligent space usage. Lucide icons."
+"A premium, ultra-compact Zenith Portfolio Hub. Desktop-First (1920x1080). **Interactive Sidebar**: Toggle between Open, Compact (Icons), and Collapsed modes. `SidebarTrigger` in the Topbar. Aesthetic: Zenith Obsidian. **Extreme Density** (`p-2`, `gap-2`). **Row Symmetry** (Flex items-stretch). No 'Pro' elements."
 
 ### [PROMPT: Phase 1 Dashboard]
-"High-impact admin dashboard for Zenith. Main content: 4-column KPI grid (Total Users, Project Entries, Active Sessions, System Health) using Shadcn Cards with pulsing 'Live' indicators. Below grid: 'Recent System Activity' feed using Shadcn ScrollArea and Table-lite (Infinite Scroll). 'Infrastructure Health' section with Progress and Badge indicators. Premium executive feel."
+"Personal Portfolio Analytics Dashboard. Top KPI Row: 'Visitors' (+trend), 'Avg. Session' (30s heartbeat tracking), 'Active Projects'. Middle Row: 'Visitor Geolocation' list (Country/State) and 'Recent Interactions' feed. High-density, row-symmetric cards."
+
+## Complexity Tracking
+
+| Violation | Why Needed | Rationale |
+|-----------|------------|-----------|
+| Use Case Layer | Principle XV | Essential for DI and testability; avoids coupling UI to Appwrite SDK. |

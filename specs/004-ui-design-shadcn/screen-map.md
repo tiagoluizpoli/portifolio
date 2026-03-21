@@ -14,13 +14,7 @@ This document details the screens required for the Zenith Management Hub and the
 - **Recent Activity**: `ScrollArea` with a list of recent events.
 - **Status Indicators**: `Badge` or `Progress` components for system health.
 
-## 3. User Management (`/users`)
-**Goal**: Administate access control.
-- **Data Table**: `Table` with row selection, sorting, and pagination.
-- **Search/Filter**: `Input` + `Select` (Filter by Role, Status).
-- **Actions**: `Button` (Invite User, Edit, Delete).
-
-## 4. Portfolio Manager (`/manager`)
+## 3. Portfolio Manager (`/manager`)
 **Goal**: Manage entries for the main portfolio app.
 - **Content Grid**: Responsive cards showing project entries.
 - **Editor**: `Dialog` or `Sheet` with a `Form` to create/edit projects.

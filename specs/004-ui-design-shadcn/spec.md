@@ -1,8 +1,11 @@
 # Feature Specification: Zenith UI Design Phase (Shadcn First)
 
-**Feature Branch**: `004-ui-design-shadcn`  
-**Created**: 2026-03-21  
-**Status**: Draft - **Input**: User description: "Focus on the Zenith management project first. Management Hub/Dashboard."
+**Feature- **Dashboard**: High-density Overview featuring:
+  - **Core KPIs**: Visitors (Count, Trend), Avg. Session Time, Active Projects.
+  - **Geographic distribution**: Top Countries/States of visitors (Simplified list or mini-map).
+  - **Recent Activity**: Streamlined log of portfolio interactions.
+- **Portfolio Manager**: Centralized CRUD for project entries (metadata, descriptions, media links).
+- **System Settings**: Global appearance and basic configuration.
 
 ## Clarifications
 
@@ -12,6 +15,9 @@
 - Q: User Role UI Differentiation → A: Option C (No UI differentiation for now; all sections visible for styling).
 - Q: Real-time UI Indicators → A: Option A (Design with "Live" badges and pulsing indicators; purely visual for now).
 - Q: Table Navigation Pattern → A: Option A (Infinite Scroll with virtualized rows).
+- Q: Analytics Heartbeat → A: Option A (30s heartbeat for session duration tracking).
+- Q: Symmetry Strategy → A: Option A (Local row-based flex stretching).
+- Feedback 2026-03-21 → "Too rounded" (reduce roundness), "Desktop primary device" (optimize for 1920x1080+ while maintaining responsiveness).
 
 ## User Scenarios & Testing (mandatory)
 
@@ -69,17 +75,21 @@ As an admin, I want to update global configuration settings for the portfolio an
 
 - **FR-001**: System MUST use Shadcn components for all UI elements (Tables, Cards, Tabs, Nav, etc.).
 - **FR-002**: UI MUST follow a "Premium" administrative aesthetic (clean, direct, intelligent space usage).
-- **FR-003**: Layout MUST include the following management screens: Dashboard Hub, User Management, Portfolio Manager, Settings, Activity Logs.
+- **FR-003**: Layout MUST include the following management screens: Dashboard Hub, Portfolio Manager, Settings.
 - **FR-005**: Navigation MUST use a standard administrative sidebar or topbar layout.
 - **FR-006**: System MUST use Google Stitch MCP for generating/iterating on these administrative screens.
-- **FR-007**: System MUST define and implement **Zero-states** (Empty states) for all tables and grids using Shadcn Ghost components or Skeletons.
-- **FR-008**: Administrative Sidebar MUST be responsive, transitioning to a `Shadcn Sheet` (Drawer) on mobile devices (<768px).
-- **FR-009**: Typography MUST follow a standardized hierarchy: Inter for UI, Geist Mono for Audit Logs, and weighted headers (semibold) for section titles.
-- **FR-010**: Global Search (Command-K) MUST use a hierarchical results list categorized by "Pages", "Users", and "Projects", with immediate navigation on selection.
+- **DR-001**: Designs MUST prioritize a **Desktop-First** administrative experience (primary target: 1920x1080) while maintaining responsiveness for tablet/mobile.
+- **DR-002**: Component roundness MUST be "Subtle/Medium" (e.g., Shadcn `rounded-md` (0.375rem) or `rounded-lg` (0.5rem)). Avoid extreme circularity or high-radius curves.
+- **DR-003**: UI MUST NOT include any "Pro", "Upgrade", "Subscription", or "Pricing" elements. This is a strictly personal, private management tool.
+- **DR-004**: UI MUST enforce **Extreme Density**. Default spacing tokens (padding, margin, gaps) MUST be minimized (e.g., `p-2` or `p-4` max for containers, `gap-2` for grids). Avoid excessive white space.
+- **FR-010**: System MUST include a **Portfolio Analytics** module on the dashboard, displaying Visitors, Session Time (via 30s heartbeat), and Geographic data (Country/State).
+- **DR-005**: UI MUST enforce **Row Symmetry**. All components within the same row (flex/grid) MUST have the same height using `items-stretch`.
+- **FR-009**: Typography MUST follow a standardized hierarchy: Inter for UI and weighted headers (semibold) for section titles.
+- **FR-010**: Global Search (Command-K) MUST focus on "Pages" and "Project Entries" for immediate navigation.
 - **FR-011**: Portfolio Manager MUST implement an explicit "Save" action for all project entries, accompanied by a "Draft / Published" status toggle.
-- **FR-012**: Administrative UI MUST display all management sections to all admin roles during this design phase, with access control differentiation (ABAC) deferred to a later implementation phase.
-- **FR-013**: UI MUST include visual real-time status indicators (e.g., pulsing dots, "Live" chips) for dynamic components like Activity Logs and System Health to communicate a "live" ecosystem ecosystem aesthetic.
-- **FR-014**: Data-heavy tables (Audit Logs, User Management) MUST implement **Infinite Scroll** with virtualized rows to ensure smooth performance across large datasets.
+- **FR-012**: Administrative UI MUST display the core management sections (Dashboard, Portfolio, Settings).
+- **FR-013**: UI MUST prioritize a clean, focused environment for single-user management.
+- **FR-014**: Tables MUST implement **Infinite Scroll** for project listings to ensure smooth performance.
 
 ### Key Entities (include if feature involves data)
 

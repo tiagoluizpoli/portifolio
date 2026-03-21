@@ -1,41 +1,32 @@
-# Quality Checklist: Zenith UI Design Phase
+# Quality Checklist: Zenith Portfolio Hub (UI & Analytics)
 
-**Purpose**: Validate Zenith UI requirements and StitchMCP prompt quality before generation.
-**Created**: 2026-03-21
-**Feature**: [UI Design Phase (004-ui-design-shadcn)](file:///home/tiago/01-dev-env/personal-repos/portifolio/specs/004-ui-design-shadcn/spec.md)
+**Feature**: [004-ui-design-shadcn](file:///home/tiago/01-dev-env/personal-repos/portifolio/specs/004-ui-design-shadcn/spec.md)
+**Status**: ACTIVE | **Last Updated**: 2026-03-21
 
-## 1. Requirement Completeness
-- [x] CHK001 - Are all 5 core management screens (Dashboard, Users, Portfolio, Settings, Logs) explicitly defined with their primary components? [Completeness, Spec §FR-003]
-- [x] CHK002 - Is the global layout (Sidebar, Topbar) defined with specific navigation items and utility components? [Completeness, Spec §FR-005]
-- [x] CHK003 - Are zero-states (empty data) defined for tables and grids? [Completeness, Spec §FR-007]
-- [x] CHK004 - Are responsive behaviors (mobile/tablet) specified for the administrative sidebar? [Completeness, Spec §FR-008]
+## Requirement Completeness
+- [ ] CHK001 - Are the "Visitors", "Engagement Time", and "Geographic distribution" metrics explicitly defined with their data sources? [Completeness, Spec §FR-010]
+- [ ] CHK002 - Is the **Interactive Sidebar** transition behavior (Open/Compact/Closed) defined for all screen sizes? [Completeness, Spec §FR-008]
+- [ ] CHK003 - Does the spec define what constitutes a "session" for the Engagement Time metric (e.g., uniqueness rules)? [Gap, Spec §FR-010]
+- [ ] CHK004 - Are zero-states (empty data) defined for the analytics dashboard? [Completeness, Spec §FR-007]
+- [ ] CHK014 - Are the fields and data types for the `analytics` and `projects` collections explicitly defined? [Completeness, Plan §Data Model]
+- [ ] CHK015 - Does the spec define the relationship between the `zenith` app and the `appwrite-core` shared package? [Completeness, Plan §Structure]
 
-## 2. Requirement Clarity & Precision
-- [x] CHK005 - Is "Premium Administrative Aesthetic" clarified with specific visual cues (e.g., brand violet, dark mode, high-density)? [Clarity, Spec §FR-002]
-- [x] CHK006 - Is "Intelligent Space Usage" quantified to avoid ambiguity in padding and margins? [Clarity, Research §High-Density Benchmarks]
-- [x] CHK007 - Are brand-specific color tokens (violet) referenced for use in accents and highlights? [Clarity, Plan §Stitch Prompt]
+## Requirement Clarity
+- [ ] CHK005 - Is **Extreme Density** quantified with specific padding/gap thresholds (e.g., `p-2` or `p-4`)? [Clarity, Spec §DR-004]
+- [ ] CHK006 - Is the **Global Row Symmetry** (aligning heights across sections) defined with measurable CSS/Layout constraints? [Clarity, Spec §DR-005]
+- [ ] CHK007 - Is the "Draft / Published" status transition behavior explicitly documented for project entries? [Clarity, Spec §FR-011]
 
-## 3. StitchMCP Prompt Robustness (Hybrid focus)
-- [x] CHK008 - Do prompts explicitly mandate the use of Shadcn UI components for all interactive elements? [Consistency, Plan §Stitch Strategy]
-- [x] CHK009 - Is "Dark Mode by default" included in all initial screen prompts to ensure visual consistency? [Consistency, Research §Strategy]
-- [x] CHK010 - Are specific Lucide icons or component variants (e.g., collapsible sidebar) mentioned in the layout prompt? [Clarity, Plan §PROMPT: Layout]
+## Requirement Consistency
+- [ ] CHK008 - Are global search (Command-K) results consistent between "Pages" and "Project Entries"? [Consistency, Spec §FR-010]
+- [ ] CHK009 - Does the "Subtle Roundness" requirement (`rounded-md`) conflict with any third-party library defaults? [Consistency, Spec §DR-002]
 
-## 4. Consistency & Standards
-- [x] CHK011 - Are all components consistently derived from the Shadcn library across all 5 screens? [Consistency, Spec §SC-001]
-- [x] CHK012 - Does navigation adhere to a single consistent pattern (e.g., 2-click max for primary sections)? [Consistency, Spec §SC-003]
-- [x] CHK013 - Are typography styles (H1, H2, Mono for logs) consistently defined across the hub? [Consistency, Spec §FR-009]
+## Scenario Coverage
+- [ ] CHK010 - Are requirements defined for the first-time user experience (no analytics data collected yet)? [Coverage, Edge Case]
+- [ ] CHK011 - Does the spec define behavior when the Appwrite TablesDB connection for analytics is delayed or offline? [Coverage, Fallback]
 
-## 5. Measurability & Success Criteria
-- [x] CHK014 - Can the "Visual Excellence" of the generated designs be objectively measured against the "Premium Admin" benchmark? [Measurability]
-- [x] CHK015 - Is the requirement for 90+ Lighthouse accessibility score verifiable from the design generation? [Measurability, Spec §SC-003]
-
-## 6. Clarification Post-Processing
-- [x] CHK016 - Is the hierarchical "Pages, Users, Projects" search behavior explicitly specified for the global command-k component? [Clarity, Spec §FR-010]
-- [x] CHK017 - Does the Portfolio Manager requirement mandate an explicit "Save" button and "Draft/Published" toggle? [Completeness, Spec §FR-011]
-- [x] CHK018 - Are all management sections intentionally made visible for all admin roles during this design phase? [Consistency, Spec §FR-012]
-- [x] CHK019 - Are visual real-time indicators (pulsing dots, "Live" badges) specified for dynamic hub components? [Clarity, Spec §FR-013]
-- [x] CHK020 - Is Infinite Scroll with virtualization mandated for all high-volume tables (Logs, Users)? [Completeness, Spec §FR-014]
-
-## Notes
-- All requirement quality items have been validated against `spec.md`, `plan.md`, and `research.md`.
-- Gaps in zero-states, typography, and responsive behaviors were resolved during this validation phase.
+## Non-Functional Quality
+- [ ] CHK012 - Are performance targets (< 200ms TBT) defined for the infinite scroll behavior? [Non-Functional, Spec §FR-014]
+- [ ] CHK013 - Is the "Personal/Private" utility constraint and lack of PII collection documented for compliance? [Non-Functional, Spec §DR-003]
+- [ ] CHK016 - Are the boundaries for the **Repository** and **Use Case** layers explicitly defined to prevent leaks? [Clarity, Principle VIII]
+- [ ] CHK017 - Is the **30s Heartbeat** duration quantifiable and testable? [Measurability, Plan §Analytics]
+- [ ] CHK018 - Are the fallback behaviors defined for Appwrite side-effects in the shared core? [Coverage, Principle XV]
