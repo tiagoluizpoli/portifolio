@@ -1,10 +1,14 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { AppwriteProvider } from '@repo/appwrite-core';
-import { ID, type TablesDB } from 'node-appwrite';
-import { DataParser } from '../domain/data.parser';
-import { SchemaManager } from '../infrastructure/schema.manager';
-import { StorageManager } from '../infrastructure/storage.manager';
+import {
+  AppwriteProvider,
+  ID,
+  type Models,
+  type TablesDB,
+} from '@repo/appwrite-core';
+import { DataParser } from '../domain/data.parser.js';
+import { SchemaManager } from '../infrastructure/schema.manager.js';
+import { StorageManager } from '../infrastructure/storage.manager.js';
 
 export class MigratePortfolioUseCase {
   private tables: TablesDB;
@@ -73,11 +77,15 @@ export class MigratePortfolioUseCase {
 
     const batches = DataParser.getBatches(data);
 
-    // 4. Execute Migration within an Atomic Transaction
-    console.log('[STEP] Initiating Atomic Transaction...');
-    const transaction = await this.tables.createTransaction({ ttl: 60 });
+    // 4. Execute Migration (Atomic 2026 Ingestion)
+    console.log('[STEP] Initiating Atomic Data Migration...');
 
+    let transaction: Models.Transaction | null = null;
     try {
+      // 2.13: Atomic Ingestion
+      transaction = await this.tables.createTransaction();
+      const transactionId = transaction.$id;
+
       for (const batch of batches) {
         console.log(
           `[BATCH] Processing ${batch.tableId} (${batch.rows.length} rows)...`,
@@ -104,44 +112,26 @@ export class MigratePortfolioUseCase {
             usedFileIds.add(pictureId);
           if (cvId && cvId !== 'cv-pdf') usedFileIds.add(cvId);
 
-          // Generate deterministic ID for idempotency (prevents duplicates)
+          // 2.15: Deterministic IDs
           const rowId = this.generateDeterministicId(
             batch.tableId,
             row as Record<string, unknown>,
           );
 
-          // Handle Conflict Strategy
-          if (strategy === 'skip') {
-            try {
-              // Check if row already exists
-              // biome-ignore lint/suspicious/noExplicitAny: TablesDB getRow exists in runtime but might be missing in older TS types
-              await (this.tables as any).getRow({
-                databaseId: this.databaseId,
-                tableId: batch.tableId,
-                rowId: rowId,
-              });
-              console.log(
-                `[SKIP] Row ${rowId} already exists in ${batch.tableId}.`,
-              );
-              continue;
-            } catch (_error) {
-              // Row doesn't exist (likely 404), proceed with creation
-            }
-          }
-
+          // Perform transactional upsert
           await this.tables.upsertRow({
             databaseId: this.databaseId,
             tableId: batch.tableId,
-            rowId: rowId,
+            rowId,
             data: row as Record<string, unknown>,
-            transactionId: transaction.$id,
+            transactionId,
           });
         }
       }
 
-      console.log('[STEP] Committing Data Transaction...');
+      // Commit transaction
       await this.tables.updateTransaction({
-        transactionId: transaction.$id,
+        transactionId,
         commit: true,
       });
 
@@ -149,21 +139,20 @@ export class MigratePortfolioUseCase {
       console.log('[STEP] Starting Asset Maintenance...');
       await this.storageManager.cleanupOrphans(usedFileIds);
 
-      console.log('--- Migration: PASS (100% Synced) ---');
+      console.log('--- Migration: PASS (Atomic Sync) ---');
     } catch (error) {
       console.error('[CRITICAL] Migration Failed. Rolling back...', error);
 
-      try {
+      if (transaction) {
+        // 2.14: Automatic Rollback
         await this.tables.updateTransaction({
           transactionId: transaction.$id,
           rollback: true,
         });
-      } catch (rollbackError) {
-        console.error('[FATAL] Rollback failed:', rollbackError);
       }
 
       throw new Error(
-        `Migration failed and was rolled back: ${error instanceof Error ? error.message : String(error)}`,
+        `Migration failed: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
   }

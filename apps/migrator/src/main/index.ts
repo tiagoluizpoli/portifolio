@@ -1,4 +1,4 @@
-import { AppwriteProvider } from '@repo/appwrite-core';
+import { AppwriteProvider, validateAppwriteEnv } from '@repo/appwrite-core';
 import dotenv from 'dotenv';
 import { MigratePortfolioUseCase } from '../application/migrate-portfolio.use-case';
 import { SchemaManager } from '../infrastructure/schema.manager'; // Assuming this is the new import path
@@ -33,9 +33,10 @@ async function main() {
     console.log(`[INIT] Conflict Strategy: ${conflictStrategy}`);
 
     // Initialize Appwrite Provider
-    AppwriteProvider.initialize(
+    const config = validateAppwriteEnv(
       process.env as Record<string, string | undefined>,
     );
+    AppwriteProvider.initialize(config);
 
     // 1. infrastructure Setup (Schema & Storage)
     const schemaManager = new SchemaManager();

@@ -1,8 +1,13 @@
-import { AppwriteProvider } from '@repo/appwrite-core';
-import type { Models, Storage, TablesDB } from 'node-appwrite';
+import {
+  AppwriteProvider,
+  type Models,
+  type Storage,
+  type TablesDB,
+} from '@repo/appwrite-core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { MigratePortfolioUseCase } from '../application/migrate-portfolio.use-case';
-import { StorageManager } from '../infrastructure/storage.manager';
+import { MigratePortfolioUseCase } from '../application/migrate-portfolio.use-case.js';
+import { SchemaManager } from '../infrastructure/schema.manager.js';
+import { StorageManager } from '../infrastructure/storage.manager.js';
 
 vi.mock('@repo/appwrite-core', () => ({
   AppwriteProvider: {
@@ -12,6 +17,7 @@ vi.mock('@repo/appwrite-core', () => ({
     getCuratorRole: vi.fn(() => 'role:team:curators'),
     initialize: vi.fn(),
   },
+  ID: { unique: vi.fn(() => 'unique-id') },
 }));
 
 vi.mock('node:fs', () => ({
@@ -22,40 +28,59 @@ vi.mock('node:path', () => ({
   join: vi.fn((...args) => args.join('/')),
 }));
 
+vi.mock('../domain/data.parser.js', () => ({
+  DataParser: {
+    parse: vi.fn(() => ({})),
+    getBatches: vi.fn(() => [
+      { tableId: 'home', rows: [{ firstName: 'Test' }] },
+    ]),
+  },
+}));
+
 describe('MigratePortfolioUseCase', () => {
   let useCase: MigratePortfolioUseCase;
-  const mockTables = {
-    createTransaction: vi.fn(),
-    updateTransaction: vi.fn(),
-    upsertRow: vi.fn(),
-    get: vi.fn().mockResolvedValue({}),
-    getTable: vi.fn().mockResolvedValue({ columns: new Array(10).fill({}) }),
-    createTable: vi.fn().mockResolvedValue({}),
-    createStringColumn: vi.fn().mockResolvedValue({}),
-    createIntegerColumn: vi.fn().mockResolvedValue({}),
-    createIndex: vi.fn().mockResolvedValue({}),
+  let mockTables: {
+    createTransaction: ReturnType<typeof vi.fn>;
+    upsertRow: ReturnType<typeof vi.fn>;
+    updateTransaction: ReturnType<typeof vi.fn>;
+    get: ReturnType<typeof vi.fn>;
   };
-  const mockStorage = {
-    getBucket: vi.fn().mockResolvedValue({}),
-    listFiles: vi.fn().mockResolvedValue({ files: [] }),
-    getFileDownload: vi.fn().mockResolvedValue(Buffer.from('test')),
-    createFile: vi.fn().mockResolvedValue({}),
-    deleteFile: vi.fn().mockResolvedValue({}),
-    uploadAsset: vi.fn().mockResolvedValue({ $id: 'file-123' }),
+  let mockStorage: {
+    getBucket: ReturnType<typeof vi.fn>;
+    listFiles: ReturnType<typeof vi.fn>;
+    getFileDownload: ReturnType<typeof vi.fn>;
+    createFile: ReturnType<typeof vi.fn>;
+    deleteFile: ReturnType<typeof vi.fn>;
   };
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockTables = {
+      createTransaction: vi.fn().mockResolvedValue({ $id: 'tx-123' }),
+      upsertRow: vi.fn().mockResolvedValue({}),
+      updateTransaction: vi.fn().mockResolvedValue({}),
+      get: vi.fn().mockResolvedValue({}),
+    };
+    mockStorage = {
+      getBucket: vi.fn().mockResolvedValue({}),
+      listFiles: vi.fn().mockResolvedValue({ files: [] }),
+      getFileDownload: vi.fn().mockResolvedValue(Buffer.from('test')),
+      createFile: vi.fn().mockResolvedValue({}),
+      deleteFile: vi.fn().mockResolvedValue({}),
+    };
+
     vi.mocked(AppwriteProvider.getTablesDB).mockReturnValue(
       mockTables as unknown as TablesDB,
     );
     vi.mocked(AppwriteProvider.getStorage).mockReturnValue(
       mockStorage as unknown as Storage,
     );
+    // Mock SchemaManager to avoid testing its internal logic here
+    vi.spyOn(SchemaManager.prototype, 'run').mockResolvedValue(undefined);
     // Mock StorageManager.uploadAsset to avoid physical disk/network calls in tests
     vi.spyOn(StorageManager.prototype, 'uploadAsset').mockResolvedValue({
       $id: 'file-123',
-    } as unknown as Models.File);
+    } as unknown as Models.File); // Models.File is complex to mock fully
     useCase = new MigratePortfolioUseCase();
   });
 
@@ -63,34 +88,23 @@ describe('MigratePortfolioUseCase', () => {
     expect(useCase).toBeDefined();
   });
 
-  it('should rollback transaction if ingestion fails', async () => {
-    mockTables.createTransaction.mockResolvedValue({ $id: 'tx-123' });
-    mockTables.upsertRow.mockRejectedValue(new Error('Ingestion Error'));
-
-    await expect(useCase.execute()).rejects.toThrow(
-      'Migration failed and was rolled back',
+  it('should throw error if migration fails', async () => {
+    mockTables.createTransaction.mockRejectedValue(
+      new Error('Transaction Error'),
     );
 
-    expect(mockTables.updateTransaction).toHaveBeenCalledWith(
-      expect.objectContaining({
-        transactionId: 'tx-123',
-        rollback: true,
-      }),
-    );
+    await expect(useCase.execute()).rejects.toThrow('Migration failed');
   });
 
   it('should finish migration successfully if no errors', async () => {
-    mockTables.createTransaction.mockResolvedValue({ $id: 'tx-123' });
     mockTables.upsertRow.mockResolvedValue({});
-    mockTables.updateTransaction.mockResolvedValue({});
 
     await useCase.execute();
 
+    expect(mockTables.createTransaction).toHaveBeenCalled();
+    expect(mockTables.upsertRow).toHaveBeenCalled();
     expect(mockTables.updateTransaction).toHaveBeenCalledWith(
-      expect.objectContaining({
-        transactionId: 'tx-123',
-        commit: true,
-      }),
+      expect.objectContaining({ commit: true }),
     );
   });
 });

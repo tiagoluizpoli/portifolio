@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "tsx watch src/main/index.ts",
+    "dev": "tsx src/main/index.ts",
     "lint": "biome check src",
     "test": "vitest run src",
     "typecheck": "tsc --noEmit"

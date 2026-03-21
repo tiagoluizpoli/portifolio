@@ -1,11 +1,11 @@
-import { AppwriteProvider } from '@repo/appwrite-core';
 import {
+  AppwriteProvider,
   IndexType,
   Permission,
   Role,
   type Storage,
   type TablesDB,
-} from 'node-appwrite';
+} from '@repo/appwrite-core';
 
 export class SchemaManager {
   private tables: TablesDB;
@@ -33,7 +33,6 @@ export class SchemaManager {
 
   private async ensureDatabase() {
     try {
-      // In TablesDB, we still check/create the database container
       await this.tables.get({ databaseId: this.databaseId });
       console.log(`Database ${this.databaseId} already exists.`);
     } catch (error: unknown) {
@@ -51,7 +50,6 @@ export class SchemaManager {
   }
 
   private async setupTables() {
-    // We can now create tables with inline columns and indexes for 2026 performance
     await this.createHomeTable();
     await this.createExperienceTable();
     await this.createEducationTable();
@@ -236,7 +234,7 @@ export class SchemaManager {
       }
     }
 
-    // Explicitly create columns to ensure Appwrite 1.8.1 compatibility
+    // Explicitly create columns
     for (const col of params.columns) {
       try {
         if (col.type === 'string') {
@@ -279,14 +277,14 @@ export class SchemaManager {
       }
     }
 
-    // Wait for attributes to be available (Appwrite 1.8.1 is async)
+    // Wait for columns to be available (Guideline 1.9)
     await this.waitForColumns(params.tableId, params.columns.length);
   }
 
   private async waitForColumns(tableId: string, expectedCount: number) {
     let attempts = 0;
     const maxAttempts = 20;
-    const delay = 100;
+    const delay = 500;
 
     while (attempts < maxAttempts) {
       const table = await this.tables.getTable({
@@ -295,8 +293,6 @@ export class SchemaManager {
       });
 
       if (table.columns && table.columns.length >= expectedCount) {
-        // Basic check for count, ideally we'd check 'status === available'
-        // but TypesDB 22.1.3 typing for columns is generic.
         return;
       }
 
