@@ -31,7 +31,7 @@ Implementing the Zenith Portfolio Hub shell and analytics dashboard. Focuses on 
 specs/004-ui-design-shadcn/
 ├── plan.md              # Restored Technical Plan
 ├── research.md          # Layout Density & Analytics Research
-├── data-model.md        # Analytics & Project Entities
+├── data-model.md        # Analytics & Project Entities (Source of Truth)
 ├── checklists/          # Requirements Quality Audit
 └── tasks.md             # Implementation Phase Breakdown
 ```

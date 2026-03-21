@@ -78,18 +78,23 @@ As an admin, I want to update global configuration settings for the portfolio an
 - **FR-003**: Layout MUST include the following management screens: Dashboard Hub, Portfolio Manager, Settings.
 - **FR-005**: Navigation MUST use a standard administrative sidebar or topbar layout.
 - **FR-006**: System MUST use Google Stitch MCP for generating/iterating on these administrative screens.
-- **DR-001**: Designs MUST prioritize a **Desktop-First** administrative experience (primary target: 1920x1080) while maintaining responsiveness for tablet/mobile.
+- **DR-001**: Designs MUST prioritize a **Desktop-First** experience (1920x1080). On **Mobile/Tablet**, the Interactive Sidebar MUST transition to a Shadcn `Sheet` (Drawer) triggered by a top-left hamburger menu.
+- **DR-006**: Appwrite Collections (`projects`, `analytics`) MUST be configured with **Private/Admin-Only** permissions; zero PII data should be accessible to public guests.
 - **DR-002**: Component roundness MUST be "Subtle/Medium" (e.g., Shadcn `rounded-md` (0.375rem) or `rounded-lg` (0.5rem)). Avoid extreme circularity or high-radius curves.
 - **DR-003**: UI MUST NOT include any "Pro", "Upgrade", "Subscription", or "Pricing" elements. This is a strictly personal, private management tool.
 - **DR-004**: UI MUST enforce **Extreme Density**. Default spacing tokens (padding, margin, gaps) MUST be minimized (e.g., `p-2` or `p-4` max for containers, `gap-2` for grids). Avoid excessive white space.
+- **FR-007**: System MUST define and implement **Zero-states** (Empty states) for all tables and grids using Shadcn Ghost components or Skeletons.
 - **FR-010**: System MUST include a **Portfolio Analytics** module on the dashboard, displaying Visitors, Session Time (via 30s heartbeat), and Geographic data (Country/State).
+- **FR-011**: System MUST define a **Session** as 30 minutes of inactivity; heartbeats MUST cease when the tab is hidden or inactive.
 - **DR-005**: UI MUST enforce **Row Symmetry**. All components within the same row (flex/grid) MUST have the same height using `items-stretch`.
-- **FR-009**: Typography MUST follow a standardized hierarchy: Inter for UI and weighted headers (semibold) for section titles.
-- **FR-010**: Global Search (Command-K) MUST focus on "Pages" and "Project Entries" for immediate navigation.
-- **FR-011**: Portfolio Manager MUST implement an explicit "Save" action for all project entries, accompanied by a "Draft / Published" status toggle.
-- **FR-012**: Administrative UI MUST display the core management sections (Dashboard, Portfolio, Settings).
-- **FR-013**: UI MUST prioritize a clean, focused environment for single-user management.
-- **FR-014**: Tables MUST implement **Infinite Scroll** for project listings to ensure smooth performance.
+- **FR-012**: Typography MUST follow a standardized hierarchy: Inter for UI and weighted headers (semibold) for section titles.
+- **FR-013**: Global Search (Command-K) MUST focus on "Pages" and "Project Entries" for immediate navigation.
+- **FR-014**: Portfolio Manager MUST implement an explicit "Save" action for all project entries, accompanied by a "Draft / Published" status toggle.
+- **FR-015**: Administrative UI MUST display the core management sections (Dashboard, Portfolio, Settings).
+- **FR-016**: UI MUST prioritize a clean, focused environment for single-user management.
+- **FR-017**: Tables MUST implement **Infinite Scroll** for project listings with a < 200ms TBT performance target.
+- **FR-018**: System MUST provide **Offline Indicators** (Toasts/Badges) and a "Last Cached" timestamp when Appwrite connection is lost.
+- **FR-019**: First-time users (no data) MUST be presented with a **"Getting Started" Dashboard** featuring Skeletons and a guide to create their first Portfolio Entry.
 
 ### Key Entities (include if feature involves data)
 
