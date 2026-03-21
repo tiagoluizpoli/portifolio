@@ -7,17 +7,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": [
-      "**",
-      ".specify/**",
-      "**/.*/**",
-      "!node_modules/",
-      "!**/dist/",
-      "!.vscode/",
-      "!.venv/",
-      "!legacy/",
-      "!**/src/route-tree.gen.ts"
-    ]
+    "includes": ["**", ".specify/**", "**/.*/**"]
   },
   "formatter": {
     "enabled": true,
@@ -25,11 +15,6 @@
     "indentStyle": "space",
     "indentWidth": 2,
     "lineEnding": "lf"
-  },
-  "css": {
-    "parser": {
-      "tailwindDirectives": true
-    }
   },
   "linter": {
     "enabled": true,
@@ -68,6 +53,11 @@
       "unsafeParameterDecoratorsEnabled": true
     }
   },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
   "assist": {
     "enabled": true,
     "actions": {
@@ -90,13 +80,25 @@
   },
   "overrides": [
     {
-      "includes": ["**/src/routes/**/*"],
+      "includes": ["**/src/routes/**/*", "**/routeTree.gen.ts"],
       "linter": {
         "rules": {
           "style": {
             "useFilenamingConvention": "off"
           }
         }
+      }
+    },
+    {
+      "includes": ["**/routeTree.gen.ts", "**/app.config.timestamp_*.js"],
+      "linter": {
+        "enabled": false
+      },
+      "formatter": {
+        "enabled": false
+      },
+      "assist": {
+        "enabled": false
       }
     }
   ]

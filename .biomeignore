@@ -2,3 +2,9 @@ node_modules/
 dist/
 .venv/
 legacy/
+.vinxi/
+.output/
+.wrangler/
+routeTree.gen.ts
+app.config.timestamp_*.js
+apps/zenith/app.config.timestamp_*.js
