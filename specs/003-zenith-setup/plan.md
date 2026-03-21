@@ -1,73 +1,109 @@
-# Implementation Plan: Zenith Setup
+# Implementation Plan: [FEATURE]
 
-## Goal Description
-Initialize the **Zenith** hub using **TanStack Start v1**, **React 19**, and **Tailwind CSS v4**. This phase establishes the foundation for a secure, type-safe, and visually premium administrative board.
+**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
+**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
+
+**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
+
+## Summary
+
+[Extract from feature spec: primary requirement + technical approach from research]
 
 ## Technical Context
-- **Feature Spec**: `specs/003-zenith-setup/spec.md`
-- **Guidelines**: `.specify/memory/zenith_guidelines_2026.md`
-- **Existing Ref**: `001-monorepo-structure`
 
-## Proposed Changes
+<!--
+  ACTION REQUIRED: Replace the content in this section with the technical details
+  for the project. The structure here is presented in advisory capacity to guide
+  the iteration process.
+-->
 
----
+**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
+**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
+**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
+**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
+**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
+**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
+- **Performance Goals**: TTI < 2.5s, Lighthouse > 90 (All major pages: Auth, Dashboard, Root)
+- **Logging**: Structured JSON (standardized fields: level, msg, timestamp, ctx).
+- **Resilience**: Centralized `TransactionManager` in `@repo/appwrite-core` for compensating transactions (FR-015).
+- **Error Handling**: High-reliability static HTML/JS for startup validation failures (FR-011).
+- **Constraints**: No legacy `app.config.ts`; MUST use `vite.config.ts`; MUST use OKLCH colors; MUST use Geist Sans/Mono.
 
-### [App: Zenith]
+## Constitution Check
 
-#### [NEW] [package.json](file:///home/tiago/01-dev-env/personal-repos/portifolio/apps/zenith/package.json)
-Initialize `@tanstack/start` with:
-- `@tanstack/react-router`
-- `@tanstack/start`
-- `react@19`
-- `react-dom@19`
-- `tailwindcss@4`
-- `@tailwindcss/vite`
-- `zod` (for runtime validation)
+*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-#### [NEW] [.env.example](file:///home/tiago/01-dev-env/personal-repos/portifolio/apps/zenith/.env.example)
-Define mandatory `VITE_` public variables and secret `APPWRITE_API_KEY`.
+- **Principle XVI (TanStack RC Standards)**: MANDATORY. Native Latest Synchronization enforced.
+- **Principle XV (Infrastructure Invisibility)**: MANDATORY. Appwrite logic isolated in `@repo/appwrite-core`.
+- **Principle XIII (AppWrite 2026 Standards)**: MANDATORY. TablesDB and transactional integrity.
+- **Principle XIV (Quality Gates)**: MANDATORY. "Trinity Check" + Quality Checklist required.
 
-#### [NEW] [app.config.ts](file:///home/tiago/01-dev-env/personal-repos/portifolio/apps/zenith/app.config.ts)
-Vite/Nitro configuration for TanStack Start.
+## Project Structure
 
-#### [NEW] [src/index.css](file:///home/tiago/01-dev-env/personal-repos/portifolio/apps/zenith/src/index.css)
-Main CSS entry points using Tailwind v4 `@import "tailwindcss";` and OKLCH-based `@theme` tokens.
+### Documentation (this feature)
 
-#### [NEW] [src/routes/__root.tsx](file:///home/tiago/01-dev-env/personal-repos/portifolio/apps/zenith/src/routes/__root.tsx)
-Root route with metadata hoisting and global styles.
+```text
+specs/[###-feature]/
+├── plan.md              # This file (/speckit.plan command output)
+├── research.md          # Phase 0 output (/speckit.plan command)
+├── data-model.md        # Phase 1 output (/speckit.plan command)
+├── quickstart.md        # Phase 1 output (/speckit.plan command)
+├── contracts/           # Phase 1 output (/speckit.plan command)
+└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
+```
 
-#### [NEW] [src/infrastructure/appwrite/server.ts](file:///home/tiago/01-dev-env/personal-repos/portifolio/apps/zenith/src/infrastructure/appwrite/server.ts)
-Base server functions for secure AppWrite access using Zod validation.
+### Source Code (repository root)
+<!--
+  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
+  for this feature. Delete unused options and expand the chosen structure with
+  real paths (e.g., apps/admin, packages/something). The delivered plan must
+  not include Option labels.
+-->
 
-#### [NEW] [src/routes/error/startup.tsx](file:///home/tiago/01-dev-env/personal-repos/portifolio/apps/zenith/src/routes/error/startup.tsx)
-Specialized error page to display missing environment variables and links to setup documentation.
+```text
+# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
+src/
+├── models/
+├── services/
+├── cli/
+└── lib/
 
-#### [NEW] [src/components/client-only.tsx](file:///home/tiago/01-dev-env/personal-repos/portifolio/apps/zenith/src/components/client-only.tsx)
-Implement the `<ClientOnly />` wrapper component using the `useHydrated` hook.
+tests/
+├── contract/
+├── integration/
+└── unit/
 
----
+# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
+backend/
+├── src/
+│   ├── models/
+│   ├── services/
+│   └── api/
+└── tests/
 
-### [Phase 2: AppWrite Core Enhancement]
-#### [NEW] [Repositories](file:///home/tiago/01-dev-env/personal-repos/portifolio/packages/appwrite-core/src/infrastructure/repositories)
-Centralized types, models, and repositories for AppWrite CRUD. Use **Zod schemas** as the source of truth.
+frontend/
+├── src/
+│   ├── components/
+│   ├── pages/
+│   └── services/
+└── tests/
 
-#### [NEW] [Exceptions](file:///home/tiago/01-dev-env/personal-repos/portifolio/packages/appwrite-core/src/domain/exceptions)
-Robust error mapping for permissions and SDK failures.
+# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
+api/
+└── [same as backend above]
 
-#### [NEW] [src/config/env.ts](file:///home/tiago/01-dev-env/personal-repos/portifolio/apps/zenith/src/config/env.ts)
-Implement fail-fast validation logic (presence/format only) for all required environment variables within the Zenith app.
+ios/ or android/
+└── [platform-specific structure: feature modules, UI flows, platform tests]
+```
 
----
+**Structure Decision**: [Document the selected structure and reference the real
+directories captured above]
 
-## Verification Plan
+## Complexity Tracking
 
-### Automated Tests
-- `pnpm install`: Link workspaces.
-- `pnpm --filter zenith biome check .`: Verify Biome compliance.
-- `pnpm --filter zenith typecheck`: Verify React 19 / TanStack Start types.
+> **Fill ONLY if Constitution Check has violations that must be justified**
 
-### Manual Verification
-- Verify `pnpm --filter zenith dev` starts successfully.
-- Confirm Shadcn `Button` renders with OKLCH Tailwind 4 styles.
-- **Security Audit (SC-004)**: Manually inspect the `zenith` client-side JS bundle for any plaintext AppWrite API keys.
-- **Startup Failure Test**: Temporarily rename `.env` and verify the `startup.tsx` error page displays missing variables and doc links.
+| Violation | Why Needed | Simpler Alternative Rejected Because |
+|-----------|------------|-------------------------------------|
+| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |

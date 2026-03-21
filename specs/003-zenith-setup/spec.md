@@ -15,6 +15,36 @@
 - **Domain Model Validation**: All domain models in `@repo/appwrite-core` MUST be defined using Zod schemas to serve as the single source of truth for both TypeScript types and runtime validation.
 - **Theme Tokens**: The system MUST use OKLCH-based CSS variables for the theme palette, following the Tailwind v4 standard for superior color interpolation and maintenance.
 - **Domain Abstraction**: Shared models in `@repo/appwrite-core` MUST be defined as decoupled domain-layer interfaces. The Repository implementation is responsible for mapping AppWrite-specific document structures to these clean domain entities.
+- **Transaction Orchestration (FR-015)**: Multi-step rollback logic MUST use a centralized `TransactionManager` in `@repo/appwrite-core` to track and undo operations rather than manual try/catch blocks in every service.
+
+- **Compensating Transactions (FR-015) Strategy**: Use a centralized `TransactionManager` to orchestrate rollbacks.
+- **Startup Error Page (FR-011) Implementation**: MUST be implemented as a high-reliability static HTML or minimal zero-dependency JS file to ensure visibility during catastrophic initialization failures.
+- **Runtime Telemetry (FR-013) Format**: Logs emitted to `stdout/stderr` MUST follow a structured JSON format (level, timestamp, message, context) to facilitate automated parsing and observability.
+
+### XII. Mandatory Quality Gating for Completion
+No task or feature implementation is considered "Done" until the following checks pass with zero errors in the affected workspaces, using the scripts defined in their `package.json`:
+1. **Linting & Formatting**: `pnpm biome check .` (or `pnpm lint`)
+2. **Type Safety**: `pnpm typecheck`
+3. **Automated Testing**: All relevant unit and integration tests pass (`pnpm test`).
+This gate is mandatory and MUST be verified before notifying the user of completion.
+
+### XIII. AppWrite 2026 Standards
+All AppWrite-related infrastructure, data operations, and migrations MUST strictly adhere to the standards defined in `.specify/memory/appwrite_guidelines_2026.md`. This includes the exclusive use of the `TablesDB` client, transactional integrity, and mandatory polling for asynchronous attribute creation.
+
+## Governance
+- The Roadmap and Constitution supersede all individual implementation decisions.
+- Changes to the Roadmap or Constitution require explicit documentation and rationale.
+
+**Version**: 1.6.0 | **Ratified**: 2026-03-19 | **Last Amended**: 2026-03-21
+
+## Clarifications
+
+### Session 2026-03-20
+- **Observability Strategy**: System and server function logs MUST use standard `console.log/error` to Docker `stdout/stderr`. Persistent 3rd party APM integration is explicitly deferred.
+- **Performance Baseline**: The application MUST achieve a "Time to Interactive" (TTI) of < 2.5 seconds on a standard 4G/Desktop connection.
+- **Script Standardization**: The project MUST provide root-level `pnpm` prefixed scripts (`zenith:dev`, `zenith:build`, `zenith:typecheck`) to manage the application without manual directory switching.
+- **Typography Standards**: Typography choice is flexible per application. Zenith uses **Geist** (Sans/Mono), but other workspace apps (e.g., Portfolio) are NOT mandated to use it.
+- **Build-time Validation**: Environment variable validation (FR-011) MUST support a `SKIP_ENV_VALIDATION` override (or equivalent logic) to allow successful `vinxi build` execution in CI/CD environments where real AppWrite keys are absent.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -68,6 +98,7 @@ As an architect, I want a secure environment for handling AppWrite secrets so th
 - **FR-001**: System MUST use **TanStack Start v1** (RC/Stable) as the core framework.
 - **FR-002**: System MUST use **React 19** (Stable) and adhere to its modern prop-passing patterns.
 - **FR-003**: System MUST use **Tailwind CSS v4** with a CSS-first configuration (no `tailwind.config.js`). Theme extensions MUST reside in `src/index.css` using **OKLCH-based CSS variables** for all tokens.
+- **FR-003.1**: Zenith MUST use **Geist Sans** for UI and **Geist Mono** for data/code displays.
 - **FR-004**: System MUST initialize **Shadcn UI** using the stable CLI (`npx shadcn@latest init`) with the `-t start --monorepo` flag.
 - **FR-005**: System MUST implement a `src/infrastructure/appwrite` module that uses `createServerFn({ method: 'POST'|'GET' })` with Zod validation for all privileged operations.
 - **FR-006**: System MUST follow the mandatory monorepo folder pattern and use `defineConfig` from `@tanstack/react-start/config` in `app.config.ts`.
@@ -75,8 +106,11 @@ As an architect, I want a secure environment for handling AppWrite secrets so th
 - **FR-008**: System MUST integrate with the root **Biome** configuration, ensuring NO ESLint or Prettier files exist in the application folder.
 - **FR-009**: System MUST centralize ALL AppWrite CRUD operations and Domain Models in the shared `@repo/appwrite-core` package. Domain Models MUST be defined using Zod schemas as the source of truth for both types and runtime validation, decoupled from the AppWrite SDK using the Repository Pattern.
 - **FR-010**: System MUST implement a standardized exception mapping system in `@repo/appwrite-core` to handle permissions and errors gracefully.
-- **FR-011**: System MUST perform **Fail-Fast Startup Validation** for mandatory environment variables (presence and format check only). If validation fails, the app MUST render a specialized error page listing the missing or invalid keys and providing a link to setup documentation.
+- **FR-011**: System MUST perform **Fail-Fast Startup Validation** for mandatory environment variables (presence and format check only). If validation fails at runtime, the app MUST render a specialized, high-reliability static error page. Validation MUST be skippable during the build phase via a `SKIP_ENV_VALIDATION` flag to support CI/CD pipelines.
 - **FR-012**: System MUST use the `useHydrated()` pattern and provide a global `<ClientOnly />` component to prevent SSR hydration mismatches for any client-side specific components or logic.
+- **FR-013**: System MUST emit all telemetry and runtime logs to the standard `stdout/stderr` streams in a **structured JSON format** for efficient Docker log collection and observability.
+- **FR-014**: Root-level `package.json` MUST expose `zenith:` prefixed scripts for all common lifecycle tasks.
+- **FR-015**: System MUST implement **Compensating Transactions** in the application service layer via a centralized `TransactionManager` in `@repo/appwrite-core`. Any multi-step operation that fails partially MUST explicitly roll back (undo) previous successful steps to maintain data consistency.
 
 ### Key Entities
 
@@ -92,5 +126,5 @@ As an architect, I want a secure environment for handling AppWrite secrets so th
 
 - **SC-001**: Zero linting errors via `pnpm lint` (Biome).
 - **SC-002**: Zero TypeScript errors via `pnpm typecheck`.
-- **SC-003**: Lighthouse Performance score > 90 for the default boilerplate.
+- **SC-003**: Lighthouse Performance score > 90 and TTI < 2.5s for the default dashboard on 4G/Desktop.
 - **SC-004**: Successful extraction of secret variables from server-only context confirmed by code audit.
