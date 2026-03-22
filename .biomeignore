@@ -1,8 +1,7 @@
 node_modules/
 dist/
-.venv/
-legacy/
-.vinxi/
+.venv
+legacy
 .output/
 .wrangler/
 routeTree.gen.ts

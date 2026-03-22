@@ -45,6 +45,18 @@ All AppWrite-related infrastructure, data operations, and migrations MUST strict
 - **Script Standardization**: The project MUST provide root-level `pnpm` prefixed scripts (`zenith:dev`, `zenith:build`, `zenith:typecheck`) to manage the application without manual directory switching.
 - **Typography Standards**: Typography choice is flexible per application. Zenith uses **Geist** (Sans/Mono), but other workspace apps (e.g., Portfolio) are NOT mandated to use it.
 - **Build-time Validation**: Environment variable validation (FR-011) MUST support a `SKIP_ENV_VALIDATION` override (or equivalent logic) to allow successful `vinxi build` execution in CI/CD environments where real AppWrite keys are absent.
+### Session 2026-03-22
+- **User Role Implementation Strategy**: System MUST implement a single, generic admin shell for the initial setup. Multi-role navigation logic is deferred.
+- **Loading State Architecture**: System MUST implement a global Top-of-Page loading bar (e.g., `nprogress`) for all navigation. Discrete skeletons are deferred.
+- **Conflict Resolution Strategy**: System MUST use a **Blocking Error Overlay** during the rollback process to prevent user interaction until the state is consistent.
+- **Data Resilience & Failure Modes**: System MUST redirect to a **"Connection Lost" Error Page** after **3 consecutive failed server function attempts** or a **timeout > 10s**. 
+- **Automatic Form Persistence**: The mechanism MUST trigger on any `AppWriteException` where connectivity is lost (code: 0). Backups MUST use the `zenith:form-backup:*` namespace in `localStorage` and be purged after **24 hours** or successful submission.
+- **Blocking Error Overlay**: Behavior MUST include a non-dismissible modal and **pointer-lock/touch-prevention** to ensure zero state mutation during rollbacks.
+- **Zero-Flash Timing**: Theme initialization MUST complete within **< 50ms** before the first contentful paint (FCP).
+- **Orchestrator Limits**: Routes in `src/routes/` MUST be lightweight, with a **soft limit of 100 LoC** and zero local business logic (must be delegated to `features/`).
+- **Q: Data Resilience & Failure Modes → A: Redirect to "Connection Lost" Page with automatic form persistence.**
+- **Theme Persistence Strategy**: System MUST implement a formal `ThemeProvider` (React Context) that EXACTLY replicates the initialization logic of the `THEME_INIT_SCRIPT` from `clean-tanstack-proj`. Once validated, the core initialization logic within the provider MUST be wrapped in a "FIXED LOGIC - DO NOT MODIFY" comment block to prevent regression while allowing for feature expansion.
+- **Q: Theme Persistence Strategy → A: ThemeProvider / Context with immutable logic protection.**
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -96,21 +108,33 @@ As an architect, I want a secure environment for handling AppWrite secrets so th
 ### Functional Requirements
 
 - **FR-001**: System MUST use **TanStack Start v1** (RC/Stable) as the core framework.
-- **FR-002**: System MUST use **React 19** (Stable) and adhere to its modern prop-passing patterns.
+- **FR-002**: System MUST use **React 19** (Stable) and adhere to its modern prop-passing patterns (e.g., direct `ref` passing, `useActionState` for forms).
 - **FR-003**: System MUST use **Tailwind CSS v4** with a CSS-first configuration (no `tailwind.config.js`). Theme extensions MUST reside in `src/index.css` using **OKLCH-based CSS variables** for all tokens.
-- **FR-003.1**: Zenith MUST use **Geist Sans** for UI and **Geist Mono** for data/code displays.
-- **FR-004**: System MUST initialize **Shadcn UI** using the stable CLI (`npx shadcn@latest init`) with the `-t start --monorepo` flag.
+- **FR-003.1**: Zenith MUST use **Geist Sans** for UI and **Geist Mono** for data/code displays, integrated directly into the Tailwind v4 @theme.
+- **FR-004**: System MUST configure **Shadcn UI** using `#/*` aliases in `components.json`, pointing `tailwind.css` to `src/styles.css` and explicitly excluding `tailwind.config.js`.
 - **FR-005**: System MUST implement a `src/infrastructure/appwrite` module that uses `createServerFn({ method: 'POST'|'GET' })` with Zod validation for all privileged operations.
-- **FR-006**: System MUST follow the mandatory monorepo folder pattern and use `defineConfig` from `@tanstack/react-start/config` in `app.config.ts`.
+- **FR-006**: System MUST follow a **Bulletproof-inspired feature-based structure**, adapted for TanStack Start:
+    - `src/features/{feature}/`: Each feature (e.g., `auth`, `profile`) MUST encapsulate its own `api/`, `components/`, `hooks/`, and `types/`.
+    - `src/routes/`: Routes SHOULD act as lightweight orchestrators, importing components and logic from the `features/` directory.
+    - `src/components/`: Reserved for global, shared UI components (e.g., Shadcn base components).
+    - `src/hooks/`, `src/lib/`, `src/utils/`: Reserved for truly global cross-cutting concerns.
+    - **Single Config**: MUST use `vite.config.ts` only (no `app.config.ts`).
+    - **Vite Plugins**: Nitro (nightly), TsconfigPaths, TailwindCSS v4, TanStackStart, ViteReact.
+    - **Styles**: `src/styles.css` is the source of truth, imported in `__root.tsx` via `?url`.
+    - **Visual Parity**: Implementation MUST achieve **identical OKLCH variable mapping** to Stitch designs as the baseline for semantic fidelity.
 - **FR-007**: System MUST provide a `.env.example` defining `VITE_` prefixed public variables and secure non-prefixed secret variables (API Keys).
 - **FR-008**: System MUST integrate with the root **Biome** configuration, ensuring NO ESLint or Prettier files exist in the application folder.
 - **FR-009**: System MUST centralize ALL AppWrite CRUD operations and Domain Models in the shared `@repo/appwrite-core` package. Domain Models MUST be defined using Zod schemas as the source of truth for both types and runtime validation, decoupled from the AppWrite SDK using the Repository Pattern.
 - **FR-010**: System MUST implement a standardized exception mapping system in `@repo/appwrite-core` to handle permissions and errors gracefully.
-- **FR-011**: System MUST perform **Fail-Fast Startup Validation** for mandatory environment variables (presence and format check only). If validation fails at runtime, the app MUST render a specialized, high-reliability static error page. Validation MUST be skippable during the build phase via a `SKIP_ENV_VALIDATION` flag to support CI/CD pipelines.
-- **FR-012**: System MUST use the `useHydrated()` pattern and provide a global `<ClientOnly />` component to prevent SSR hydration mismatches for any client-side specific components or logic.
+- **FR-011**: System MUST perform **Fail-Fast Startup Validation** for mandatory environment variables (presence and format check only). If validation fails at runtime, the app MUST render a specialized **TanStack Error Component** displaying the missing/invalid keys with links to documentation. Validation MUST be skippable during the build phase via a `SKIP_ENV_VALIDATION` flag.
+- **FR-012**: System MUST use the `useHydrated()` pattern and provide a global `<ClientOnly />` component to prevent SSR hydration mismatches, explicitly leveraging TanStack Start's hydration utilities for server-to-client state transfer.
 - **FR-013**: System MUST emit all telemetry and runtime logs to the standard `stdout/stderr` streams in a **structured JSON format** for efficient Docker log collection and observability.
 - **FR-014**: Root-level `package.json` MUST expose `zenith:` prefixed scripts for all common lifecycle tasks.
-- **FR-015**: System MUST implement **Compensating Transactions** in the application service layer via a centralized `TransactionManager` in `@repo/appwrite-core`. Any multi-step operation that fails partially MUST explicitly roll back (undo) previous successful steps to maintain data consistency.
+- **FR-015**: System MUST implement **Compensating Transactions** in the application service layer via a centralized `TransactionManager` in `@repo/appwrite-core`. 
+    - **FR-015.1**: Support for **asynchronous compensating actions** (e.g., polling for resource deletion) MUST be built-in.
+    - **FR-015.2**: If a compensating action fails, the system MUST emit a CRITICAL log with the full state for manual intervention.
+- **FR-016**: System MUST leverage **Google Stitch** specialized skills for all UI design. 
+    - **FR-016.1**: Every Stitch-generated design MUST be validated against the implementation for semantic alignment and visual fidelity before completion.
 
 ### Key Entities
 

@@ -65,8 +65,11 @@ This gate is mandatory and MUST be verified before notifying the user of complet
 2. **Pure Vite Architecture**: Deference to the `@tanstack/start-vite-plugin` instead of external orchestrators.
 3. **Guideline Adherence**: All code must comply with the monolithic [TanStack Guideline](file:///home/tiago/01-dev-env/personal-repos/portifolio/.specify/memory/guidelines/tanstack_start_v1.md).
 
+### XVII. Google Stitch Synergy
+**Definition**: All frontend planning, research, design, and implementation tasks MUST leverage the Google Stitch MCP connection and its specialized skills (`speckit-stitch`, etc.). Stitch is the primary engine for generating high-fidelity UI components, screen layouts, and design variants. Every technical plan or frontend task must prioritize Stitch-generated designs as the authoritative baseline for implementation.
+
 ## Governance
 - The Roadmap and Constitution supersede all individual implementation decisions.
 - Changes to the Roadmap or Constitution require explicit documentation and rationale.
 
-**Version**: 1.7.0 | **Ratified**: 2026-03-19 | **Last Amended**: 2026-03-21
+**Version**: 1.8.0 | **Ratified**: 2026-03-19 | **Last Amended**: 2026-03-21

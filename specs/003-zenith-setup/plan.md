@@ -1,109 +1,41 @@
-# Implementation Plan: [FEATURE]
+# Implementation Plan: Zenith Setup (Checklist Aligned)
 
-**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
-**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
-
-**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
+**Branch**: `003-zenith-setup` | **Date**: 2026-03-22 | **Spec**: [spec.md](file:///home/tiago/01-dev-env/personal-repos/portifolio/specs/003-zenith-setup/spec.md)
 
 ## Summary
-
-[Extract from feature spec: primary requirement + technical approach from research]
+Establish a high-fidelity foundation for Zenith by mirroring `clean-tanstack-proj` and adopting **Bulletproof React** modularity. This plan is fully audited against the quality checklist, incorporating measurable metrics for **zero-flash timing**, **connection failure limits**, and **form persistence** namespace isolation.
 
 ## Technical Context
 
-<!--
-  ACTION REQUIRED: Replace the content in this section with the technical details
-  for the project. The structure here is presented in advisory capacity to guide
-  the iteration process.
--->
-
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
-- **Performance Goals**: TTI < 2.5s, Lighthouse > 90 (All major pages: Auth, Dashboard, Root)
-- **Logging**: Structured JSON (standardized fields: level, msg, timestamp, ctx).
-- **Resilience**: Centralized `TransactionManager` in `@repo/appwrite-core` for compensating transactions (FR-015).
-- **Error Handling**: High-reliability static HTML/JS for startup validation failures (FR-011).
-- **Constraints**: No legacy `app.config.ts`; MUST use `vite.config.ts`; MUST use OKLCH colors; MUST use Geist Sans/Mono.
+**Structure**: Bulletproof features in `src/features/`. Routes < 100 LoC.
+**Resilience**: `TransactionManager` + **Pointer-Locked** Blocking UI.
+**Connectivity**: Redirect after **3 failures** + **24h** localStorage backup.
+**Theming**: `ThemeProvider` initialization **< 50ms** (FCP).
 
 ## Constitution Check
+- **Principle XVI (TanStack RC)**: Verified.
+- **Principle XVII (Stitch Synergy)**: Verified.
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+## Phase 1: Foundation & Sync
+1.  **Sync Package**: Mirror `clean-tanstack-proj` dependencies.
+2.  **Config**: `vite.config.ts`, `components.json`.
 
-- **Principle XVI (TanStack RC Standards)**: MANDATORY. Native Latest Synchronization enforced.
-- **Principle XV (Infrastructure Invisibility)**: MANDATORY. Appwrite logic isolated in `@repo/appwrite-core`.
-- **Principle XIII (AppWrite 2026 Standards)**: MANDATORY. TablesDB and transactional integrity.
-- **Principle XIV (Quality Gates)**: MANDATORY. "Trinity Check" + Quality Checklist required.
+## Phase 2: Bootstrapping & Theme Synergy
+1.  **Theme Logic**: Port `THEME_INIT_SCRIPT` to `ThemeProvider` with **< 50ms** target.
+2.  **Logic**: Lock core theme logic with immutable comments after verification.
+3.  **Loading**: Global `nprogress` bar integration.
 
-## Project Structure
+## Phase 3: Resilience & Hybrid Logic
+1.  **Backup**: Implement `useFormPersistence` using `zenith:form-backup:*` namespace.
+2.  **Rollback**: Implement `TransactionManager` + **Pointer-Lock** overlay.
+3.  **Fail-Fast**: Implement redirect to "Connection Lost" after **3 consecutive failures**.
 
-### Documentation (this feature)
+## Phase 4: Implementation (US1-US4)
+1.  **Feature Base**: Initialize `src/features/` modular dashboard feature.
+2.  **US1**: Root index route orchestrator (< 100 LoC).
+3.  **Stitch**: Validate visual parity via **identical OKLCH variables**.
 
-```text
-specs/[###-feature]/
-├── plan.md              # This file (/speckit.plan command output)
-├── research.md          # Phase 0 output (/speckit.plan command)
-├── data-model.md        # Phase 1 output (/speckit.plan command)
-├── quickstart.md        # Phase 1 output (/speckit.plan command)
-├── contracts/           # Phase 1 output (/speckit.plan command)
-└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
-```
-
-### Source Code (repository root)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
-
-```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
-
-tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
-
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
-
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
-```
-
-**Structure Decision**: [Document the selected structure and reference the real
-directories captured above]
-
-## Complexity Tracking
-
-> **Fill ONLY if Constitution Check has violations that must be justified**
-
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
-| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+## Verification Plan
+- **Theme Audit**: Verify initialization < 50ms via Performance tab.
+- **Persistence Audit**: Fill form → 3x failures → Verify backup in `localStorage`.
+- **Security Audit**: `grep` dist for leaked API keys.
