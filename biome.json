@@ -113,6 +113,15 @@
       "assist": {
         "enabled": false
       }
+    },
+    {
+      "includes": ["apps/clean-tanstack-proj/**/*"],
+      "linter": {
+        "enabled": false
+      },
+      "formatter": {
+        "enabled": false
+      }
     }
   ]
 }

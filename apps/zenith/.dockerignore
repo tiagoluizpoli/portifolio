@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.tanstack/
+.git/
+.env*
+*.log
+Dockerfile*
+.dockerignore

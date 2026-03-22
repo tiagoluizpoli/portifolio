@@ -9,13 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ConnectionLostRouteImport } from './routes/connection-lost'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ErrorStartupRouteImport } from './routes/error/startup'
 
-const ConnectionLostRoute = ConnectionLostRouteImport.update({
-  id: '/connection-lost',
-  path: '/connection-lost',
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -23,49 +22,40 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ErrorStartupRoute = ErrorStartupRouteImport.update({
-  id: '/error/startup',
-  path: '/error/startup',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/connection-lost': typeof ConnectionLostRoute
-  '/error/startup': typeof ErrorStartupRoute
+  '/about': typeof AboutRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/connection-lost': typeof ConnectionLostRoute
-  '/error/startup': typeof ErrorStartupRoute
+  '/about': typeof AboutRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/connection-lost': typeof ConnectionLostRoute
-  '/error/startup': typeof ErrorStartupRoute
+  '/about': typeof AboutRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/connection-lost' | '/error/startup'
+  fullPaths: '/' | '/about'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/connection-lost' | '/error/startup'
-  id: '__root__' | '/' | '/connection-lost' | '/error/startup'
+  to: '/' | '/about'
+  id: '__root__' | '/' | '/about'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ConnectionLostRoute: typeof ConnectionLostRoute
-  ErrorStartupRoute: typeof ErrorStartupRoute
+  AboutRoute: typeof AboutRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/connection-lost': {
-      id: '/connection-lost'
-      path: '/connection-lost'
-      fullPath: '/connection-lost'
-      preLoaderRoute: typeof ConnectionLostRouteImport
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -75,20 +65,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/error/startup': {
-      id: '/error/startup'
-      path: '/error/startup'
-      fullPath: '/error/startup'
-      preLoaderRoute: typeof ErrorStartupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ConnectionLostRoute: ConnectionLostRoute,
-  ErrorStartupRoute: ErrorStartupRoute,
+  AboutRoute: AboutRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
