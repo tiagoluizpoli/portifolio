@@ -17,8 +17,11 @@
 - **Max Padding**: Containers should use `p-4` (16px) or `p-2` (8px). Avoid `p-6` unless necessary for hero sections.
 - **Default Gap**: Grids and flex layouts should use `gap-2` (8px). Use `gap-1` (4px) for micro-components.
 - **Symmetry**: Elements in the same row must be `h-full` or `items-stretch` to ensure visual alignment.
-- **Compact Components**: Use "small" or "compact" variants of Shadcn components.
 - **Roundness**: Prefer `rounded-md` (0.375rem).
+- **Typography**: MUST use **Geist Sans** and **Geist Mono** for the premium, intelligence-oriented administrative hub aesthetic.
+
+## Decision: Visual Parity & Stitch Audit
+**Rationale**: To maintain the highest level of semantic and visual fidelity, every implemented component must be audited against the **Google Stitch** designs for OKLCH variable mapping (Audit CHK024).
 
 ## Alternatives Considered: Custom Tailwind Components
 **Rejected Because**: Violates the "SHADCN FIRST" core constraint. Custom components are more prone to inconsistent design language compared to a unified UI library.

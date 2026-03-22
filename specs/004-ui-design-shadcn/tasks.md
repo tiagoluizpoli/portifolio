@@ -11,6 +11,7 @@
 - [ ] T006 Implement `Sidebar` core component with Open/Compact/Mobile Sheet states in `apps/zenith/app/components/sidebar/`. [Spec §FR-008, §DR-001]
 - [ ] T007 [P] Add `SidebarTrigger` and Breadcrumbs to the Global Topbar.
 - [ ] T008 Setup `__root.tsx` layout with SidebarInset and high-density spacing. [Spec §DR-004]
+- [ ] T022 Initialize Shadcn UI components (Button, Input) using `#/*` aliases.
 
 ## Phase 3: User Story 1 - Portfolio Analytics [US1]
 **Goal**: Admin can monitor visitors, engagement, and geolocations from the main dashboard.
@@ -41,6 +42,8 @@
 - [ ] T019 Final audit for **Global Row Symmetry** (`items-stretch`) across all Dashboard sections. [Spec §DR-005]
 - [ ] T020 Optimize typography hierarchy and verify Command-K hierarchal search. [Spec §FR-013]
 - [ ] T021 Run `pnpm biome check .` across all affected workspaces and verify < 200ms TBT. [Spec §FR-017]
+- [ ] T023 [P] **Performance Audit**: Verify theme initialization **< 50ms** before FCP and Lighthouse > 90. [Spec §FR-011]
+- [ ] T024 [P] **Visual Parity Audit**: Validate semantic design parity against Stitch OKLCH tokens. [Spec §FR-021]
 
 ## Dependencies & Parallel Execution
 - **Setup Order**: Phase 1 → Phase 2 → Phase 3/4 (Parallel) → Phase 6.

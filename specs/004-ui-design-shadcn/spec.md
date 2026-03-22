@@ -87,14 +87,16 @@ As an admin, I want to update global configuration settings for the portfolio an
 - **FR-010**: System MUST include a **Portfolio Analytics** module on the dashboard, displaying Visitors, Session Time (via 30s heartbeat), and Geographic data (Country/State).
 - **FR-011**: System MUST define a **Session** as 30 minutes of inactivity; heartbeats MUST cease when the tab is hidden or inactive.
 - **DR-005**: UI MUST enforce **Row Symmetry**. All components within the same row (flex/grid) MUST have the same height using `items-stretch`.
-- **FR-012**: Typography MUST follow a standardized hierarchy: Inter for UI and weighted headers (semibold) for section titles.
-- **FR-013**: Global Search (Command-K) MUST focus on "Pages" and "Project Entries" for immediate navigation.
-- **FR-014**: Portfolio Manager MUST implement an explicit "Save" action for all project entries, accompanied by a "Draft / Published" status toggle.
-- **FR-015**: Administrative UI MUST display the core management sections (Dashboard, Portfolio, Settings).
-- **FR-016**: UI MUST prioritize a clean, focused environment for single-user management.
-- **FR-017**: Tables MUST implement **Infinite Scroll** for project listings with a < 200ms TBT performance target.
-- **FR-018**: System MUST provide **Offline Indicators** (Toasts/Badges) and a "Last Cached" timestamp when Appwrite connection is lost.
-- **FR-019**: First-time users (no data) MUST be presented with a **"Getting Started" Dashboard** featuring Skeletons and a guide to create their first Portfolio Entry.
+- **FR-012**: Typography MUST use **Geist Sans** for UI and **Geist Mono** for data/code displays, integrated directly into the Tailwind v4 @theme.
+- **FR-013**: Typography hierarchy MUST follow a standardized model: Geist Sans for UI and weighted headers (semibold) for section titles.
+- **FR-014**: Global Search (Command-K) MUST focus on "Pages" and "Project Entries" for immediate navigation.
+- **FR-015**: Portfolio Manager MUST implement an explicit "Save" action for all project entries, accompanied by a "Draft / Published" status toggle.
+- **FR-016**: Administrative UI MUST display the core management sections (Dashboard, Portfolio, Settings).
+- **FR-017**: UI MUST prioritize a clean, focused environment for single-user management.
+- **FR-018**: Tables MUST implement **Infinite Scroll** for project listings with a < 200ms TBT performance target.
+- **FR-019**: System MUST provide **Offline Indicators** (Toasts/Badges) and a "Last Cached" timestamp when Appwrite connection is lost.
+- **FR-020**: First-time users (no data) MUST be presented with a **"Getting Started" Dashboard** featuring Skeletons and a guide to create their first Portfolio Entry.
+- **FR-021**: System MUST achieve **identical OKLCH variable mapping** to Stitch designs as the baseline for semantic fidelity.
 
 ### Key Entities (include if feature involves data)
 

@@ -1,41 +1,46 @@
-# Implementation Plan: Zenith Setup (Checklist Aligned)
+# Implementation Plan: Zenith Setup (v1.1)
 
-**Branch**: `003-zenith-setup` | **Date**: 2026-03-22 | **Spec**: [spec.md](file:///home/tiago/01-dev-env/personal-repos/portifolio/specs/003-zenith-setup/spec.md)
-
-## Summary
-Establish a high-fidelity foundation for Zenith by mirroring `clean-tanstack-proj` and adopting **Bulletproof React** modularity. This plan is fully audited against the quality checklist, incorporating measurable metrics for **zero-flash timing**, **connection failure limits**, and **form persistence** namespace isolation.
+**Feature**: `003-zenith-setup` | **Status**: Execution (Audit Phase) | **Revision**: 2026-03-22
 
 ## Technical Context
 
-**Structure**: Bulletproof features in `src/features/`. Routes < 100 LoC.
-**Resilience**: `TransactionManager` + **Pointer-Locked** Blocking UI.
-**Connectivity**: Redirect after **3 failures** + **24h** localStorage backup.
-**Theming**: `ThemeProvider` initialization **< 50ms** (FCP).
+- **Framework**: TanStack Start v1 (RC/Stable) + React 19.
+- **Styling**: Tailwind CSS v4 (CSS-first) + Shadcn UI.
+- **Structure**: **Bulletproof React** directory pattern (`src/features/{feature}`).
+- **Resilience**: `TransactionManager` (AppWrite Core) + Blocking Overlay (Pointer-Lock).
+- **Theming**: Zero-flash `ThemeProvider` (< 50ms FCP target).
+- **Connectivity**: Redirection to `/connection-lost` after 3 failures OR 10s timeout.
+- **Persistence**: `useFormPersistence` with `zenith:form-backup:*` namespace (24h expiry).
 
-## Constitution Check
-- **Principle XVI (TanStack RC)**: Verified.
-- **Principle XVII (Stitch Synergy)**: Verified.
+## Constitution Check (v1.9.0 Alignment)
 
-## Phase 1: Foundation & Sync
-1.  **Sync Package**: Mirror `clean-tanstack-proj` dependencies.
-2.  **Config**: `vite.config.ts`, `components.json`.
+- [x] **Principle XII (Mandatory Root-Level Quality Gates)**: ALL verification must run via root `pnpm lint`, `pnpm typecheck`, `pnpm test`.
+- [x] **Principle XVI (TanStack RC)**: Use `latest` tags for all `@tanstack/*` packages.
+- [x] **Principle XVII (Stitch Synergy)**: High-fidelity designs from Stitch are the authoritative baseline.
+- [x] **Principle III/IX/XIV (Monorepo Integrity)**: Single VCS, root-level Biome config. **Baseline project (`clean-tanstack-proj`) is IGNORED to prevent noise.**
 
-## Phase 2: Bootstrapping & Theme Synergy
-1.  **Theme Logic**: Port `THEME_INIT_SCRIPT` to `ThemeProvider` with **< 50ms** target.
-2.  **Logic**: Lock core theme logic with immutable comments after verification.
-3.  **Loading**: Global `nprogress` bar integration.
+## Phase 0: Research & Alignment (research.md)
+- [x] Verify TanStack Start v1 RC hydration patterns.
+- [x] Map OKLCH color interpolation for Tailwind v4.
+- [x] Define `TransactionManager` compensation strategies.
 
-## Phase 3: Resilience & Hybrid Logic
-1.  **Backup**: Implement `useFormPersistence` using `zenith:form-backup:*` namespace.
-2.  **Rollback**: Implement `TransactionManager` + **Pointer-Lock** overlay.
-3.  **Fail-Fast**: Implement redirect to "Connection Lost" after **3 consecutive failures**.
+## Phase 1: Design & Contracts (data-model.md)
+- [x] Define Zod schemas for `Home` and `Portfolio` entities.
+- [x] Establish server function contracts for AppWrite interaction.
+- [x] Initialize Bulletproof feature boundaries.
 
-## Phase 4: Implementation (US1-US4)
-1.  **Feature Base**: Initialize `src/features/` modular dashboard feature.
-2.  **US1**: Root index route orchestrator (< 100 LoC).
-3.  **Stitch**: Validate visual parity via **identical OKLCH variables**.
+## Phase 2: Core Infrastructure (Done)
+- [x] Router factory, environment validation, shell component.
+- [x] ThemeProvider with fixed logic comments.
+- [x] Resilience suite (Overlay, Persistence, Monitor).
 
 ## Verification Plan
-- **Theme Audit**: Verify initialization < 50ms via Performance tab.
-- **Persistence Audit**: Fill form → 3x failures → Verify backup in `localStorage`.
-- **Security Audit**: `grep` dist for leaked API keys.
+
+### Automated
+- `pnpm session:verify` (root): Must pass 100% (baseline ignored).
+- `vitest` (zenith): Dummy smoke tests and resilience logic tests.
+
+### Manual
+- **Zero-Flash Timing**: Performance tab audit (< 50ms).
+- **Failure Simulation**: Network kill → Verify recovery flow + form persistence.
+- **Security Audit**: Grep production bundle for secrets.

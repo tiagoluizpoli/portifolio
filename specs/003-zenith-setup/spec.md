@@ -75,19 +75,6 @@ As a developer, I want a fully initialized TanStack Start project so that I can 
 
 ---
 
-### User Story 2 - Modern Styling Foundation (Priority: P2)
-
-As a developer, I want Shadcn UI integrated with Tailwind CSS v4 so that I can build a premium, visually stunning interface using the latest styling engine and modern components.
-
-**Why this priority**: Medium. Essential for the "wow" factor and development speed.
-
-**Independent Test**: Can be tested by adding a Shadcn UI component (e.g., Button) and verifying it renders correctly with Tailwind v4 styles (including theme variables from CSS-first config).
-
-**Acceptance Scenarios**:
-
-1. **Given** Tailwind v4 is configured, **When** I use a `@theme` variable in CSS, **Then** it is correctly applied to components.
-2. **Given** a Shadcn component is initialized, **When** it is rendered, **Then** it uses React 19 style `ref` passing (no `forwardRef` errors).
-
 ---
 
 ### User Story 3 - Secure Server Environment (Priority: P1)
@@ -110,8 +97,6 @@ As an architect, I want a secure environment for handling AppWrite secrets so th
 - **FR-001**: System MUST use **TanStack Start v1** (RC/Stable) as the core framework.
 - **FR-002**: System MUST use **React 19** (Stable) and adhere to its modern prop-passing patterns (e.g., direct `ref` passing, `useActionState` for forms).
 - **FR-003**: System MUST use **Tailwind CSS v4** with a CSS-first configuration (no `tailwind.config.js`). Theme extensions MUST reside in `src/index.css` using **OKLCH-based CSS variables** for all tokens.
-- **FR-003.1**: Zenith MUST use **Geist Sans** for UI and **Geist Mono** for data/code displays, integrated directly into the Tailwind v4 @theme.
-- **FR-004**: System MUST configure **Shadcn UI** using `#/*` aliases in `components.json`, pointing `tailwind.css` to `src/styles.css` and explicitly excluding `tailwind.config.js`.
 - **FR-005**: System MUST implement a `src/infrastructure/appwrite` module that uses `createServerFn({ method: 'POST'|'GET' })` with Zod validation for all privileged operations.
 - **FR-006**: System MUST follow a **Bulletproof-inspired feature-based structure**, adapted for TanStack Start:
     - `src/features/{feature}/`: Each feature (e.g., `auth`, `profile`) MUST encapsulate its own `api/`, `components/`, `hooks/`, and `types/`.
@@ -121,7 +106,6 @@ As an architect, I want a secure environment for handling AppWrite secrets so th
     - **Single Config**: MUST use `vite.config.ts` only (no `app.config.ts`).
     - **Vite Plugins**: Nitro (nightly), TsconfigPaths, TailwindCSS v4, TanStackStart, ViteReact.
     - **Styles**: `src/styles.css` is the source of truth, imported in `__root.tsx` via `?url`.
-    - **Visual Parity**: Implementation MUST achieve **identical OKLCH variable mapping** to Stitch designs as the baseline for semantic fidelity.
 - **FR-007**: System MUST provide a `.env.example` defining `VITE_` prefixed public variables and secure non-prefixed secret variables (API Keys).
 - **FR-008**: System MUST integrate with the root **Biome** configuration, ensuring NO ESLint or Prettier files exist in the application folder.
 - **FR-009**: System MUST centralize ALL AppWrite CRUD operations and Domain Models in the shared `@repo/appwrite-core` package. Domain Models MUST be defined using Zod schemas as the source of truth for both types and runtime validation, decoupled from the AppWrite SDK using the Repository Pattern.
@@ -133,8 +117,7 @@ As an architect, I want a secure environment for handling AppWrite secrets so th
 - **FR-015**: System MUST implement **Compensating Transactions** in the application service layer via a centralized `TransactionManager` in `@repo/appwrite-core`. 
     - **FR-015.1**: Support for **asynchronous compensating actions** (e.g., polling for resource deletion) MUST be built-in.
     - **FR-015.2**: If a compensating action fails, the system MUST emit a CRITICAL log with the full state for manual intervention.
-- **FR-016**: System MUST leverage **Google Stitch** specialized skills for all UI design. 
-    - **FR-016.1**: Every Stitch-generated design MUST be validated against the implementation for semantic alignment and visual fidelity before completion.
+- **FR-015.2**: If a compensating action fails, the system MUST emit a CRITICAL log with the full state for manual intervention.
 
 ### Key Entities
 
@@ -150,5 +133,4 @@ As an architect, I want a secure environment for handling AppWrite secrets so th
 
 - **SC-001**: Zero linting errors via `pnpm lint` (Biome).
 - **SC-002**: Zero TypeScript errors via `pnpm typecheck`.
-- **SC-003**: Lighthouse Performance score > 90 and TTI < 2.5s for the default dashboard on 4G/Desktop.
-- **SC-004**: Successful extraction of secret variables from server-only context confirmed by code audit.
+- **SC-003**: Successful extraction of secret variables from server-only context confirmed by code audit.
