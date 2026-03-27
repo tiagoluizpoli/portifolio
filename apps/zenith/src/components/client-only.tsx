@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import { useHydrated } from '~/hooks/use-hydrated';
+import { useHydrated } from '@/hooks/use-hydrated';
 
 export function ClientOnly({
   children,

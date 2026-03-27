@@ -1,7 +1,7 @@
 import { PortfolioService } from '@repo/appwrite-core';
 import { createServerFn } from '@tanstack/react-start';
 import { z } from 'zod';
-import { env } from '~/config/env';
+import { env } from '@/config/env';
 
 // Use service for initialization
 PortfolioService.init(env);
