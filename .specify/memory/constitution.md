@@ -1,9 +1,8 @@
 <!--
 Sync Impact Report:
-- Version change: 1.6.0 → 1.7.0
-- Added sections: Principle XVI (TanStack RC Standards)
+- Version change: 1.8.0 → 1.9.0
+- Added sections: Principle XVIII (Architecture-Level Test Plans), XIX (Explicit SOLID Mapping), XX (Security Boundary Mapping), XXI (Test Immutability)
 - Modified principles: None
-- Templates updated: [guidelines/tanstack_start_v1.md](file:///home/tiago/01-dev-env/personal-repos/portifolio/.specify/memory/guidelines/tanstack_start_v1.md)
 -->
 
 # Zenith Constitution
@@ -68,8 +67,20 @@ This gate is mandatory and MUST be verified before notifying the user of complet
 ### XVII. Google Stitch Synergy
 **Definition**: All frontend planning, research, design, and implementation tasks MUST leverage the Google Stitch MCP connection and its specialized skills (`speckit-stitch`, etc.). Stitch is the primary engine for generating high-fidelity UI components, screen layouts, and design variants. Every technical plan or frontend task must prioritize Stitch-generated designs as the authoritative baseline for implementation.
 
+### XVIII. Architecture-Level Test Plans
+**Definition**: No feature specification is considered complete without a mandatory "Architecture-Level Test Plan." This plan MUST define the high-level strategy for BDD (Playwright) and TDD (Vitest) BEFORE any implementation code is written. This ensures that testability is an architectural constraint, not an afterthought.
+
+### XIX. Explicit SOLID Mapping
+**Definition**: Every high-level technical design MUST explicitly state which SOLID principles are being applied and how. Rationale such as "Following Single Responsibility Principle to isolate data fetching from UI rendering" is mandatory to ensure architectural clarity and maintainability.
+
+### XX. Security Boundary Mapping
+**Definition**: All features involving data mutation or sensitive access MUST include a explicit "Security Boundary Map." This identifies which logic is strictly handled by the server (Server Functions) and which is client-side (Standard React). The default state for UI is CLIENT-SIDE, while the default state for data integrity is SERVER-SIDE.
+
+### XXI. Test Immutability
+**Definition**: Automated tests are the authoritative source of truth for feature behavior. Once established, tests are IMMUTABLE. They cannot be modified to align with implementation code without an explicit justification provided to the user. Tests ENFORCE correctness, they do not follow code.
+
 ## Governance
 - The Roadmap and Constitution supersede all individual implementation decisions.
 - Changes to the Roadmap or Constitution require explicit documentation and rationale.
 
-**Version**: 1.8.0 | **Ratified**: 2026-03-19 | **Last Amended**: 2026-03-21
+**Version**: 1.9.0 | **Ratified**: 2026-03-27 | **Last Amended**: 2026-03-27

@@ -1,8 +1,12 @@
 # portifolio Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-03-21
+Auto-generated from all feature plans. Last updated: 2026-03-27
 
 ## Active Technologies
+- TypeScript 5.7+ / React 19 + TanStack Start v1 (RC), Tailwind CSS v4, Shadcn UI, Geist Typography (004-ui-design-shadcn)
+- Appwrite (Server Functions + Repository Pattern) (004-ui-design-shadcn)
+- TypeScript 5.7+ / React 19 (TanStack Start) + `@tanstack/react-start`, `@repo/appwrite-core`, `tailwindcss` v4, `shadcn/ui`, `lucide-react`, `zod`. (004-ui-design-shadcn)
+- Appwrite v22+ TablesDB (Owner-authenticated access). (004-ui-design-shadcn)
 
 - (003-zenith-setup)
 
@@ -22,8 +26,10 @@ tests/
 : Follow standard conventions
 
 ## Recent Changes
+- 004-ui-design-shadcn: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
+- 004-ui-design-shadcn: Added TypeScript 5.7+ / React 19 (TanStack Start) + `@tanstack/react-start`, `@repo/appwrite-core`, `tailwindcss` v4, `shadcn/ui`, `lucide-react`, `zod`.
+- 004-ui-design-shadcn: Added TypeScript 5.7+ / React 19 (TanStack Start) + `@tanstack/react-start`, `@repo/appwrite-core`, `tailwindcss` v4, `shadcn/ui`, `lucide-react`, `zod`.
 
-- 003-zenith-setup: Added
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->
