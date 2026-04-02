@@ -3,16 +3,16 @@
 This document details the screens required for the Zenith Management Hub and the Shadcn components to be used for each.
 
 ## 1. Global Layout (`__root.tsx`)
-**Goal**: Professional administrative navigation.
-- **Sidebar**: `Sheet` or `Sidebar` component (Links: Dashboard, Users, Portfolio, Settings, Logs).
-- **Topbar**: `Breadcrumb`, `Input` (Global search), `DropdownMenu` (User profile), `ThemeToggle`.
-- **Branding**: "Zenith" logo with premium typography.
+**Goal**: The Digital Curator (Editorial & High-Density).
+- **Sidebar**: `Sidebar` (Dashboard, Manager, Blog [WIP], Reports [WIP]). No dividers. Settings removed from bottom.
+- **Topbar**: `Breadcrumb`, `Input` (Search), `Button` (Settings Gear icon), `DropdownMenu` (User profile).
+- **Rounding**: Global `rounded-xl` (12px).
 
 ## 2. Dashboard Hub (`/`)
-**Goal**: High-level overview of ecosystem health.
-- **KPI Grid**: 4x `Card` components showing (Users, Projects, Active Sessions, Errors).
-- **Recent Activity**: `ScrollArea` with a list of recent events.
-- **Status Indicators**: `Badge` or `Progress` components for system health.
+**Goal**: Zenith Hub: Portfolio Analytics (Baseline: `3d199cd1`).
+- **KPI Grid**: 4 Cards (MAU, Session, Engagement, Projects).
+- **Visitor Origins**: `ScrollArea` list with **Minimalist Flat Flag Icons** and density bars.
+- **Visuals**: High-density masonry/grid, zero excessive whitespace.
 
 ## 3. Portfolio Manager (`/manager`)
 **Goal**: Manage entries for the main portfolio app.

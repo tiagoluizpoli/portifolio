@@ -1,35 +1,49 @@
-# Research: Zenith UI Design & StitchMCP
+# Research: Zenith High-Rigor Architecture (Shell Refactor)
 
-## Decision: Shadcn-First Administrative Design
-**Rationale**: The user explicitly requested a "Shadcn First" approach for visual excellence and robust component usage. Shadcn provides the premium, clean, and direct aesthetic required for a management hub.
+This research resolves the requirements from the **Zenith Constitution v1.9.0** and the **TanStack Master Skill**.
 
-## Decision: StitchMCP Generation Strategy
-**Rationale**: To optimize token usage and ensure robustness, prompts will be detailed, specifying exact Shadcn components, layout density, and the "Premium Admin" aesthetic. Screens will be generated in logical phases (Layout -> Dashboard -> Administrative Tools).
+## Decision: Mock Data Engine (P1)
+**Rationale**: Per user feedback, real analytics are deferred until the portfolio integration. We will implement a `MockDataEngine` service inside `app/services/` to provide consistent, high-fidelity mock data for the dashboard.
+- **Strategy**: Use a seed-based randomizer to ensure stable mock data during development.
+- **Scope**: Visitors (Count, Trend), Session Time, Geographic Distribution (Mocked flags).
 
-## Decision: Visitor Analytics Storage
-**Rationale**: For personal visitor tracking (Visitors, Time, Geo), we will use an `analytics` collection in Appwrite TablesDB.
-- **Fields**: `sessionId`, `timestamp`, `path`, `duration`, `country`, `state`.
-- **Integration**: Tracked via a global `useEffect` or TanStack Router hook in the portfolio app, pushed directly to the `analytics` collection.
-- **Privacy**: No PII collected. Strictly for aggregate dashboard display.
+## Decision: Shell Symmetry & Spacing (P1)
+**Rationale**: To ensure "Intelligent Space Usage" (Spec §DR-004), the Administrative Shell will follow a strict symmetry grid:
+- **Sidebar**: Fixed width (e.g., 256px), padding-y of `p-4` (16px), and `gap-2` (8px) for nav items.
+- **Topbar**: Height of `h-16` (64px) with `px-4` padding.
+- **Content Area**: `p-6` (24px) with nested cards using `gap-4` (16px).
+- **Rounding**: Global `rounded-xl` (12px) for cards and `rounded-lg` (8px) for interactive elements.
 
-## Decision: High-Density Layout Benchmarks
-**Rationale**: To ensure "Intelligent Space Usage" (Spec §FR-003), the UI will follow high-density spacing rules:
-- **Max Padding**: Containers should use `p-4` (16px) or `p-2` (8px). Avoid `p-6` unless necessary for hero sections.
-- **Default Gap**: Grids and flex layouts should use `gap-2` (8px). Use `gap-1` (4px) for micro-components.
-- **Symmetry**: Elements in the same row must be `h-full` or `items-stretch` to ensure visual alignment.
-- **Roundness**: Prefer `rounded-md` (0.375rem).
-- **Typography**: MUST use **Geist Sans** and **Geist Mono** for the premium, intelligence-oriented administrative hub aesthetic.
+## Decision: Infrastructure Sealing (Appwrite)
+**Rationale**: Secure initialization of the Appwrite client in `app/services/appwrite.server.ts`, ensuring it is ONLY accessible via `createServerFn`. Logic in `@repo/appwrite-core` will be mapped to clean domain interfaces (IRepository).
 
-## Decision: Visual Parity & Stitch Audit
-**Rationale**: To maintain the highest level of semantic and visual fidelity, every implemented component must be audited against the **Google Stitch** designs for OKLCH variable mapping (Audit CHK024).
+---
 
-## Alternatives Considered: Custom Tailwind Components
-**Rejected Because**: Violates the "SHADCN FIRST" core constraint. Custom components are more prone to inconsistent design language compared to a unified UI library.
+## Decision: Security Boundary Map (Principle XX)
 
-## StitchMCP Prompt Templates
+| Logic/Data Component | Location | Component Type | Rationale |
+| :--- | :--- | :--- | :--- |
+| **User Authentication** | Server | Middleware / Server Fn | Prevent data leakage; only authenticated owner can access. |
+| **System Configuration**| Server | Server Function | Secure persistence of admin preferences. |
+| **Mock Data Loaders** | Client | Standard React Hook | Fast, reactive dashboard without server overhead. |
+| **Theme/Sidebar Toggle** | Client | Standard React Hook | Browser state only. |
 
-### Layout Template (Main Shell)
-"Premium admin dashboard layout for Zenith Hub. Sidebar navigation (Dashboard, Users, Portfolio, Settings, Logs). Topbar with Breadcrumbs, Search, User Profile. Shadcn UI exclusively. Dark mode, Brand Violet accents. High-density but clean."
+---
 
-### Dashboard Template
-"Data-dense admin dashboard for Zenith. KPI Card grid (4 columns). Recent activity list (ScrollArea). System health (Badges/Progress). Shadcn typography. Premium executive feel."
+## Decision: Architecture-Level Test Plan (Principle XVIII)
+
+### BDD (Playwright) - Shell Stability
+- **Scenario**: Admin toggles sidebar and verifies the layout shift.
+- **Scenario**: Admin navigates between Dashboard and Settings via the Sidebar.
+- **Immunity**: This test MUST NEVER be changed without user prompting.
+
+### TDD (Vitest) - Core Logic
+- **Module**: `mockDataEngine.ts` -> Verify consistent seed-based generation.
+- **Module**: `appwrite.server.ts` -> Verify that secrets are isolated from the client bundle.
+
+---
+
+## Out of Scope (Deferred)
+- **Project Manager**: Postponed until portfolio data structure is finalized.
+- **Real Analytics**: Awaiting Portfolio integration.
+- **Multi-Role Navigation**: Zenith Hub is single-owner only.
