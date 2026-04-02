@@ -25,10 +25,14 @@ export const Route = createRootRoute({
   component: RootComponent,
 });
 
+import { LayoutShell } from '../components/layout/layout-shell';
+
 function RootComponent() {
   return (
     <RootDocument>
-      <Outlet />
+      <LayoutShell>
+        <Outlet />
+      </LayoutShell>
     </RootDocument>
   );
 }

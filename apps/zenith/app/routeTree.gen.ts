@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ConnectionLostRouteImport } from './routes/connection-lost'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ErrorStartupRouteImport } from './routes/error/startup'
 
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConnectionLostRoute = ConnectionLostRouteImport.update({
   id: '/connection-lost',
   path: '/connection-lost',
@@ -32,35 +38,46 @@ const ErrorStartupRoute = ErrorStartupRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/connection-lost': typeof ConnectionLostRoute
+  '/settings': typeof SettingsRoute
   '/error/startup': typeof ErrorStartupRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/connection-lost': typeof ConnectionLostRoute
+  '/settings': typeof SettingsRoute
   '/error/startup': typeof ErrorStartupRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/connection-lost': typeof ConnectionLostRoute
+  '/settings': typeof SettingsRoute
   '/error/startup': typeof ErrorStartupRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/connection-lost' | '/error/startup'
+  fullPaths: '/' | '/connection-lost' | '/settings' | '/error/startup'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/connection-lost' | '/error/startup'
-  id: '__root__' | '/' | '/connection-lost' | '/error/startup'
+  to: '/' | '/connection-lost' | '/settings' | '/error/startup'
+  id: '__root__' | '/' | '/connection-lost' | '/settings' | '/error/startup'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ConnectionLostRoute: typeof ConnectionLostRoute
+  SettingsRoute: typeof SettingsRoute
   ErrorStartupRoute: typeof ErrorStartupRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/connection-lost': {
       id: '/connection-lost'
       path: '/connection-lost'
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ConnectionLostRoute: ConnectionLostRoute,
+  SettingsRoute: SettingsRoute,
   ErrorStartupRoute: ErrorStartupRoute,
 }
 export const routeTree = rootRouteImport

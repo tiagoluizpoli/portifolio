@@ -1,4 +1,4 @@
-import { ClientOnly } from './client-only';
+import { ClientOnly } from './client-only.js';
 
 interface BlockingErrorOverlayProps {
   isVisible: boolean;
