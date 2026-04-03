@@ -41,24 +41,35 @@ const buttonVariants = cva(
   }
 )
 
+import { useOnlineStatus } from "@/hooks/use-online-status"
+
 function Button({
   className,
   variant = "default",
   size = "default",
   asChild = false,
+  type,
+  disabled,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean
   }) {
   const Comp = asChild ? Slot.Root : "button"
+  const { isOffline } = useOnlineStatus()
+  
+  // Enforce FR-019: Block Save Actions (type="submit") during offline states
+  const isDisabled = disabled || (isOffline && type === "submit")
 
   return (
     <Comp
       data-slot="button"
       data-variant={variant}
       data-size={size}
+      data-offline={isOffline && type === "submit"}
       className={cn(buttonVariants({ variant, size, className }))}
+      type={type}
+      disabled={isDisabled}
       {...props}
     />
   )

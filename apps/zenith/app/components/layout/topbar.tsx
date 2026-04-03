@@ -12,18 +12,29 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
+import { useOnlineStatus } from '@/hooks/use-online-status';
+
 /**
  * Topbar Component (Constitution §XV, §I)
  * High-density editorial header providing search, utility actions, and profile context.
  * Features Oceanic Obsidian backdrop-blur-2xl and the 'No-Line' rule.
  */
 export function Topbar() {
+  const { isOffline } = useOnlineStatus();
+
   return (
     <header className="sticky top-0 z-10 flex h-14 w-full items-center justify-between px-4 glass-premium border-none">
       <div className="flex flex-1 items-center gap-4">
         <SidebarTrigger className="hover:bg-sidebar-accent/50 text-muted-foreground transition-colors" />
         <div className="h-4 w-px bg-foreground/10 mx-2 hidden md:block" />
         
+        {isOffline && (
+          <div className="flex items-center gap-2 px-3 py-1 bg-destructive/10 rounded-full border border-destructive/20 animate-pulse">
+            <span className="size-1.5 rounded-full bg-destructive" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-destructive">Offline Mode</span>
+          </div>
+        )}
+
         <div className="relative w-full max-w-md group hidden md:block">
           <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground/50 group-focus-within:text-primary transition-colors" />
           <Input
