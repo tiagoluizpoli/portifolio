@@ -15,7 +15,10 @@ export interface AnalyticsData {
   geoDistribution: { country: string; code: string; value: number }[];
 }
 
-export const useMockAnalytics = (seed = 'zenith-v1', isEmpty = false): AnalyticsData => {
+export const useMockAnalytics = (
+  seed = 'zenith-v1',
+  isEmpty = false,
+): AnalyticsData => {
   return useMemo(() => {
     if (isEmpty) {
       return {
