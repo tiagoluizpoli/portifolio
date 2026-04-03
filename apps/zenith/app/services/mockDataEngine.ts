@@ -4,8 +4,19 @@ import { useMemo } from 'react';
  * MockDataEngine (Constitution §XV)
  * Provides seed-based, consistent mock metrics for the administrative dashboard.
  */
-export const useMockAnalytics = (seed = 'zenith-v1') => {
+export const useMockAnalytics = (seed = 'zenith-v1', isEmpty = false) => {
   return useMemo(() => {
+    if (isEmpty) {
+      return {
+        kpis: {
+          visitors: 0,
+          avgSessionTime: '0s',
+          engagementRate: '0%',
+        },
+        geoDistribution: [],
+      };
+    }
+
     // Basic seed-based random generator for consistency
     const pseudoRandom = (offset: number) => {
       let hash = 0;

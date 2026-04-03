@@ -24,6 +24,7 @@ import {
   CardFooter
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const Route = createFileRoute('/')({
   component: Dashboard,
@@ -34,14 +35,69 @@ export const Route = createFileRoute('/')({
  * High-fidelity 'Executive Tier' refinement matching model 3d199cd15cb2.
  */
 function Dashboard() {
-  const { kpis } = useMockAnalytics();
+  const isEmpty = false; // Toggle for FR-020 verification
+  const { kpis } = useMockAnalytics('zenith-v1', isEmpty);
 
   const kpiCards = [
-    { label: 'Total MAU', value: '2.4k', icon: Users, trend: '12.5%', trendType: 'up' },
-    { label: 'Avg. Session', value: '4m 12s', icon: Clock, trend: '0.0%', trendType: 'neutral' },
-    { label: 'Engagement Rate', value: '68%', icon: Zap, trend: '2.1%', trendType: 'down' },
+    { label: 'Total MAU', value: kpis.visitors.toLocaleString(), icon: Users, trend: '12.5%', trendType: 'up' },
+    { label: 'Avg. Session', value: kpis.avgSessionTime, icon: Clock, trend: '0.0%', trendType: 'neutral' },
+    { label: 'Engagement Rate', value: kpis.engagementRate, icon: Zap, trend: '2.1%', trendType: 'down' },
     { label: 'Active Projects', value: '42', icon: Activity, trend: '0% change', trendType: 'neutral' },
   ];
+
+  if (isEmpty) {
+    return (
+      <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-700 font-sans">
+        <div className="grid gap-4 md:grid-cols-4">
+          {[1, 2, 3, 4].map((i) => (
+            <Card key={i} className="bg-surface-container-low/40 border-none shadow-none">
+              <CardContent className="p-5 flex items-center justify-between">
+                <div className="space-y-2.5 w-full">
+                  <Skeleton className="h-2 w-16 bg-foreground/5" />
+                  <Skeleton className="h-6 w-24 bg-foreground/10" />
+                </div>
+                <Skeleton className="size-8 rounded-lg bg-foreground/5 shrink-0" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <Card className="border-none shadow-none bg-surface-container-low/20">
+          <CardHeader className="text-center py-12 space-y-4">
+            <div className="p-4 bg-primary/10 rounded-full mx-auto w-fit">
+              <Zap className="size-8 text-primary animate-pulse" />
+            </div>
+            <div className="space-y-2">
+              <CardTitle className="text-3xl">Welcome to Zenith Hub</CardTitle>
+              <CardDescription className="max-w-md mx-auto text-sm leading-relaxed">
+                Your administrative engine is ready. To begin populating your dashboard, 
+                start by creating your first portfolio entries in the management sections.
+              </CardDescription>
+            </div>
+            <div className="flex justify-center gap-3 pt-4">
+              <Button size="sm" className="rounded-full px-6 bg-primary text-primary-foreground hover:bg-primary/90">
+                Create Project
+              </Button>
+              <Button variant="ghost" size="sm" className="rounded-full px-6 hover:bg-foreground/5">
+                View Documentation
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent className="px-12 pb-16 space-y-8">
+             <div className="space-y-4 max-w-2xl mx-auto">
+               {[1, 2, 3].map((i) => (
+                 <div key={i} className="flex items-center gap-6 opacity-30">
+                   <Skeleton className="size-5 rounded-full bg-foreground/10" />
+                   <Skeleton className="h-3 flex-1 bg-foreground/5 rounded-full" />
+                   <Skeleton className="h-3 w-20 bg-foreground/5 rounded-full" />
+                 </div>
+               ))}
+             </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const regions = [
     { name: 'United States', code: 'US', requests: '1,240,582', latency: '18ms', status: 'low', distribution: 85 },
