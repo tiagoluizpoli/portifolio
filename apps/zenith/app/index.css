@@ -1,12 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap');
+@import "@fontsource-variable/geist/index.css";
+@import "@fontsource-variable/geist-mono/index.css";
 @import "tw-animate-css";
 @import "tailwindcss";
 
-/* High-Density Editorial Typography: The Digital Curator */
+/* High-Density Editorial Typography: The Digital Curator [FR-012] */
 
 @custom-variant dark (&:is(.dark *));
 
 @theme {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+  --font-display: "Geist Variable", var(--font-sans);
   --color-brand-primary: #d0bcff;
   --color-brand-secondary: #dbe2fd;
   --color-accent: #d0bcff;
