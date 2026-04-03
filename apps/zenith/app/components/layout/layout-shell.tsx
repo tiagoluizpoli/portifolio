@@ -1,7 +1,7 @@
-import React from 'react';
+import type React from 'react';
 import { AppSidebar } from './sidebar';
 import { Topbar } from './topbar';
-import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 
 /**
  * LayoutShell (Constitution §XV, §I)
@@ -19,9 +19,7 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
 
           {/* Main Content Area: High-Density Editorial Surface */}
           <main className="flex-1 overflow-y-auto p-4 md:p-4 space-y-8">
-            <div className="w-full">
-              {children}
-            </div>
+            <div className="w-full">{children}</div>
           </main>
         </SidebarInset>
       </div>

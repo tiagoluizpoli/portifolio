@@ -1,17 +1,23 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { 
-  Settings, 
-  User, 
-  Shield, 
+import {
+  ArrowRight,
   Database,
   Save,
-  ArrowRight
+  Settings,
+  Shield,
+  User,
 } from 'lucide-react';
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
 export const Route = createFileRoute('/settings')({
   component: SettingsPage,
@@ -35,8 +41,12 @@ function SettingsPage() {
     <div className="space-y-10 animate-in fade-in duration-500 font-sans">
       <div className="flex items-end justify-between">
         <div className="space-y-1">
-          <h1 className="font-display text-4xl font-extrabold tracking-tight">System Configuration</h1>
-          <p className="text-muted-foreground text-sm">Manage your portfolio hub deployment and administrative parameters.</p>
+          <h1 className="font-display text-4xl font-extrabold tracking-tight">
+            System Configuration
+          </h1>
+          <p className="text-muted-foreground text-sm">
+            Manage your portfolio hub deployment and administrative parameters.
+          </p>
         </div>
         <Button className="gap-2 font-bold uppercase tracking-widest text-[10px] h-10 px-6 bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-xl transition-all">
           <Save className="h-3.5 w-3.5" />
@@ -53,19 +63,29 @@ function SettingsPage() {
           {tabs.map((tab) => (
             <button
               key={tab.id}
+              type="button"
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                "w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all group",
-                activeTab === tab.id 
-                  ? "bg-primary/10 text-primary" 
-                  : "hover:bg-muted/5 text-muted-foreground hover:text-foreground"
+                'w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all group',
+                activeTab === tab.id
+                  ? 'bg-primary/10 text-primary'
+                  : 'hover:bg-muted/5 text-muted-foreground hover:text-foreground',
               )}
             >
               <div className="flex items-center gap-3">
-                <tab.icon className={cn("h-4 w-4 transition-colors", activeTab === tab.id ? "text-primary" : "text-muted-foreground/60 group-hover:text-foreground")} />
+                <tab.icon
+                  className={cn(
+                    'h-4 w-4 transition-colors',
+                    activeTab === tab.id
+                      ? 'text-primary'
+                      : 'text-muted-foreground/60 group-hover:text-foreground',
+                  )}
+                />
                 {tab.label}
               </div>
-              {activeTab === tab.id && <ArrowRight className="h-3 w-3 animate-in slide-in-from-left-1 duration-300" />}
+              {activeTab === tab.id && (
+                <ArrowRight className="h-3 w-3 animate-in slide-in-from-left-1 duration-300" />
+              )}
             </button>
           ))}
         </aside>
@@ -76,33 +96,50 @@ function SettingsPage() {
             <Card className="border-none shadow-none bg-surface-container-low/30">
               <CardHeader className="pb-8">
                 <CardTitle>Hub Identity</CardTitle>
-                <CardDescription>Configure the primary metadata for your administrative board.</CardDescription>
+                <CardDescription>
+                  Configure the primary metadata for your administrative board.
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-8">
                 <div className="grid gap-8 md:grid-cols-2">
                   <div className="space-y-2.5">
-                    <label htmlFor="hub-name" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Hub Display Name</label>
-                    <Input 
-                      id="hub-name" 
-                      placeholder="Zenith Portfolio Hub" 
-                      defaultValue="Zenith Hub" 
+                    <label
+                      htmlFor="hub-name"
+                      className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground"
+                    >
+                      Hub Display Name
+                    </label>
+                    <Input
+                      id="hub-name"
+                      placeholder="Zenith Portfolio Hub"
+                      defaultValue="Zenith Hub"
                       className="bg-background/40 border-none h-11 focus-visible:ring-primary/20"
                     />
                   </div>
                   <div className="space-y-2.5">
-                    <label htmlFor="hub-version" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">System Version</label>
-                    <Input 
-                      id="hub-version" 
-                      placeholder="v1.0.0" 
-                      defaultValue="v1.0.0-PROXIMA" 
-                      disabled 
+                    <label
+                      htmlFor="hub-version"
+                      className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground"
+                    >
+                      System Version
+                    </label>
+                    <Input
+                      id="hub-version"
+                      placeholder="v1.0.0"
+                      defaultValue="v1.0.0-PROXIMA"
+                      disabled
                       className="bg-muted/5 border-none h-11 opacity-50"
                     />
                   </div>
                 </div>
                 <div className="space-y-2.5">
-                  <label htmlFor="hub-desc" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Dashboard Purpose</label>
-                  <textarea 
+                  <label
+                    htmlFor="hub-desc"
+                    className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground"
+                  >
+                    Dashboard Purpose
+                  </label>
+                  <textarea
                     id="hub-desc"
                     className="w-full bg-background/40 border-none rounded-xl p-4 text-sm min-h-[120px] outline-none focus:ring-2 ring-primary/20 transition-all font-sans"
                     placeholder="Primary administrative board for Zenith portfolio management."
@@ -119,8 +156,13 @@ function SettingsPage() {
                   <Settings className="h-10 w-10 text-primary/40 animate-pulse" />
                 </div>
                 <div className="space-y-1">
-                  <h3 className="font-display text-xl font-bold">Module Integration Pending</h3>
-                  <p className="text-sm text-muted-foreground max-w-xs mx-auto">This section will be connected to the Appwrite Service layer in the next architectural sprint.</p>
+                  <h3 className="font-display text-xl font-bold">
+                    Module Integration Pending
+                  </h3>
+                  <p className="text-sm text-muted-foreground max-w-xs mx-auto">
+                    This section will be connected to the Appwrite Service layer
+                    in the next architectural sprint.
+                  </p>
                 </div>
               </CardContent>
             </Card>

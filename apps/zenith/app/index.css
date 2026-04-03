@@ -66,7 +66,7 @@
     /* The No-Line Rule: Boundaries are defined by light/shadow, not lines */
     @apply border-transparent outline-ring/50;
   }
-  
+
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
@@ -77,7 +77,12 @@
   }
 
   /* Editorial Spacing Scales */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-display text-foreground tracking-tight;
   }
 
@@ -93,11 +98,11 @@
 @theme inline {
   --font-display: "Manrope", var(--font-sans);
   --font-sans: "Inter", system-ui, sans-serif;
-  
+
   --color-surface-container-low: var(--surface-container-low);
   --color-surface-container-high: var(--surface-container-high);
   --color-surface-variant: var(--surface-variant);
-  
+
   /* Standard mapping for existing components */
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -107,7 +112,7 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
-  
+
   --color-chart-1: #d0bcff;
   --color-chart-2: #dbe2fd;
   --color-chart-3: #cbc3d7;
@@ -141,4 +146,3 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 }
-

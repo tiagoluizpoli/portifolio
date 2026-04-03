@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /**
  * useActivity (Constitution §XV, §XIX)
@@ -19,12 +19,22 @@ export function useActivity(timeoutMs = 30 * 60 * 1000) {
     // Initialize timer
     handleActivity();
 
-    const events = ['mousedown', 'keydown', 'scroll', 'touchstart', 'mousemove'];
-    events.forEach(event => window.addEventListener(event, handleActivity));
+    const events = [
+      'mousedown',
+      'keydown',
+      'scroll',
+      'touchstart',
+      'mousemove',
+    ];
+    events.forEach((event) => {
+      window.addEventListener(event, handleActivity);
+    });
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
-      events.forEach(event => window.removeEventListener(event, handleActivity));
+      events.forEach((event) => {
+        window.removeEventListener(event, handleActivity);
+      });
     };
   }, [timeoutMs]);
 
