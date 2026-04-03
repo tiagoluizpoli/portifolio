@@ -1,18 +1,12 @@
+import { useState } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMockAnalytics } from '@/services/mockDataEngine';
 import { 
   Users, 
-  Clock, 
-  MousePointerClick, 
   TrendingUp,
-  ArrowUpRight,
-  ArrowDownRight,
   Activity,
   ChevronRight,
-  Globe,
-  Zap,
-  Server,
-  DownloadCloud
+  Zap
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { 
@@ -25,6 +19,12 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger 
+} from '@/components/ui/tooltip';
 
 export const Route = createFileRoute('/')({
   component: Dashboard,
@@ -37,6 +37,7 @@ export const Route = createFileRoute('/')({
 function Dashboard() {
   const isEmpty = false; // Toggle for FR-020 verification
   const { kpis, accessHistory } = useMockAnalytics('zenith-v1', isEmpty);
+  const [activeRange, setActiveRange] = useState('24h');
 
   const kpiCards = [
     { label: 'Total Portfolio Access', value: kpis.totalAccess.toLocaleString(), icon: Users, trend: 'stable', trendType: 'neutral' },
@@ -151,31 +152,83 @@ function Dashboard() {
               <CardTitle className="text-2xl font-display font-extrabold tracking-tight">Temporal Density</CardTitle>
               <CardDescription>Portfolio access frequency over the last 24 hours</CardDescription>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-1.5 bg-foreground/5 p-1 rounded-xl">
                {accessHistory.map((h) => (
-                 <div key={h.label} className="text-center px-3 py-1.5 bg-foreground/3 rounded-lg">
-                   <p className="text-[10px] font-bold text-muted-foreground/40 uppercase">{h.label}</p>
-                   <p className="text-xs font-mono font-bold">{h.value}</p>
-                 </div>
+                 <Button
+                   key={h.label}
+                   variant="ghost"
+                   size="icon"
+                   onClick={() => setActiveRange(h.label)}
+                   className={cn(
+                     "size-9 flex flex-col items-center justify-center rounded-lg transition-all border-none shadow-none",
+                     activeRange === h.label 
+                       ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" 
+                       : "text-muted-foreground/40 hover:bg-foreground/5 hover:text-muted-foreground"
+                   )}
+                 >
+                   <p className="text-[9px] font-black uppercase leading-none">{h.label}</p>
+                   <p className="text-[10px] font-mono font-bold leading-none mt-0.5">{h.value}</p>
+                 </Button>
                ))}
             </div>
           </CardHeader>
-          <CardContent className="h-64 flex items-end gap-2 px-6 pb-6">
-            {/* Sparkline-like visual representation */}
-            {Array.from({ length: 48 }).map((_, i) => {
-              const height = 20 + (Math.sin(i * 0.3) * 30) + (Math.random() * 40);
-              return (
-                <div 
-                  key={i} 
-                  className="flex-1 bg-primary/20 hover:bg-primary transition-colors rounded-t-sm"
-                  style={{ height: `${height}%` }}
-                />
-              );
-            })}
+          <CardContent className="px-6 pb-2">
+            <TooltipProvider>
+              <div className="h-64 flex items-end gap-1.5">
+                {Array.from({ length: 48 }).map((_, i) => {
+                  const height = 20 + (Math.sin(i * 0.3) * 30) + (Math.random() * 40);
+                  const timeAgo = (48 - i) * 30; // 30 mins intervals
+                  const hours = Math.floor(timeAgo / 60);
+                  const mins = timeAgo % 60;
+                  const label = hours > 0 ? `${hours}h ${mins}m ago` : `${mins}m ago`;
+                  
+                  return (
+                    <Tooltip key={i}>
+                      <TooltipTrigger asChild>
+                        <div 
+                          className="flex-1 bg-primary/40 hover:bg-primary transition-all duration-300 rounded-t-sm cursor-crosshair min-w-[2px]"
+                          style={{ height: `${height}%` }}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent 
+                        side="top" 
+                        className="flex flex-col gap-1 py-3 px-4 bg-surface-container-high border-none shadow-2xl rounded-xl animate-in zoom-in-95"
+                      >
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Capture Point</span>
+                        <div className="flex flex-col gap-0">
+                          <span className="text-lg font-mono font-black tabular-nums text-white leading-none">{label}</span>
+                          <span className="text-[11px] font-bold text-muted-foreground mt-1">
+                             <span className="text-primary">{Math.floor(height)}</span> verified hits
+                          </span>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  );
+                })}
+              </div>
+            </TooltipProvider>
           </CardContent>
-          <CardFooter className="px-6 py-4 flex justify-between text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40 border-t border-white/5">
-             <span>00:00 UTC</span>
-             <span>Now</span>
+          <CardFooter className="px-6 py-5 flex flex-col gap-4 border-t border-white/5">
+             <div className="flex justify-between w-full text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+                {Array.from({ length: 5 }).map((_, i) => {
+                  const rangeValue = parseInt(activeRange);
+                  const step = rangeValue / 4;
+                  const value = rangeValue - (i * step);
+                  
+                  return (
+                    <span key={i} className="flex flex-col items-center gap-2">
+                      <div className="w-px h-1.5 bg-foreground/20" />
+                      <span className="tabular-nums">
+                        {value === 0 
+                          ? 'Now' 
+                          : activeRange.includes('h') 
+                            ? `${value}h ago` 
+                            : `${value}m ago`}
+                      </span>
+                    </span>
+                  );
+                })}
+             </div>
           </CardFooter>
         </Card>
 
