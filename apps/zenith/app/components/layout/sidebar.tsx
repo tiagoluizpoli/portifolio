@@ -1,74 +1,120 @@
-import { Link } from '@tanstack/react-router';
+import { Link, useLocation } from '@tanstack/react-router';
 import {
   LayoutDashboard,
   Briefcase,
+  History,
   Cpu,
   GraduationCap,
-  History,
   Share2,
   Settings,
-  PanelLeftClose,
+  Zap,
+  HelpCircle,
+  LogOut,
+  BarChart3,
+  BookOpen,
+  PieChart
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail,
+} from '@/components/ui/sidebar';
+import { Button } from '@/components/ui/button';
 
-/**
- * Sidebar Component (Constitution §XV, §I)
- * Provides navigation for all 7 primary entities.
- */
-export function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
+const navigations = [
+  { label: 'Dashboard', icon: LayoutDashboard, to: '/' },
+  { label: 'Portfolio Manager', icon: Briefcase, to: '/projects' },
+  { label: 'Blog WIP', icon: BookOpen, to: '/experience' },
+  { label: 'Reports WIP', icon: PieChart, to: '/stack' },
+];
 
-  const navigations = [
-    { label: 'Dashboard', icon: LayoutDashboard, to: '/' },
-    { label: 'Projects', icon: Briefcase, to: '/projects' },
-    { label: 'Experience', icon: History, to: '/experience' },
-    { label: 'Tech Stack', icon: Cpu, to: '/stack' },
-    { label: 'Education', icon: GraduationCap, to: '/education' },
-    { label: 'Socials', icon: Share2, to: '/socials' },
-    { label: 'System', icon: Settings, to: '/settings' },
-  ];
+const systemNav = [
+  { label: 'System Settings', icon: Settings, to: '/settings' },
+];
+
+export function AppSidebar() {
+  const location = useLocation();
 
   return (
-    <aside
-      className={cn(
-        'h-full border-r bg-card flex flex-col transition-all duration-300',
-        collapsed ? 'w-16' : 'w-64'
-      )}
-    >
-      <div className="p-4 flex items-center justify-between border-b">
-        {!collapsed && <span className="text-lg font-bold tracking-tight">ZENITH</span>}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="p-1 hover:bg-accent rounded transition-colors"
-          aria-label="Toggle Sidebar"
-          id="sidebar-toggle"
-        >
-          <PanelLeftClose className={cn('h-5 w-5', collapsed && 'rotate-180')} />
-        </button>
-      </div>
+    <Sidebar collapsible="icon" className="border-none bg-sidebar font-sans">
+      <SidebarHeader className="h-16 flex items-center px-6 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:justify-center">
+        <div className="flex items-center gap-3 group-data-[collapsible=icon]:gap-0">
+          <div className="flex aspect-square size-10 group-data-[collapsible=icon]:size-8 items-center justify-center rounded-xl group-data-[collapsible=icon]:rounded-full bg-primary/10 text-primary shadow-lg shadow-primary/5 transition-all">
+            <Zap className="size-5 group-data-[collapsible=icon]:size-4 fill-current" />
+          </div>
+          <div className="flex flex-col gap-0.5 group-data-[collapsible=icon]:hidden ml-3">
+            <span className="font-display text-lg font-extrabold tracking-tight leading-none">
+              Zenith Hub
+            </span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-primary/60 leading-none">
+              Executive Tier
+            </span>
+          </div>
+        </div>
+      </SidebarHeader>
 
-      <nav className="flex-1 p-2 space-y-1 overflow-y-auto">
-        {navigations.map((nav) => (
-          <Link
-            key={nav.label}
-            to={nav.to}
-            className="flex items-center gap-3 px-3 py-2 rounded-md transition-all hover:bg-accent group"
-            activeProps={{ className: 'bg-primary/10 text-primary' }}
-          >
-            <nav.icon className="h-5 w-5 shrink-0" />
-            {!collapsed && (
-              <span className="text-sm font-medium tracking-wide">
-                {nav.label}
-              </span>
-            )}
-          </Link>
-        ))}
-      </nav>
+      <SidebarContent className="px-2 group-data-[collapsible=icon]:px-0">
+        <SidebarGroup className="group-data-[collapsible=icon]:p-2">
+          <SidebarMenu>
+            {navigations.map((nav) => {
+              const isActive = location.pathname === nav.to;
+              return (
+                <SidebarMenuItem key={nav.label}>
+                  <SidebarMenuButton
+                    asChild
+                    tooltip={nav.label}
+                    isActive={isActive}
+                    className="h-11 px-4 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:justify-center hover:bg-sidebar-accent/50 transition-all duration-200 rounded-lg data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:relative data-[active=true]:after:content-[''] data-[active=true]:after:absolute data-[active=true]:after:right-0 group-data-[collapsible=icon]:data-[active=true]:after:-right-2 data-[active=true]:after:h-6 data-[active=true]:after:w-[2px] data-[active=true]:after:bg-primary data-[active=true]:after:rounded-full"
+                  >
+                    <Link to={nav.to}>
+                      <nav.icon className="size-[18px] group-data-[collapsible=icon]:size-4" />
+                      <span className="font-medium text-sm ml-3 group-data-[collapsible=icon]:hidden">{nav.label}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              );
+            })}
+          </SidebarMenu>
+        </SidebarGroup>
 
-      <div className="p-4 border-t text-[10px] text-muted-foreground uppercase tracking-widest text-center">
-        {!collapsed ? 'v1.0.0-PROXIMA' : 'v1'}
-      </div>
-    </aside>
+        <SidebarGroup className="mt-4 group-data-[collapsible=icon]:p-2">
+          <SidebarGroupLabel className="font-bold uppercase tracking-[0.2em] text-[10px] opacity-40 px-4 mb-2 group-data-[collapsible=icon]:hidden">
+            Configuration
+          </SidebarGroupLabel>
+          <SidebarMenu>
+            {systemNav.map((nav) => {
+              const isActive = location.pathname === nav.to;
+              return (
+                <SidebarMenuItem key={nav.label}>
+                  <SidebarMenuButton
+                    asChild
+                    tooltip={nav.label}
+                    isActive={isActive}
+                    className="h-11 px-4 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:justify-center hover:bg-sidebar-accent/50 transition-all duration-200 rounded-lg data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:relative data-[active=true]:after:content-[''] data-[active=true]:after:absolute data-[active=true]:after:right-0 group-data-[collapsible=icon]:data-[active=true]:after:-right-2 data-[active=true]:after:h-6 data-[active=true]:after:w-[2px] data-[active=true]:after:bg-primary data-[active=true]:after:rounded-full"
+                  >
+                    <Link to={nav.to}>
+                      <nav.icon className="size-[18px] group-data-[collapsible=icon]:size-4" />
+                      <span className="font-medium text-sm ml-3 group-data-[collapsible=icon]:hidden">{nav.label}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              );
+            })}
+          </SidebarMenu>
+        </SidebarGroup>
+      </SidebarContent>
+
+      <SidebarFooter className="p-4 border-none">
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
   );
 }

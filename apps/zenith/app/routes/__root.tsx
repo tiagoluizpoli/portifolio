@@ -26,13 +26,16 @@ export const Route = createRootRoute({
 });
 
 import { LayoutShell } from '../components/layout/layout-shell';
+import { TooltipProvider } from '../components/ui/tooltip';
 
 function RootComponent() {
   return (
     <RootDocument>
-      <LayoutShell>
-        <Outlet />
-      </LayoutShell>
+      <TooltipProvider>
+        <LayoutShell>
+          <Outlet />
+        </LayoutShell>
+      </TooltipProvider>
     </RootDocument>
   );
 }
