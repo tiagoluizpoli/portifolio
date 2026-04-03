@@ -25,16 +25,17 @@ export function Topbar() {
   return (
     <header className="sticky top-0 z-10 flex h-14 w-full items-center justify-between px-4 glass-premium border-none">
       <div className="flex flex-1 items-center gap-4">
+        {/* Offline Indicator: Positioned to avoid layout shifts */}
+        {isOffline && (
+          <div className="flex items-center gap-2 px-3 py-1 bg-destructive/10 rounded-full border border-destructive/20 animate-pulse shrink-0">
+            <span className="size-1.5 rounded-full bg-destructive" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-destructive">Offline</span>
+          </div>
+        )}
+        
         <SidebarTrigger className="hover:bg-sidebar-accent/50 text-muted-foreground transition-colors" />
         <div className="h-4 w-px bg-foreground/10 mx-2 hidden md:block" />
         
-        {isOffline && (
-          <div className="flex items-center gap-2 px-3 py-1 bg-destructive/10 rounded-full border border-destructive/20 animate-pulse">
-            <span className="size-1.5 rounded-full bg-destructive" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-destructive">Offline Mode</span>
-          </div>
-        )}
-
         <div className="relative w-full max-w-md group hidden md:block">
           <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground/50 group-focus-within:text-primary transition-colors" />
           <Input

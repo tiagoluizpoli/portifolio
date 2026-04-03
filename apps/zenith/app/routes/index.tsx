@@ -36,13 +36,13 @@ export const Route = createFileRoute('/')({
  */
 function Dashboard() {
   const isEmpty = false; // Toggle for FR-020 verification
-  const { kpis } = useMockAnalytics('zenith-v1', isEmpty);
+  const { kpis, accessHistory } = useMockAnalytics('zenith-v1', isEmpty);
 
   const kpiCards = [
-    { label: 'Total MAU', value: kpis.visitors.toLocaleString(), icon: Users, trend: '12.5%', trendType: 'up' },
-    { label: 'Avg. Session', value: kpis.avgSessionTime, icon: Clock, trend: '0.0%', trendType: 'neutral' },
-    { label: 'Engagement Rate', value: kpis.engagementRate, icon: Zap, trend: '2.1%', trendType: 'down' },
-    { label: 'Active Projects', value: '42', icon: Activity, trend: '0% change', trendType: 'neutral' },
+    { label: 'Total Portfolio Access', value: kpis.totalAccess.toLocaleString(), icon: Users, trend: 'stable', trendType: 'neutral' },
+    { label: 'Access this Month', value: kpis.accessMonthly.toLocaleString(), icon: TrendingUp, trend: '+14%', trendType: 'up' },
+    { label: 'New Contact Inquiries', value: kpis.newContacts, icon: Zap, trend: 'priority', trendType: 'up', highlight: true },
+    { label: 'Viewers Active', value: kpis.activeUsers, icon: Activity, trend: 'live', trendType: 'neutral', highlight: true },
   ];
 
   if (isEmpty) {
@@ -65,21 +65,17 @@ function Dashboard() {
         <Card className="border-none shadow-none bg-surface-container-low/20">
           <CardHeader className="text-center py-12 space-y-4">
             <div className="p-4 bg-primary/10 rounded-full mx-auto w-fit">
-              <Zap className="size-8 text-primary animate-pulse" />
+              <TrendingUp className="size-8 text-primary animate-pulse" />
             </div>
             <div className="space-y-2">
-              <CardTitle className="text-3xl">Welcome to Zenith Hub</CardTitle>
+              <CardTitle className="text-3xl">Ready to Curate</CardTitle>
               <CardDescription className="max-w-md mx-auto text-sm leading-relaxed">
-                Your administrative engine is ready. To begin populating your dashboard, 
-                start by creating your first portfolio entries in the management sections.
+                Your portfolio management engine is initialized. Begin by integrating your first projects to see real-time access analytics and contact inquiries.
               </CardDescription>
             </div>
             <div className="flex justify-center gap-3 pt-4">
               <Button size="sm" className="rounded-full px-6 bg-primary text-primary-foreground hover:bg-primary/90">
-                Create Project
-              </Button>
-              <Button variant="ghost" size="sm" className="rounded-full px-6 hover:bg-foreground/5">
-                View Documentation
+                Integrate Portfolio
               </Button>
             </div>
           </CardHeader>
@@ -100,74 +96,148 @@ function Dashboard() {
   }
 
   const regions = [
-    { name: 'United States', code: 'US', requests: '1,240,582', latency: '18ms', status: 'low', distribution: 85 },
-    { name: 'United Kingdom', code: 'GB', requests: '892,110', latency: '34ms', status: 'low', distribution: 65 },
-    { name: 'Germany', code: 'DE', requests: '456,204', latency: '62ms', status: 'med', distribution: 45 },
-    { name: 'Japan', code: 'JP', requests: '210,004', latency: '155ms', status: 'high', distribution: 25 },
+    { name: 'United States', code: 'US', requests: '12,405', latency: '18ms', status: 'low', distribution: 85, flag: '🇺🇸' },
+    { name: 'Brazil', code: 'BR', requests: '8,921', latency: '24ms', status: 'low', distribution: 65, flag: '🇧🇷' },
+    { name: 'Germany', code: 'DE', requests: '4,562', latency: '42ms', status: 'med', distribution: 45, flag: '🇩🇪' },
+    { name: 'Japan', code: 'JP', requests: '2,100', latency: '112ms', status: 'high', distribution: 25, flag: '🇯🇵' },
   ];
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700 font-sans">
-      {/* Top Metric Strip */}
+      {/* Portfolio KPI Strip */}
       <div className="grid gap-4 md:grid-cols-4">
         {kpiCards.map((kpi) => (
-          <Card key={kpi.label} className="bg-surface-container-low/40 border-none shadow-none group">
+          <Card key={kpi.label} className={cn(
+            "bg-surface-container-low/40 border-none shadow-none group relative overflow-hidden",
+            kpi.highlight && "ring-1 ring-primary/20"
+          )}>
+            {kpi.highlight && (
+              <div className="absolute top-3 right-3">
+                <span className="flex size-1.5 rounded-full bg-primary animate-pulse" />
+              </div>
+            )}
             <CardContent className="p-5 flex items-center justify-between">
               <div className="space-y-1.5">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">{kpi.label}</p>
                 <div className="flex items-baseline gap-2">
-                  <h3 className="text-2xl font-display font-extrabold">{kpi.value}</h3>
+                  <h3 className="text-2xl font-mono font-bold tracking-tight">{kpi.value}</h3>
                   <span className={cn(
-                    "text-[10px] font-bold flex items-center",
-                    kpi.trendType === 'up' ? "text-emerald-500" : 
-                    kpi.trendType === 'down' ? "text-rose-500" : "text-muted-foreground/40"
+                    "text-[10px] font-bold",
+                    kpi.trendType === 'up' ? "text-primary" : "text-muted-foreground/40"
                   )}>
-                    {kpi.trendType === 'up' && <ArrowUpRight className="size-2.5 mr-0.5" />}
-                    {kpi.trendType === 'down' && <ArrowDownRight className="size-2.5 mr-0.5" />}
                     {kpi.trend}
                   </span>
                 </div>
               </div>
-              <div className="p-2 bg-foreground/3 rounded-lg group-hover:bg-primary/10 transition-colors">
-                <kpi.icon className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
+              <div className={cn(
+                "p-2 rounded-lg transition-colors",
+                kpi.highlight ? "bg-primary/20" : "bg-foreground/3 group-hover:bg-primary/10"
+              )}>
+                <kpi.icon className={cn(
+                  "size-4 transition-colors",
+                  kpi.highlight ? "text-primary" : "text-muted-foreground group-hover:text-primary"
+                )} />
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      {/* Primary Ingress Section */}
-      <Card className="border-none shadow-none bg-surface-container-low/20">
-        <CardHeader className="flex flex-row items-start justify-between pb-8">
-          <div className="space-y-1.5">
-            <CardTitle className="text-3xl">Geographical Ingress</CardTitle>
-            <CardDescription className="normal-case tracking-normal">Visitor origins by top performing regions</CardDescription>
+      <div className="grid gap-8 lg:grid-cols-3">
+        {/* Temporal Access Density */}
+        <Card className="lg:col-span-2 border-none shadow-none bg-surface-container-low/20">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div className="space-y-1">
+              <CardTitle className="text-2xl font-display font-extrabold tracking-tight">Temporal Density</CardTitle>
+              <CardDescription>Portfolio access frequency over the last 24 hours</CardDescription>
+            </div>
+            <div className="flex gap-2">
+               {accessHistory.map((h) => (
+                 <div key={h.label} className="text-center px-3 py-1.5 bg-foreground/3 rounded-lg">
+                   <p className="text-[10px] font-bold text-muted-foreground/40 uppercase">{h.label}</p>
+                   <p className="text-xs font-mono font-bold">{h.value}</p>
+                 </div>
+               ))}
+            </div>
+          </CardHeader>
+          <CardContent className="h-64 flex items-end gap-2 px-6 pb-6">
+            {/* Sparkline-like visual representation */}
+            {Array.from({ length: 48 }).map((_, i) => {
+              const height = 20 + (Math.sin(i * 0.3) * 30) + (Math.random() * 40);
+              return (
+                <div 
+                  key={i} 
+                  className="flex-1 bg-primary/20 hover:bg-primary transition-colors rounded-t-sm"
+                  style={{ height: `${height}%` }}
+                />
+              );
+            })}
+          </CardContent>
+          <CardFooter className="px-6 py-4 flex justify-between text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40 border-t border-white/5">
+             <span>00:00 UTC</span>
+             <span>Now</span>
+          </CardFooter>
+        </Card>
+
+        {/* Recent Contact Inquiries */}
+        <Card className="border-none shadow-none bg-surface-container-low/20">
+          <CardHeader>
+            <CardTitle className="text-xl">Recent Inquiries</CardTitle>
+            <CardDescription>New messages through portfolio</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {[
+              { name: 'Sarah J.', subject: 'Collaboration Inquiry', time: '2h ago' },
+              { name: 'Marcus Chen', subject: 'Project Proposal', time: '5h ago' },
+              { name: 'Elite Designs', subject: 'Feedback on UX', time: '12h ago' },
+            ].map((msg, i) => (
+              <div key={i} className="flex items-center justify-between p-3 bg-foreground/3 rounded-xl hover:bg-primary/5 transition-colors cursor-pointer group">
+                <div className="space-y-0.5">
+                  <p className="text-sm font-bold">{msg.name}</p>
+                  <p className="text-xs text-muted-foreground/60">{msg.subject}</p>
+                </div>
+                <div className="flex flex-col items-end gap-1">
+                  <span className="text-[10px] font-bold text-muted-foreground/40">{msg.time}</span>
+                  <ChevronRight className="size-3 text-muted-foreground/20 group-hover:text-primary transition-colors" />
+                </div>
+              </div>
+            ))}
+            <Button variant="ghost" size="sm" className="w-full text-[10px] font-bold uppercase tracking-widest hover:bg-primary/10 hover:text-primary">
+              View All Messages
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Geographic Distribution (Reverted to Table) */}
+      <Card className="border-none shadow-none bg-surface-container-low/20 overflow-hidden">
+        <CardHeader className="flex flex-row items-baseline justify-between pb-8">
+          <div className="space-y-1">
+            <CardTitle className="text-2xl font-display font-extrabold tracking-tight">Geographic Ingress</CardTitle>
+            <CardDescription>Top performing regions by access volume</CardDescription>
           </div>
           <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
             <span className="size-2 rounded-full bg-primary animate-pulse" />
             <span className="text-[10px] font-bold uppercase tracking-widest text-primary">Live Traffic</span>
           </div>
         </CardHeader>
-        <CardContent className="space-y-12 pb-10">
-          {/* Table-like Header */}
+        <CardContent className="space-y-8 pb-10">
           <div className="grid grid-cols-4 px-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40">
             <span>Region</span>
             <span className="text-right">Requests</span>
             <span className="text-right">Latency</span>
             <span className="text-right">Distribution</span>
           </div>
-
-          {/* Region Rows */}
           <div className="space-y-6">
             {regions.map((region) => (
               <div key={region.name} className="grid grid-cols-4 items-center px-4 group cursor-pointer transition-all hover:translate-x-1">
                 <div className="flex items-center gap-3">
-                  <div className="size-6 rounded-md bg-muted/20 overflow-hidden flex items-center justify-center">
-                    <span className="text-xs">{region.code === 'US' ? '🇺🇸' : region.code === 'GB' ? '🇬🇧' : region.code === 'DE' ? '🇩🇪' : '🇯🇵'}</span>
+                  <div className="size-6 rounded-md bg-muted/20 flex items-center justify-center overflow-hidden">
+                    <span className="text-xs leading-none">{region.flag}</span>
                   </div>
                   <span className="text-sm font-semibold">{region.name}</span>
                 </div>
-                <div className="text-right font-display font-bold text-sm tabular-nums">
+                <div className="text-right font-mono font-bold text-sm tabular-nums text-foreground/80">
                   {region.requests}
                 </div>
                 <div className={cn(
@@ -177,10 +247,10 @@ function Dashboard() {
                 )}>
                   {region.latency}
                 </div>
-                <div className="flex justify-end">
+                <div className="flex justify-end pr-4">
                   <div className="w-40 h-1.5 bg-foreground/3 rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-primary rounded-full transition-all duration-1000 ease-out shadow-[0_0_8px_rgba(208,188,255,0.4)]" 
+                      className="h-full bg-primary rounded-full transition-all duration-1000 ease-out" 
                       style={{ width: `${region.distribution}%` }} 
                     />
                   </div>
@@ -188,63 +258,8 @@ function Dashboard() {
               </div>
             ))}
           </div>
-
-          {/* Map Visualization Placeholder */}
-          <div className="relative w-full aspect-video rounded-3xl bg-muted/5 overflow-hidden group">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(208,188,255,0.1),transparent)]" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="flex flex-col items-center gap-4 text-center opacity-40 group-hover:opacity-100 transition-all duration-500">
-                <div className="p-6 bg-background rounded-full shadow-2xl">
-                   <Globe className="size-12 text-primary animate-[spin_20s_linear_infinite]" />
-                </div>
-                <div className="space-y-1">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary">Global Density Visualization</p>
-                  <p className="text-xs font-mono text-muted-foreground/60 italic">Integrated Node Graph rendering...</p>
-                </div>
-              </div>
-            </div>
-            {/* Minimal Background Grid Effect */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #d0bcff 0.5px, transparent 0.5px)', backgroundSize: '24px 24px' }} />
-          </div>
         </CardContent>
       </Card>
-
-      {/* Bottom Auxiliary Metrics */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card className="border-none shadow-none bg-surface-container-low/20">
-          <CardContent className="p-6 flex items-center justify-between">
-            <div className="space-y-1">
-               <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40">System Load</p>
-               <div className="flex items-baseline gap-2">
-                 <h3 className="text-2xl font-display font-extrabold text-emerald-500">0.04</h3>
-                 <span className="text-[10px] font-bold text-muted-foreground/40 uppercase">AVG</span>
-               </div>
-            </div>
-            <div className="flex gap-1 h-8 items-end">
-               {[20, 40, 30, 70, 50, 90, 40].map((h, i) => (
-                 <div key={i} className="w-1 bg-primary/20 rounded-full" style={{ height: `${h}%` }} />
-               ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-none shadow-none bg-surface-container-low/20">
-          <CardContent className="p-6 flex items-center justify-between">
-            <div className="space-y-1">
-               <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40">Data Ingress</p>
-               <div className="flex items-baseline gap-2">
-                 <h3 className="text-2xl font-display font-extrabold">1.2</h3>
-                 <span className="text-[10px] font-bold text-muted-foreground/40 uppercase">GB/S</span>
-               </div>
-            </div>
-            <div className="flex gap-1 h-8 items-end">
-               {[90, 60, 80, 40, 70, 30, 60].map((h, i) => (
-                 <div key={i} className="w-1 bg-foreground/10 rounded-full" style={{ height: `${h}%` }} />
-               ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }

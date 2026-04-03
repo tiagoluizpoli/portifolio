@@ -18,7 +18,7 @@
 
 @layer base {
   :root {
-    /* Oceanic Obsidian Theme */
+    /* Oceanic Obsidian Theme [UNIFIED BACKGROUND] */
     --background: #0b1326;
     --foreground: #dbe2fd;
     --card: #131b2e;
@@ -45,12 +45,12 @@
     --surface-container-high: #222a3e;
     --surface-variant: #cbc3d7;
 
-    /* Sidebar Theme */
-    --sidebar: #131b2e;
+    /* Sidebar Theme (Seamless Integration) */
+    --sidebar: #0b1326;
     --sidebar-foreground: #dbe2fd;
     --sidebar-primary: #d0bcff;
     --sidebar-primary-foreground: #0b1326;
-    --sidebar-accent: #222a3e;
+    --sidebar-accent: #131b2e;
     --sidebar-accent-foreground: #dbe2fd;
     --sidebar-border: transparent;
     --sidebar-ring: #d0bcff;

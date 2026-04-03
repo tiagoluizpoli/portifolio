@@ -14,7 +14,7 @@ import {
   BookOpen,
   PieChart
 } from 'lucide-react';
-import {
+import { 
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -28,6 +28,7 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 const navigations = [
   { label: 'Dashboard', icon: LayoutDashboard, to: '/' },
@@ -45,17 +46,17 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon" className="border-none bg-sidebar font-sans">
-      <SidebarHeader className="h-16 flex items-center px-6 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:justify-center">
+      <SidebarHeader className="h-24 flex items-start pt-8 px-6 mt-4 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:justify-center">
         <div className="flex items-center gap-3 group-data-[collapsible=icon]:gap-0">
           <div className="flex aspect-square size-10 group-data-[collapsible=icon]:size-8 items-center justify-center rounded-xl group-data-[collapsible=icon]:rounded-full bg-primary/10 text-primary shadow-lg shadow-primary/5 transition-all">
             <Zap className="size-5 group-data-[collapsible=icon]:size-4 fill-current" />
           </div>
           <div className="flex flex-col gap-0.5 group-data-[collapsible=icon]:hidden ml-3">
-            <span className="font-display text-lg font-extrabold tracking-tight leading-none">
+            <span className="font-display text-lg font-extrabold tracking-tight leading-none text-foreground">
               Zenith Hub
             </span>
             <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-primary/60 leading-none">
-              Executive Tier
+              Portfolio Management
             </span>
           </div>
         </div>
@@ -71,8 +72,12 @@ export function AppSidebar() {
                   <SidebarMenuButton
                     asChild
                     tooltip={nav.label}
-                    isActive={isActive}
-                    className="h-11 px-4 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:justify-center hover:bg-sidebar-accent/50 transition-all duration-200 rounded-lg data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:relative data-[active=true]:after:content-[''] data-[active=true]:after:absolute data-[active=true]:after:right-0 group-data-[collapsible=icon]:data-[active=true]:after:-right-2 data-[active=true]:after:h-6 data-[active=true]:after:w-[2px] data-[active=true]:after:bg-primary data-[active=true]:after:rounded-full"
+                    className={cn(
+                      "h-11 px-4 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:justify-center transition-all duration-200 rounded-lg",
+                      isActive 
+                        ? "bg-sidebar-accent text-primary font-bold shadow-sm" 
+                        : "text-muted-foreground/50 hover:bg-sidebar-accent/30 hover:text-muted-foreground/80"
+                    )}
                   >
                     <Link to={nav.to}>
                       <nav.icon className="size-[18px] group-data-[collapsible=icon]:size-4" />
@@ -97,8 +102,12 @@ export function AppSidebar() {
                   <SidebarMenuButton
                     asChild
                     tooltip={nav.label}
-                    isActive={isActive}
-                    className="h-11 px-4 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:justify-center hover:bg-sidebar-accent/50 transition-all duration-200 rounded-lg data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:relative data-[active=true]:after:content-[''] data-[active=true]:after:absolute data-[active=true]:after:right-0 group-data-[collapsible=icon]:data-[active=true]:after:-right-2 data-[active=true]:after:h-6 data-[active=true]:after:w-[2px] data-[active=true]:after:bg-primary data-[active=true]:after:rounded-full"
+                    className={cn(
+                      "h-11 px-4 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:justify-center transition-all duration-200 rounded-lg",
+                      isActive 
+                        ? "bg-sidebar-accent text-primary font-bold shadow-sm" 
+                        : "text-muted-foreground/50 hover:bg-sidebar-accent/30 hover:text-muted-foreground/80"
+                    )}
                   >
                     <Link to={nav.to}>
                       <nav.icon className="size-[18px] group-data-[collapsible=icon]:size-4" />

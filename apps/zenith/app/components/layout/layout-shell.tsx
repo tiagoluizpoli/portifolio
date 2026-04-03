@@ -12,10 +12,8 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <div className="flex h-screen w-full bg-background overflow-hidden font-sans">
-        {/* Sidebar Slot */}
         <AppSidebar />
-
-        <SidebarInset className="flex flex-col flex-1 min-w-0 bg-background">
+        <SidebarInset className="flex flex-col flex-1 min-w-0">
           {/* Topbar Slot */}
           <Topbar />
 
