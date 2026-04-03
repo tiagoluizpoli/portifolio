@@ -45,11 +45,11 @@ export function AppSidebar() {
   const location = useLocation();
 
   return (
-    <Sidebar collapsible="icon" className="border-none bg-sidebar font-sans">
-      <SidebarHeader className="h-24 flex items-start pt-8 px-6 mt-4 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:justify-center">
+    <Sidebar collapsible="icon" className="border-none bg-sidebar font-sans transition-all duration-300">
+      <SidebarHeader className="h-24 flex items-start pt-8 px-6 mt-4 transition-all duration-300 group-data-[collapsible=icon]:h-14 group-data-[collapsible=icon]:pt-0 group-data-[collapsible=icon]:mt-1 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:justify-center">
         <div className="flex items-center gap-3 group-data-[collapsible=icon]:gap-0">
           <div className="flex aspect-square size-10 group-data-[collapsible=icon]:size-8 items-center justify-center rounded-xl group-data-[collapsible=icon]:rounded-full bg-primary/10 text-primary shadow-lg shadow-primary/5 transition-all">
-            <Zap className="size-5 group-data-[collapsible=icon]:size-4 fill-current" />
+            <Zap className="size-5 group-data-[collapsible=icon]:size-4 fill-current transition-all" />
           </div>
           <div className="flex flex-col gap-0.5 group-data-[collapsible=icon]:hidden ml-3">
             <span className="font-display text-lg font-extrabold tracking-tight leading-none text-foreground">
