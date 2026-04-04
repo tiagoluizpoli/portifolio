@@ -27,3 +27,20 @@ export {
   mapAppwriteError,
   updateSystemConfig,
 } from './infrastructure/repositories/system-config.repository.js';
+export {
+  type CreatePortfolioItemPayload,
+  createPortfolioItemSchema,
+  type DeletePortfolioItemPayload,
+  deletePortfolioItemSchema,
+  type GetPortfolioRecordPayload,
+  getPortfolioRecordSchema,
+  type UpdatePortfolioItemPayload,
+  updatePortfolioItemSchema,
+} from './models/portfolio.schemas.js';
+export {
+  type CompensatingAction,
+  type CompensatingActionStatus,
+  getTransactionManager,
+  type ITransactionManager,
+  TransactionManager,
+} from './transactions/transaction-manager.js';
