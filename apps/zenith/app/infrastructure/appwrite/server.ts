@@ -1,44 +1,40 @@
-import { PortfolioService } from '@repo/appwrite-core';
+/**
+ * AppWrite Server Functions — FR-015: TransactionManager-wrapped RPCs.
+ *
+ * All multi-step mutation operations are wrapped in `TransactionManager.execute()`
+ * to ensure LIFO compensating transactions if any step fails. Single-step reads
+ * use the shared payload schemas from `@repo/appwrite-core` for consistency.
+ *
+ * Security: All functions in this file execute exclusively server-side via
+ * `createServerFn`. Client code cannot access rollback logic or env credentials.
+ */
+import {
+  createPortfolioItemSchema,
+  getPortfolioRecordSchema,
+  getTransactionManager,
+  PortfolioService,
+} from '@repo/appwrite-core';
 import { createServerFn } from '@tanstack/react-start';
-import { z } from 'zod';
 import { env } from '@/config/env';
 
-// Use service for initialization
+// ---------------------------------------------------------------------------
+// Service initialization (one instance per module load)
+// ---------------------------------------------------------------------------
 PortfolioService.init(env);
 
 const portfolioService = new PortfolioService(
   env.APPWRITE_PROJECT_ID,
-  env.APPWRITE_DATABASE_ID, // This was missing in the constructor before, I need to check if I updated the service
+  env.APPWRITE_DATABASE_ID,
 );
+
+// ---------------------------------------------------------------------------
+// Queries (read-only — no transaction needed)
+// ---------------------------------------------------------------------------
 
 export const getAppWriteData = createServerFn({ method: 'GET' }).handler(
   async (payload) => {
-    const { data } = z
-      .object({
-        data: z.object({
-          collectionId: z.string(),
-          documentId: z.string(),
-        }),
-      })
-      .parse(payload);
-    // Note: In a fully abstracted world, the service would know the collectionId
-    // or we pass it from a secure config. For now, following the existing repo pattern.
+    const { data } = getPortfolioRecordSchema.parse(payload);
     return await portfolioService.getPortfolioRecord(data.documentId);
-  },
-);
-
-export const createPortfolioItem = createServerFn({ method: 'POST' }).handler(
-  async (payload) => {
-    const { data } = z
-      .object({
-        data: z.object({
-          title: z.string().min(1),
-          description: z.string().optional(),
-        }),
-      })
-      .parse(payload);
-
-    return await portfolioService.createPortfolioItem(data);
   },
 );
 
@@ -48,5 +44,31 @@ export const testSecretIsolation = createServerFn({ method: 'GET' }).handler(
       hasKey: !!env.APPWRITE_API_KEY,
       message: 'Isolation Test',
     };
+  },
+);
+
+// ---------------------------------------------------------------------------
+// Mutations (wrapped in TransactionManager for LIFO rollback)
+// ---------------------------------------------------------------------------
+
+export const createPortfolioItem = createServerFn({ method: 'POST' }).handler(
+  async (payload) => {
+    const { data } = createPortfolioItemSchema.parse(payload);
+    const tm = getTransactionManager();
+
+    return await tm.execute(async (tx) => {
+      const item = await portfolioService.createPortfolioItem(data);
+
+      // TODO(FR-015): Register rollback once PortfolioService exposes deletePortfolioItem().
+      // tx.push({
+      //   id: `delete-portfolio-item-${item.$id}`,
+      //   rollback: async () => portfolioService.deletePortfolioItem(item.$id),
+      // });
+      // When a second cross-service step is added (e.g. webhook notification),
+      // add its tx.push() here and the LIFO stack will auto-compensate on failure.
+      void tx;
+
+      return item;
+    });
   },
 );
