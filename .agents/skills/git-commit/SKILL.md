@@ -1,3 +1,12 @@
+---
+name: git-commit
+description: Triggers the Portfolio Semantic Commit workflow, ensuring changes are safety-stashed, quality-gated, and committed using granular logical intent.
+allowed-tools:
+  - "Read"
+  - "Write"
+  - "Bash"
+---
+
 # Git Commit Skill (Logical Intent Edition)
 
 This skill automates the process of committing changes in the **Portfolio** monorepo while adhering to strict safety, semantic, and **Intent-Based** standards.

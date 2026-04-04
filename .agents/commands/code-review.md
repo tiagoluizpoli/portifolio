@@ -1,21 +1,41 @@
-# /review Command
+---
+description: Triggers a comprehensive Code Review using the code-review Skill against the active specification in the specs/ directory.
+---
 
-This command triggers a comprehensive **Code Review** using the `code-review` Skill. It assumes the persona of a principal engineer specialized in the relevant stack and validates the code against the active specification in the `specs/` directory.
+# /code.review Command
 
-## Execution Pattern
+## User Input
 
-1. **Trigger**: Invoke `@[/review]` or `/review <target>`. `target` can be a file, a directory, or empty (to review recent unstaged/staged changes).
-2. **Strategy**:
-    - **Context Gathering**: Evaluate the target code changes using your `Read` tools. Actively identify the feature or specification folder in `specs/`. If uncertain, prompt the user.
-    - **Spec Alignment**: Read `spec.md`, `plan.md`, and any checklists in the relevant `specs/` directory.
-    - **Analysis**: Cross-reference the implementation with the functional requirements and architecture directives.
-    - **Review Output**: Output a structured, expert-level code review focusing on performance, security, idioms, and adherence to the plan.
+```text
+$ARGUMENTS
+```
 
-## Rules
-- **No Compromises**: Hold the code to the highest industry standards for the identified tech stack.
-- **Spec-Driven**: Ensure the code satisfies the "spec kit" requirements. Highlight any code that works but deviates from `plan.md` or `spec.md`.
-- **Constructive Guidance**: Provide concrete code snippets, architectural improvements, and actionable steps instead of just pointing out errors.
+You **MUST** consider the user input before proceeding (if not empty). It usually specifies the target file(s) or directory to review.
 
-## Metadata
-- **Scope**: codebase
-- **Skill**: code-review
+## Goal
+
+Perform a comprehensive code review assuming the role of a principal engineer. Validate code against the highest industry standards, clean code practices (SOLID), and the active feature's specification constraints (`spec.md` and `plan.md`).
+
+## Operating Constraints
+
+- **No Compromises**: Hold the code strictly to the industry standards of the identified tech stack.
+- **Spec-Driven**: Ensure code satisfies "spec kit" requirements. Output failures when code deviates from the plan/spec architecture.
+- **Constructive Guidance**: Must provide actionable steps, including code snippets and architectural improvements.
+
+## Execution Steps
+
+### 1. Identify Context
+Use `$ARGUMENTS` or your Read tools on `git status` to locate the files under review. Match them to the active/relevant feature directory inside `specs/`.
+
+### 2. Spec Alignment
+Load `spec.md`, `plan.md`, and any checklists from the assigned `specs/` directory to derive current requirements and technical constraints.
+
+### 3. Deep Analysis
+Evaluate the target code changes using the capabilities defined in the `code-review` Skill. Focus on performance, security, SOLID principles, code smells, and alignment with the specifications.
+
+### 4. Review Output
+Emit a structured code review outlining Spec Alignment, Critical Findings, Nitpicks & Best Practices, and Suggested Changes. Provide concrete patches or snippets for identified issues.
+
+## Context
+
+$ARGUMENTS
