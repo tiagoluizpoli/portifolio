@@ -11,6 +11,8 @@
       "**/src/**/*",
       "**/app/**/*",
       "**/.vscode/**/*",
+      "specs/**/*",
+      ".agents/**/*",
       "**/index.html",
       "**/vite.config.ts",
       "!**/src/routeTree.gen.ts",
@@ -117,6 +119,24 @@
     },
     {
       "includes": ["apps/clean-tanstack-proj/**/*"],
+      "linter": {
+        "enabled": false
+      },
+      "formatter": {
+        "enabled": false
+      }
+    },
+    {
+      "includes": ["specs/**/*"],
+      "linter": {
+        "enabled": false
+      },
+      "formatter": {
+        "enabled": false
+      }
+    },
+    {
+      "includes": [".agents/**/*"],
       "linter": {
         "enabled": false
       },

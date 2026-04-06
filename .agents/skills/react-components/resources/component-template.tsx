@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import type React from 'react';
 
 // Use a valid identifier like 'StitchComponent' as the placeholder
 interface StitchComponentProps {

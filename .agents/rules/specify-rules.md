@@ -1,6 +1,6 @@
 # portifolio Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-04-04
+Auto-generated from all feature plans. Last updated: 2026-04-06
 
 ## Active Technologies
 - TypeScript 5.7+ / React 19 + TanStack Start v1 (RC), Tailwind CSS v4, Shadcn UI, Geist Typography (004-ui-design-shadcn)
@@ -30,7 +30,6 @@ tests/
 ## Recent Changes
 - 005-refactor-zenith-architecture: Added TypeScript 5.7+ + TanStack Start v1 (RC), React 19, Zod
 - 004-ui-design-shadcn: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
-- 004-ui-design-shadcn: Added TypeScript 5.7+ / React 19 (TanStack Start) + `@tanstack/react-start`, `@repo/appwrite-core`, `tailwindcss` v4, `shadcn/ui`, `lucide-react`, `zod`.
 
 
 <!-- MANUAL ADDITIONS START -->
