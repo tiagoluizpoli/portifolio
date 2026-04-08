@@ -1,4 +1,4 @@
-import { Query, type Models } from 'node-appwrite';
+import { type Databases, type Models, Query } from 'node-appwrite';
 
 /**
  * BaseCmsRepository: Generic Persistence Orchestrator 🎯 MVP
@@ -6,16 +6,22 @@ import { Query, type Models } from 'node-appwrite';
  * Adheres to Principle VIII (SRP) and Infrastructure Invisibility.
  */
 
-export abstract class BaseCmsRepository<T extends { id: string; sort?: number }> {
+export abstract class BaseCmsRepository<
+  T extends { id: string; sort?: number },
+> {
   constructor(
-    protected readonly databases: any, // Appwrite Databases
+    protected readonly databases: Databases, // Appwrite Databases
     protected readonly databaseId: string,
-    protected readonly collectionId: string
+    protected readonly collectionId: string,
   ) {}
 
   async get(id: string): Promise<T | null> {
     try {
-      const doc = await this.databases.getDocument(this.databaseId, this.collectionId, id);
+      const doc = await this.databases.getDocument(
+        this.databaseId,
+        this.collectionId,
+        id,
+      );
       return this.mapToEntity(doc);
     } catch {
       return null;
@@ -26,9 +32,11 @@ export abstract class BaseCmsRepository<T extends { id: string; sort?: number }>
     const response = await this.databases.listDocuments(
       this.databaseId,
       this.collectionId,
-      queries
+      queries,
     );
-    return response.documents.map((doc: Models.Document) => this.mapToEntity(doc));
+    return response.documents.map((doc: Models.Document) =>
+      this.mapToEntity(doc),
+    );
   }
 
   async update(id: string, data: Partial<T>): Promise<T> {
@@ -36,7 +44,7 @@ export abstract class BaseCmsRepository<T extends { id: string; sort?: number }>
       this.databaseId,
       this.collectionId,
       id,
-      this.mapToDb(data)
+      this.mapToDb(data),
     );
     return this.mapToEntity(doc);
   }
@@ -55,12 +63,17 @@ export abstract class BaseCmsRepository<T extends { id: string; sort?: number }>
 
     // Batch update sort values (Principle II Efficiency)
     await Promise.all(
-      newItems.map((item, index) => 
-        this.databases.updateDocument(this.databaseId, this.collectionId, item.id, { sort: index })
-      )
+      newItems.map((item, index) =>
+        this.databases.updateDocument(
+          this.databaseId,
+          this.collectionId,
+          item.id,
+          { sort: index },
+        ),
+      ),
     );
   }
 
   protected abstract mapToEntity(doc: Models.Document): T;
-  protected abstract mapToDb(data: Partial<T>): any;
+  protected abstract mapToDb(data: Partial<T>): Record<string, unknown>;
 }

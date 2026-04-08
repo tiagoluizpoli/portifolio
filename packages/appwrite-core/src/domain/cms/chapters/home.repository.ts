@@ -14,8 +14,15 @@ export interface HomeEntity {
   profilePic?: string; // fileId
 }
 
+type HomeDocument = Models.Document & {
+  name?: string;
+  tagline?: string;
+  bio?: string;
+  profilePic?: string;
+};
+
 export class HomeRepository extends BaseCmsRepository<HomeEntity> {
-  protected mapToEntity(doc: any): HomeEntity {
+  protected mapToEntity(doc: HomeDocument): HomeEntity {
     return {
       id: doc.$id,
       name: doc.name || '',
@@ -25,8 +32,8 @@ export class HomeRepository extends BaseCmsRepository<HomeEntity> {
     };
   }
 
-  protected mapToDb(data: Partial<HomeEntity>): any {
-    const dbData: any = { ...data };
+  protected mapToDb(data: Partial<HomeEntity>): Record<string, unknown> {
+    const dbData: Record<string, unknown> = { ...data };
     if (data.tagline) dbData.tagline = JSON.stringify(data.tagline);
     if (data.bio) dbData.bio = JSON.stringify(data.bio);
     return dbData;

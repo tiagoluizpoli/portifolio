@@ -6,15 +6,15 @@ import { z } from 'zod';
  */
 
 export const LocalizedStringSchema = z.object({
-  en: z.string().min(1, "English version is required"),
-  pt: z.string().min(1, "Portuguese version is required"),
+  en: z.string().min(1, 'English version is required'),
+  pt: z.string().min(1, 'Portuguese version is required'),
 });
 
 export type LocalizedString = z.infer<typeof LocalizedStringSchema>;
 
 export const LocalizedRichTextSchema = z.object({
-  en: z.string().min(1, "English version is required"), // Rich Text Lite (Markdown)
-  pt: z.string().min(1, "Portuguese version is required"),
+  en: z.string().min(1, 'English version is required'), // Rich Text Lite (Markdown)
+  pt: z.string().min(1, 'Portuguese version is required'),
 });
 
 export type LocalizedRichText = z.infer<typeof LocalizedRichTextSchema>;
@@ -28,10 +28,12 @@ export const IdentitySchema = z.object({
   tagline: LocalizedStringSchema,
   bio: LocalizedRichTextSchema,
   profilePic: z.string().optional(), // Appwrite File ID
-  cv: z.object({
-    en: z.string(), // Appwrite File ID for EN CV
-    pt: z.string(), // Appwrite File ID for PT CV
-  }).optional(),
+  cv: z
+    .object({
+      en: z.string(), // Appwrite File ID for EN CV
+      pt: z.string(), // Appwrite File ID for PT CV
+    })
+    .optional(),
 });
 
 export type Identity = z.infer<typeof IdentitySchema>;
