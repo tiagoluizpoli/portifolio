@@ -7,6 +7,7 @@ import {
   Settings,
   Zap,
 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import {
   Sidebar,
   SidebarContent,
@@ -23,9 +24,9 @@ import { cn } from '@/lib/utils';
 
 const navigations = [
   { label: 'Dashboard', icon: LayoutDashboard, to: '/' },
-  { label: 'Portfolio Manager', icon: Briefcase, to: '/projects' },
-  { label: 'Blog WIP', icon: BookOpen, to: '/experience' },
-  { label: 'Reports WIP', icon: PieChart, to: '/stack' },
+  { label: 'Portfolio Manager', icon: Briefcase, to: '/features/cms' },
+  { label: 'Blog', icon: BookOpen, to: '/cms/blog', wip: true },
+  { label: 'Reports', icon: PieChart, to: '/cms/reports', wip: true },
 ];
 
 const systemNav = [
@@ -60,7 +61,35 @@ export function AppSidebar() {
         <SidebarGroup className="group-data-[collapsible=icon]:p-2">
           <SidebarMenu>
             {navigations.map((nav) => {
-              const isActive = location.pathname === nav.to;
+              const isActive =
+                nav.to === '/'
+                  ? location.pathname === '/'
+                  : location.pathname.startsWith(nav.to);
+
+              if (nav.wip) {
+                return (
+                  <SidebarMenuItem key={nav.label}>
+                    <SidebarMenuButton
+                      tooltip={nav.label}
+                      className="h-11 px-4 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:justify-center rounded-lg opacity-50 cursor-not-allowed text-muted-foreground"
+                    >
+                      <div className="flex items-center w-full">
+                        <nav.icon className="size-[18px] group-data-[collapsible=icon]:size-4" />
+                        <span className="font-medium text-sm ml-3 flex-1 group-data-[collapsible=icon]:hidden">
+                          {nav.label}
+                        </span>
+                        <Badge
+                          variant="outline"
+                          className="text-[8px] uppercase tracking-widest px-1 py-0 h-4 bg-muted border-border/50 group-data-[collapsible=icon]:hidden"
+                        >
+                          WIP
+                        </Badge>
+                      </div>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              }
+
               return (
                 <SidebarMenuItem key={nav.label}>
                   <SidebarMenuButton
