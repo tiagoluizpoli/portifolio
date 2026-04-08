@@ -129,13 +129,29 @@ This plan ensures testability is an architectural constraint through BDD and TDD
 
 | Entity | Attribute | Integration |
 | :--- | :--- | :--- |
-| **Home** | `profilePictureId` | Assets (Storage) |
+| **Home** | `profilePictureId` (Unique) | Assets (Storage) |
+| **About** | `content` (Unique) | Text Editor |
 | **Skill** | `icon` | Icon Picker (Iconify) |
 | **Social** | `icon` | Icon Picker (Iconify) |
 | **Experience** | `sort` | Kinetic DND |
+| **Education** | `sort` | Kinetic DND |
 
 ---
 
 ## 8. Assumptions & Bounded Scope
 - **Assumed**: Appwrite is the single source of truth for all 7 tables.
 - **Bound**: This spec addresses the UI/UX behavior and state management of the Portfolio Manager. Server-side API implementation for the 7 new tables is assumed to follow the established `PortfolioItem` pattern.
+
+---
+
+## 9. Clarifications
+
+### Session 2026-04-08
+- Q: Data Uniqueness for Global Sections (Home/About)? → A: Single record per locale; current values are always overwritten.
+- Q: Handling Empty States? → A: Tonal, thematic illustration with a centered "Add First" button.
+- Q: Iconify Resilience? → A: Display visual API error and allow manual icon code entry.
+- Q: Concurrent Editing Handling? → A: Last-write-wins; simple overwrite.
+- Q: Maturity Audit Frequency? → A: Real-time (auto-refresh on debounced field changes).
+- Q: Asset Commonality (EN vs PT)? → A: Mixed Mode (Profile Picture is shared; CV is locale-specific).
+- Q: State Regression on Incompleteness? → A: Hard Regression (Language reverts to Draft instantly).
+- Q: Destructive Confirmation UI? → A: Custom Dialog (Glassmorphic tonal modal).
