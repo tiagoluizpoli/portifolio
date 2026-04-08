@@ -65,7 +65,11 @@ This gate is mandatory and MUST be verified before notifying the user of complet
 3. **Guideline Adherence**: All code must comply with the monolithic [TanStack Guideline](file:///home/tiago/01-dev-env/personal-repos/portifolio/.specify/memory/guidelines/tanstack_start_v1.md).
 
 ### XVII. Google Stitch Synergy
-**Definition**: All frontend planning, research, design, and implementation tasks MUST leverage the Google Stitch MCP connection and its specialized skills (`speckit-stitch`, etc.). Stitch is the primary engine for generating high-fidelity UI components, screen layouts, and design variants. Every technical plan or frontend task must prioritize Stitch-generated designs as the authoritative baseline for implementation.
+**Definition**: All frontend planning, research, design, and implementation tasks MUST leverage the Google Stitch MCP connection and its specialized skills (`stitch-design`, etc.). This process MUST strictly follow the [UI Generation Workflow](file:///home/tiago/01-dev-env/personal-repos/portifolio/.specify/memory/guidelines/ui-generation-workflow.md), which mandates:
+1. **Iterative Design-First**: Visual authoritative baselines must be generated via Stitch.
+2. **Mandatory User Approval**: No implementation code may be written until the corresponding screen design is approved by the user.
+3. **Per-Screen Documentation**: Every screen must have its own `DESIGN.md` for full traceability.
+Every technical plan or frontend task must prioritize Stitch-generated designs as the authoritative baseline for implementation.
 
 ### XVIII. Architecture-Level Test Plans
 **Definition**: No feature specification is considered complete without a mandatory "Architecture-Level Test Plan." This plan MUST define the high-level strategy for BDD (Playwright) and TDD (Vitest) BEFORE any implementation code is written. This ensures that testability is an architectural constraint, not an afterthought.

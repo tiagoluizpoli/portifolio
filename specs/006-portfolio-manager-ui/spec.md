@@ -81,7 +81,38 @@ The Portfolio Manager must provide dedicated editors for:
 
 ---
 
-## 4. Success Criteria
+## 4. Architecture-Level Test Plan (Principle XVIII)
+
+This plan ensures testability is an architectural constraint through BDD and TDD.
+
+### BDD Scenarios (Playwright)
+- **Feature: Kinetic Sorting**
+    - **Scenario**: Successful drag-and-drop reordering.
+    - **Step**: Admin drags "Company A" above "Company B".
+    - **Verify**: The visual order updates immediately, and a PUT request to the repository is triggered with the new `sort` order.
+- **Feature: Bilingual Maturity Lock**
+    - **Scenario**: Prevent activation of incomplete language.
+    - **Step**: Admin attempts to toggle "PT" to Live while "About" section is missing PT data.
+    - **Verify**: Toggle is disabled and an "Incomplete: About" tooltip appears.
+
+### TDD Strategy (Vitest)
+- **Unit Tests**:
+    - `MaturityAuditService`: Verify 0-100% calculation logic for all 7 chapters.
+    - `BaseCmsRepository`: Verify transactional integrity of the `sort` update operations.
+
+---
+
+## 5. Security Boundary Mapping (Principle XX)
+
+| Layer | Responsibility | Security Boundary |
+| :--- | :--- | :--- |
+| **Client (React)** | UI State, DND feedback, Form validation | Non-authoritative; visual logic only. |
+| **Server (TanStack Start)** | `server-functions` for Appwrite mutations | **AUTHORITATIVE**. All data mutation calls MUST be validated for session and permissions before repository access. |
+| **Infrastructure (Appwrite)** | Persistence, Auth, Storage | Final security gate via Appwrite Server SDK. |
+
+---
+
+## 6. Success Criteria
 
 ### **Quantitative Metrics**
 - **Zero Incomplete Fragments**: 0% of "Live" entities can have missing translations in an active language.
@@ -94,7 +125,7 @@ The Portfolio Manager must provide dedicated editors for:
 
 ---
 
-## 5. Key Entities (Expanded)
+## 7. Key Entities (Expanded)
 
 | Entity | Attribute | Integration |
 | :--- | :--- | :--- |
@@ -105,6 +136,6 @@ The Portfolio Manager must provide dedicated editors for:
 
 ---
 
-## 6. Assumptions & Bounded Scope
+## 8. Assumptions & Bounded Scope
 - **Assumed**: Appwrite is the single source of truth for all 7 tables.
 - **Bound**: This spec addresses the UI/UX behavior and state management of the Portfolio Manager. Server-side API implementation for the 7 new tables is assumed to follow the established `PortfolioItem` pattern.
