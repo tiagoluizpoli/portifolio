@@ -18,7 +18,7 @@
 
 @layer base {
   :root {
-    /* Oceanic Obsidian Theme [UNIFIED BACKGROUND] */
+    /* Oceanic Obsidian Theme [REVERTED BASE] */
     --background: #0b1326;
     --foreground: #dbe2fd;
     --card: #131b2e;
@@ -38,7 +38,7 @@
     --border: #49445433;
     --input: #131b2e;
     --ring: #d0bcff;
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
     /* Surface Hierarchy (Digital Curator) */
     --surface-container-low: #131b2e;
@@ -56,7 +56,7 @@
     --sidebar-ring: #d0bcff;
   }
 
-  /* Force Dark mode for the Digital Curator vibe if requested, but support it natively */
+  /* Force Dark mode for the Digital Curator vibe */
   .dark {
     --background: #0b1326;
     --foreground: #dbe2fd;

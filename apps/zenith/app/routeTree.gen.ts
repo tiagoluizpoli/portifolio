@@ -12,7 +12,16 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ConnectionLostRouteImport } from './routes/connection-lost'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as FeaturesCmsRouteImport } from './routes/features/cms'
 import { Route as ErrorStartupRouteImport } from './routes/error/startup'
+import { Route as FeaturesCmsIndexRouteImport } from './routes/features/cms/index'
+import { Route as FeaturesCmsSolutionsRouteImport } from './routes/features/cms/solutions'
+import { Route as FeaturesCmsSkillsRouteImport } from './routes/features/cms/skills'
+import { Route as FeaturesCmsHomeRouteImport } from './routes/features/cms/home'
+import { Route as FeaturesCmsExperienceRouteImport } from './routes/features/cms/experience'
+import { Route as FeaturesCmsEducationRouteImport } from './routes/features/cms/education'
+import { Route as FeaturesCmsContactRouteImport } from './routes/features/cms/contact'
+import { Route as FeaturesCmsAboutRouteImport } from './routes/features/cms/about'
 
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
@@ -29,10 +38,55 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FeaturesCmsRoute = FeaturesCmsRouteImport.update({
+  id: '/features/cms',
+  path: '/features/cms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ErrorStartupRoute = ErrorStartupRouteImport.update({
   id: '/error/startup',
   path: '/error/startup',
   getParentRoute: () => rootRouteImport,
+} as any)
+const FeaturesCmsIndexRoute = FeaturesCmsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => FeaturesCmsRoute,
+} as any)
+const FeaturesCmsSolutionsRoute = FeaturesCmsSolutionsRouteImport.update({
+  id: '/solutions',
+  path: '/solutions',
+  getParentRoute: () => FeaturesCmsRoute,
+} as any)
+const FeaturesCmsSkillsRoute = FeaturesCmsSkillsRouteImport.update({
+  id: '/skills',
+  path: '/skills',
+  getParentRoute: () => FeaturesCmsRoute,
+} as any)
+const FeaturesCmsHomeRoute = FeaturesCmsHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => FeaturesCmsRoute,
+} as any)
+const FeaturesCmsExperienceRoute = FeaturesCmsExperienceRouteImport.update({
+  id: '/experience',
+  path: '/experience',
+  getParentRoute: () => FeaturesCmsRoute,
+} as any)
+const FeaturesCmsEducationRoute = FeaturesCmsEducationRouteImport.update({
+  id: '/education',
+  path: '/education',
+  getParentRoute: () => FeaturesCmsRoute,
+} as any)
+const FeaturesCmsContactRoute = FeaturesCmsContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => FeaturesCmsRoute,
+} as any)
+const FeaturesCmsAboutRoute = FeaturesCmsAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => FeaturesCmsRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -40,12 +94,29 @@ export interface FileRoutesByFullPath {
   '/connection-lost': typeof ConnectionLostRoute
   '/settings': typeof SettingsRoute
   '/error/startup': typeof ErrorStartupRoute
+  '/features/cms': typeof FeaturesCmsRouteWithChildren
+  '/features/cms/about': typeof FeaturesCmsAboutRoute
+  '/features/cms/contact': typeof FeaturesCmsContactRoute
+  '/features/cms/education': typeof FeaturesCmsEducationRoute
+  '/features/cms/experience': typeof FeaturesCmsExperienceRoute
+  '/features/cms/home': typeof FeaturesCmsHomeRoute
+  '/features/cms/skills': typeof FeaturesCmsSkillsRoute
+  '/features/cms/solutions': typeof FeaturesCmsSolutionsRoute
+  '/features/cms/': typeof FeaturesCmsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/connection-lost': typeof ConnectionLostRoute
   '/settings': typeof SettingsRoute
   '/error/startup': typeof ErrorStartupRoute
+  '/features/cms/about': typeof FeaturesCmsAboutRoute
+  '/features/cms/contact': typeof FeaturesCmsContactRoute
+  '/features/cms/education': typeof FeaturesCmsEducationRoute
+  '/features/cms/experience': typeof FeaturesCmsExperienceRoute
+  '/features/cms/home': typeof FeaturesCmsHomeRoute
+  '/features/cms/skills': typeof FeaturesCmsSkillsRoute
+  '/features/cms/solutions': typeof FeaturesCmsSolutionsRoute
+  '/features/cms': typeof FeaturesCmsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +124,61 @@ export interface FileRoutesById {
   '/connection-lost': typeof ConnectionLostRoute
   '/settings': typeof SettingsRoute
   '/error/startup': typeof ErrorStartupRoute
+  '/features/cms': typeof FeaturesCmsRouteWithChildren
+  '/features/cms/about': typeof FeaturesCmsAboutRoute
+  '/features/cms/contact': typeof FeaturesCmsContactRoute
+  '/features/cms/education': typeof FeaturesCmsEducationRoute
+  '/features/cms/experience': typeof FeaturesCmsExperienceRoute
+  '/features/cms/home': typeof FeaturesCmsHomeRoute
+  '/features/cms/skills': typeof FeaturesCmsSkillsRoute
+  '/features/cms/solutions': typeof FeaturesCmsSolutionsRoute
+  '/features/cms/': typeof FeaturesCmsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/connection-lost' | '/settings' | '/error/startup'
+  fullPaths:
+    | '/'
+    | '/connection-lost'
+    | '/settings'
+    | '/error/startup'
+    | '/features/cms'
+    | '/features/cms/about'
+    | '/features/cms/contact'
+    | '/features/cms/education'
+    | '/features/cms/experience'
+    | '/features/cms/home'
+    | '/features/cms/skills'
+    | '/features/cms/solutions'
+    | '/features/cms/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/connection-lost' | '/settings' | '/error/startup'
-  id: '__root__' | '/' | '/connection-lost' | '/settings' | '/error/startup'
+  to:
+    | '/'
+    | '/connection-lost'
+    | '/settings'
+    | '/error/startup'
+    | '/features/cms/about'
+    | '/features/cms/contact'
+    | '/features/cms/education'
+    | '/features/cms/experience'
+    | '/features/cms/home'
+    | '/features/cms/skills'
+    | '/features/cms/solutions'
+    | '/features/cms'
+  id:
+    | '__root__'
+    | '/'
+    | '/connection-lost'
+    | '/settings'
+    | '/error/startup'
+    | '/features/cms'
+    | '/features/cms/about'
+    | '/features/cms/contact'
+    | '/features/cms/education'
+    | '/features/cms/experience'
+    | '/features/cms/home'
+    | '/features/cms/skills'
+    | '/features/cms/solutions'
+    | '/features/cms/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +186,7 @@ export interface RootRouteChildren {
   ConnectionLostRoute: typeof ConnectionLostRoute
   SettingsRoute: typeof SettingsRoute
   ErrorStartupRoute: typeof ErrorStartupRoute
+  FeaturesCmsRoute: typeof FeaturesCmsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -92,6 +212,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/features/cms': {
+      id: '/features/cms'
+      path: '/features/cms'
+      fullPath: '/features/cms'
+      preLoaderRoute: typeof FeaturesCmsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/error/startup': {
       id: '/error/startup'
       path: '/error/startup'
@@ -99,14 +226,97 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ErrorStartupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/features/cms/': {
+      id: '/features/cms/'
+      path: '/'
+      fullPath: '/features/cms/'
+      preLoaderRoute: typeof FeaturesCmsIndexRouteImport
+      parentRoute: typeof FeaturesCmsRoute
+    }
+    '/features/cms/solutions': {
+      id: '/features/cms/solutions'
+      path: '/solutions'
+      fullPath: '/features/cms/solutions'
+      preLoaderRoute: typeof FeaturesCmsSolutionsRouteImport
+      parentRoute: typeof FeaturesCmsRoute
+    }
+    '/features/cms/skills': {
+      id: '/features/cms/skills'
+      path: '/skills'
+      fullPath: '/features/cms/skills'
+      preLoaderRoute: typeof FeaturesCmsSkillsRouteImport
+      parentRoute: typeof FeaturesCmsRoute
+    }
+    '/features/cms/home': {
+      id: '/features/cms/home'
+      path: '/home'
+      fullPath: '/features/cms/home'
+      preLoaderRoute: typeof FeaturesCmsHomeRouteImport
+      parentRoute: typeof FeaturesCmsRoute
+    }
+    '/features/cms/experience': {
+      id: '/features/cms/experience'
+      path: '/experience'
+      fullPath: '/features/cms/experience'
+      preLoaderRoute: typeof FeaturesCmsExperienceRouteImport
+      parentRoute: typeof FeaturesCmsRoute
+    }
+    '/features/cms/education': {
+      id: '/features/cms/education'
+      path: '/education'
+      fullPath: '/features/cms/education'
+      preLoaderRoute: typeof FeaturesCmsEducationRouteImport
+      parentRoute: typeof FeaturesCmsRoute
+    }
+    '/features/cms/contact': {
+      id: '/features/cms/contact'
+      path: '/contact'
+      fullPath: '/features/cms/contact'
+      preLoaderRoute: typeof FeaturesCmsContactRouteImport
+      parentRoute: typeof FeaturesCmsRoute
+    }
+    '/features/cms/about': {
+      id: '/features/cms/about'
+      path: '/about'
+      fullPath: '/features/cms/about'
+      preLoaderRoute: typeof FeaturesCmsAboutRouteImport
+      parentRoute: typeof FeaturesCmsRoute
+    }
   }
 }
+
+interface FeaturesCmsRouteChildren {
+  FeaturesCmsAboutRoute: typeof FeaturesCmsAboutRoute
+  FeaturesCmsContactRoute: typeof FeaturesCmsContactRoute
+  FeaturesCmsEducationRoute: typeof FeaturesCmsEducationRoute
+  FeaturesCmsExperienceRoute: typeof FeaturesCmsExperienceRoute
+  FeaturesCmsHomeRoute: typeof FeaturesCmsHomeRoute
+  FeaturesCmsSkillsRoute: typeof FeaturesCmsSkillsRoute
+  FeaturesCmsSolutionsRoute: typeof FeaturesCmsSolutionsRoute
+  FeaturesCmsIndexRoute: typeof FeaturesCmsIndexRoute
+}
+
+const FeaturesCmsRouteChildren: FeaturesCmsRouteChildren = {
+  FeaturesCmsAboutRoute: FeaturesCmsAboutRoute,
+  FeaturesCmsContactRoute: FeaturesCmsContactRoute,
+  FeaturesCmsEducationRoute: FeaturesCmsEducationRoute,
+  FeaturesCmsExperienceRoute: FeaturesCmsExperienceRoute,
+  FeaturesCmsHomeRoute: FeaturesCmsHomeRoute,
+  FeaturesCmsSkillsRoute: FeaturesCmsSkillsRoute,
+  FeaturesCmsSolutionsRoute: FeaturesCmsSolutionsRoute,
+  FeaturesCmsIndexRoute: FeaturesCmsIndexRoute,
+}
+
+const FeaturesCmsRouteWithChildren = FeaturesCmsRoute._addFileChildren(
+  FeaturesCmsRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ConnectionLostRoute: ConnectionLostRoute,
   SettingsRoute: SettingsRoute,
   ErrorStartupRoute: ErrorStartupRoute,
+  FeaturesCmsRoute: FeaturesCmsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
