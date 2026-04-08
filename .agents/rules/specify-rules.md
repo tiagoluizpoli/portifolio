@@ -1,6 +1,6 @@
 # portifolio Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-04-06
+Auto-generated from all feature plans. Last updated: 2026-04-08
 
 ## Active Technologies
 - TypeScript 5.7+ / React 19 + TanStack Start v1 (RC), Tailwind CSS v4, Shadcn UI, Geist Typography (004-ui-design-shadcn)
@@ -9,6 +9,8 @@ Auto-generated from all feature plans. Last updated: 2026-04-06
 - Appwrite v22+ TablesDB (Owner-authenticated access). (004-ui-design-shadcn)
 - TypeScript 5.7+ + TanStack Start v1 (RC), React 19, Zod (005-refactor-zenith-architecture)
 - N/A (Abstraction layer over existing AppWrite SDK) (005-refactor-zenith-architecture)
+- TypeScript / React 19 / TanStack Start (v1 RC) + `dnd-kit` (Kinetic Sorting), `Iconify` (Visual curation), `Lucide` (Admin controls) (006-portfolio-manager-ui)
+- **MOCKED** (Assumed existing core repositories) (006-portfolio-manager-ui)
 
 - (003-zenith-setup)
 
@@ -28,6 +30,7 @@ tests/
 : Follow standard conventions
 
 ## Recent Changes
+- 006-portfolio-manager-ui: Added TypeScript / React 19 / TanStack Start (v1 RC) + `dnd-kit` (Kinetic Sorting), `Iconify` (Visual curation), `Lucide` (Admin controls)
 - 005-refactor-zenith-architecture: Added TypeScript 5.7+ + TanStack Start v1 (RC), React 19, Zod
 - 004-ui-design-shadcn: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
 
