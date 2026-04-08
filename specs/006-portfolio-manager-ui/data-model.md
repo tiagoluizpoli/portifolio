@@ -17,8 +17,8 @@ type I18nString = {
 - `name`: string
 - `title`: string (Headline)
 - `description`: string (Bio)
-- `pictureId`: string (Appwrite File ID)
-- `cvId`: string (Appwrite File ID)
+- `pictureId`: string (Appwrite File ID - Shared across locales)
+- `cvId`: string (Appwrite File ID - Distinct per locale)
 
 ### 2. Experience
 - `id`: string (e.g., `exp-company-en`)
