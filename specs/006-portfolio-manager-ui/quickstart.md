@@ -1,23 +1,33 @@
-# Quickstart: Portfolio Manager
+# Quickstart: Portfolio Manager CMS
 
-This tool allows you to manage the 7 primary sections of your portfolio using a direct, simplified interface.
+The Portfolio Manager is the central orchestrator for the 7 primary chapters of your professional narrative. It utilizes a **high-fidelity, design-first interface** built on the Oceanic Obsidian design system.
 
-## 🛠️ Interface Structure
-Organized as 7 individual sections: **Home, About, Experience, Education, Skills, Solutions, and Contact**.
+## 🛠️ Interface Layout
 
-### Step 1: Navigating Sections
-- Use the **Section Sidebar** to select a chapter.
-- Edit bilingual fields (EN/PT) directly in each form.
+1.  **Section Sidebar**: Use the vertical rail on the left to navigate between **Home, About, Experience, Education, Skills, Solutions, and Contact**.
+2.  **Editor Canvas**: The main workspace for managing section-specific content.
+3.  **Validation Strip**: Fixed footer showing EN/PT maturity progress (0-100%).
 
-### Step 2: Managing Lists
-- For **Experience, Education, Skills, Solutions, and Contact**, use the "Add Item" button.
-- Reorder items via drag-and-drop handles for kinetic sorting.
-- Select brand icons using the **Iconify** search in the icon-picker.
+## ⚡ Core Workflows
 
-### Step 3: Media Management
-- Upload your **profile photo** and **CV/Resume** using the media uploader in the Home and About sections.
-- Assets are automatically mapped to Appwrite Storage.
+### 1. Managing Bi-lingual Content
+- Toggle between **English** and **Portuguese** modes.
+- Fields missing translations will be flagged in real-time in the Validation Strip.
+- Sections reach "100% Maturity" only when all mandatory fields exist in both languages.
 
-## 📊 Status Audit
-1. **Check Maturity**: Use the **Status Footer** to ensure both EN and PT translations reach 100%.
-2. **Review Toggles**: Ensure all mandatory fields are filled before enabling the "Live" toggle.
+### 2. Kinetic Sorting (DND)
+- For list-based sections (Experience, Education), hover over an item to reveal the **Grab Handle**.
+- Drag and drop to reorder. The visual scaling and smooth transitions ensure a premium, lag-free experience.
+
+### 3. Icon Selection
+- In **Skills** and **Solutions**, search for brand icons directly within the editor.
+- If the external API is unreachable, use the "Manual Code" entry to paste an Iconify ID (e.g., `logos:react`).
+
+### 4. Media Curation
+- Upload profile photos and CVs (PDF) in the Home/About sections.
+- Preview assets directly within the canvas before saving.
+
+## 📊 Status Meanings
+- **Draft**: Content saved but maturity check failed (cannot publish).
+- **Ready**: 100% maturity reached; ready for publication.
+- **Published**: Content is live on the public portfolio.
