@@ -2,11 +2,11 @@ import {
   AppwriteProvider,
   type Storage,
   type TablesDB,
-} from '@repo/appwrite-core';
+} from '@repo/appwrite-core/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SchemaManager } from '../infrastructure/schema.manager.js';
 
-vi.mock('@repo/appwrite-core', () => ({
+vi.mock('@repo/appwrite-core/server', () => ({
   AppwriteProvider: {
     getTablesDB: vi.fn(),
     initialize: vi.fn(),
@@ -15,7 +15,7 @@ vi.mock('@repo/appwrite-core', () => ({
     getCuratorRole: vi.fn(() => 'role:team:curators'),
   },
   Permission: { read: vi.fn(), write: vi.fn() },
-  Role: { any: vi.fn(), team: vi.fn() },
+  Role: { any: vi.fn(), team: vi.fn(), curator: vi.fn() },
   IndexType: { Key: 'key' },
 }));
 

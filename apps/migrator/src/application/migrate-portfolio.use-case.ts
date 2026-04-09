@@ -5,7 +5,7 @@ import {
   ID,
   type Models,
   type TablesDB,
-} from '@repo/appwrite-core';
+} from '@repo/appwrite-core/server';
 import { DataParser } from '../domain/data.parser.js';
 import { SchemaManager } from '../infrastructure/schema.manager.js';
 import { StorageManager } from '../infrastructure/storage.manager.js';

@@ -5,7 +5,7 @@ import {
   Role,
   type Storage,
   type TablesDB,
-} from '@repo/appwrite-core';
+} from '@repo/appwrite-core/server';
 
 export class SchemaManager {
   private tables: TablesDB;

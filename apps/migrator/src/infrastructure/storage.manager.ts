@@ -1,4 +1,4 @@
-import { AppwriteProvider } from '@repo/appwrite-core';
+import { AppwriteProvider } from '@repo/appwrite-core/server';
 import { type Models, Permission, Role, type Storage } from 'node-appwrite';
 import { InputFile } from 'node-appwrite/file';
 

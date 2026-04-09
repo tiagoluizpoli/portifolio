@@ -3,13 +3,13 @@ import {
   type Models,
   type Storage,
   type TablesDB,
-} from '@repo/appwrite-core';
+} from '@repo/appwrite-core/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MigratePortfolioUseCase } from '../application/migrate-portfolio.use-case.js';
 import { SchemaManager } from '../infrastructure/schema.manager.js';
 import { StorageManager } from '../infrastructure/storage.manager.js';
 
-vi.mock('@repo/appwrite-core', () => ({
+vi.mock('@repo/appwrite-core/server', () => ({
   AppwriteProvider: {
     getTablesDB: vi.fn(),
     getStorage: vi.fn(),
@@ -18,6 +18,13 @@ vi.mock('@repo/appwrite-core', () => ({
     initialize: vi.fn(),
   },
   ID: { unique: vi.fn(() => 'unique-id') },
+  PortfolioService: {
+    init: vi.fn(),
+  },
+}));
+
+vi.mock('@repo/appwrite-core', () => ({
+  uploadAssetSchema: { parse: vi.fn((data) => ({ data })) },
 }));
 
 vi.mock('node:fs', () => ({
