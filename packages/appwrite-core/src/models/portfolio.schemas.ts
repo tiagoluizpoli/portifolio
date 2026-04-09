@@ -65,3 +65,32 @@ export const updatePortfolioItemSchema = z.object({
 export type UpdatePortfolioItemPayload = z.infer<
   typeof updatePortfolioItemSchema
 >;
+
+// ---------------------------------------------------------------------------
+
+/** Schema for searching icons via Iconify API */
+export const searchIconsSchema = z.object({
+  data: z.string(),
+});
+
+export type SearchIconsPayload = z.infer<typeof searchIconsSchema>;
+
+export const uploadAssetSchema = z.object({
+  data: z.object({
+    bucketId: z.string(),
+    file: z.string(), // Base64
+    fileName: z.string(),
+    fileId: z.string().optional(),
+  }),
+});
+
+export type UploadAssetPayload = z.infer<typeof uploadAssetSchema>;
+
+export const getAssetPreviewSchema = z.object({
+  data: z.object({
+    bucketId: z.string(),
+    fileId: z.string(),
+  }),
+});
+
+export type GetAssetPreviewPayload = z.infer<typeof getAssetPreviewSchema>;

@@ -1,16 +1,19 @@
-import type { Portfolio } from '../domain/repositories/interfaces.js';
+import type { Asset, Portfolio } from '../domain/repositories/interfaces.js';
 import {
   type AppwriteEnv,
   AppwriteProvider,
 } from '../infrastructure/appwrite.client.js';
 import { PortfolioRepository } from '../infrastructure/repositories/portfolio.repository.js';
+import { StorageRepository } from '../infrastructure/repositories/storage.repository.js';
 import { withCompensatingTransaction } from './transactions.js';
 
 export class PortfolioService {
   private repository: PortfolioRepository;
+  private storageRepository: StorageRepository;
 
   constructor(projectId: string, collectionId: string) {
     this.repository = new PortfolioRepository(projectId, collectionId);
+    this.storageRepository = new StorageRepository();
   }
 
   /**
@@ -41,5 +44,36 @@ export class PortfolioService {
    */
   static init(config: AppwriteEnv) {
     AppwriteProvider.initialize(config);
+  }
+
+  /**
+   * Uploads an asset (image or document) to the Appwrite storage.
+   */
+  async uploadAsset(
+    bucketId: string,
+    file: Buffer | Blob,
+    fileName: string,
+    fileId?: string,
+  ): Promise<Asset> {
+    return await this.storageRepository.uploadFile(
+      bucketId,
+      file,
+      fileName,
+      fileId,
+    );
+  }
+
+  /**
+   * Generates a preview URL for a stored asset.
+   */
+  getAssetPreview(bucketId: string, fileId: string): URL {
+    return this.storageRepository.getFilePreview(bucketId, fileId);
+  }
+
+  /**
+   * Deletes an asset from storage.
+   */
+  async deleteAsset(bucketId: string, fileId: string): Promise<void> {
+    await this.storageRepository.deleteFile(bucketId, fileId);
   }
 }
