@@ -73,6 +73,7 @@ const fullData: AuditData = {
       name: 'TypeScript',
       category: 'hard' as const,
       icon: 'lucide:code',
+      status: 'active',
     },
   ],
   solutions: [

@@ -1,24 +1,19 @@
-import {
-  Code2,
-  Cpu,
-  Pencil,
-  Plus,
-  RefreshCcw,
-  Search,
-  Trash2,
-  Wrench,
-} from 'lucide-react';
+import { rectSortingStrategy } from '@dnd-kit/sortable';
+import { Icon } from '@iconify/react';
+import { Pencil, Plus, RefreshCcw, Search, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useCmsContext } from '../../context/cms-context';
 import type { Skill, SkillCategory } from '../../types/assets';
 import { EMPTY_SKILL } from '../../types/assets';
 import { IconPicker } from '../common/icon-picker';
+import { SortableList } from '../common/sortable-list';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -34,7 +29,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { cn } from '@/lib/utils';
+import { cn, generateId } from '@/lib/utils';
 
 /**
  * SkillsForm (Constitution §XVII, §I)
@@ -56,6 +51,21 @@ export function SkillsForm() {
     updateSection('skills', newSkills);
   };
 
+  const handleReorder = (reorderedSkills: Skill[]) => {
+    if (activeCategory !== 'all') {
+      const newSkills = [...skills];
+      let filterIndex = 0;
+      skills.forEach((s, i) => {
+        if (s.category === activeCategory) {
+          newSkills[i] = reorderedSkills[filterIndex++];
+        }
+      });
+      handleChange(newSkills);
+    } else {
+      handleChange(reorderedSkills);
+    }
+  };
+
   const commitSkill = () => {
     if (editingId) {
       handleChange(
@@ -66,7 +76,7 @@ export function SkillsForm() {
     } else {
       const skill: Skill = {
         ...currentSkill,
-        id: Math.random().toString(36).substr(2, 9),
+        id: generateId('skill'),
       };
       handleChange([...skills, skill]);
     }
@@ -85,6 +95,7 @@ export function SkillsForm() {
       name: skill.name,
       category: skill.category,
       icon: skill.icon,
+      status: skill.status || 'active',
     });
     setIsModalOpen(true);
   };
@@ -104,7 +115,6 @@ export function SkillsForm() {
     activeCategory === 'all'
       ? skills
       : skills.filter((s) => s.category === activeCategory);
-
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 w-full mb-8">
       {/* Editorial Header */}
@@ -153,21 +163,63 @@ export function SkillsForm() {
                 <DialogTitle className="text-xl font-bold tracking-tight">
                   {editingId ? 'Modify Curation Registry' : 'Curation Registry'}
                 </DialogTitle>
+                <DialogDescription className="text-xs text-muted-foreground/60">
+                  Define the identity and classification of this technical
+                  asset.
+                </DialogDescription>
               </DialogHeader>
               <div className="space-y-6 py-4">
-                <div className="space-y-3">
-                  <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">
-                    Skill Identity
-                  </Label>
-                  <Input
-                    placeholder="e.g. React, Docker, Python..."
-                    value={currentSkill.name}
-                    onChange={(e) =>
-                      setCurrentSkill({ ...currentSkill, name: e.target.value })
-                    }
-                    className="bg-transparent border-border rounded-lg h-11"
-                  />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">
+                      Skill Identity
+                    </Label>
+                    <Input
+                      placeholder="e.g. React"
+                      value={currentSkill.name}
+                      onChange={(e) =>
+                        setCurrentSkill({
+                          ...currentSkill,
+                          name: e.target.value,
+                        })
+                      }
+                      className="bg-muted/30 border-border rounded-lg h-11"
+                    />
+                  </div>
+                  <div className="space-y-3">
+                    <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">
+                      Lifecycle Status
+                    </Label>
+                    <Select
+                      value={currentSkill.status}
+                      onValueChange={(val) =>
+                        setCurrentSkill({
+                          ...currentSkill,
+                          status: val as 'active' | 'archived',
+                        })
+                      }
+                    >
+                      <SelectTrigger className="w-full bg-muted/30 border-border rounded-lg h-11">
+                        <SelectValue placeholder="Status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem
+                          value="active"
+                          className="text-[10px] font-bold uppercase"
+                        >
+                          Active
+                        </SelectItem>
+                        <SelectItem
+                          value="archived"
+                          className="text-[10px] font-bold uppercase"
+                        >
+                          Archived
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
+
                 <div className="space-y-3">
                   <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">
                     Classification
@@ -182,7 +234,7 @@ export function SkillsForm() {
                       })
                     }
                   >
-                    <SelectTrigger className="w-full bg-transparent border-border rounded-lg h-11">
+                    <SelectTrigger className="w-full bg-muted/30 border-border rounded-lg h-11">
                       <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
                     <SelectContent>
@@ -212,18 +264,18 @@ export function SkillsForm() {
                   />
                 </div>
               </div>
-              <DialogFooter>
-                <div className="flex gap-2 w-full">
+              <DialogFooter className="bg-muted/30 -mx-6 -mb-6 p-4 mt-6 border-t border-border">
+                <div className="flex gap-3 w-full">
                   <Button
                     onClick={closeModal}
                     variant="ghost"
-                    className="flex-1 text-[10px] uppercase font-bold tracking-widest bg-muted hover:bg-muted/80 text-muted-foreground"
+                    className="flex-1 text-[10px] uppercase font-bold tracking-widest h-10 hover:bg-muted"
                   >
                     Discard
                   </Button>
                   <Button
                     onClick={commitSkill}
-                    className="flex-2 bg-primary text-primary-foreground font-black uppercase tracking-[0.2em] text-[10px] h-10 rounded-lg shadow-sm"
+                    className="flex-1 bg-primary text-primary-foreground font-black uppercase tracking-[0.2em] text-[10px] h-10 rounded-lg shadow-lg shadow-primary/20"
                   >
                     {editingId ? 'Save Changes' : 'Commit to Toolkit'}
                   </Button>
@@ -241,12 +293,12 @@ export function SkillsForm() {
           onValueChange={setActiveCategory}
           className="w-full"
         >
-          <TabsList className="bg-muted border border-border rounded-md p-1 h-11 inline-flex items-center justify-center">
+          <TabsList className="bg-muted border border-border rounded-xl p-1 h-11 inline-flex items-center justify-center">
             {(['all', 'hard', 'soft', 'tool'] as const).map((cat) => (
               <TabsTrigger
                 key={cat}
                 value={cat}
-                className="px-6 rounded-sm text-[10px] font-bold uppercase tracking-[0.2em] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm transition-all"
+                className="px-6 rounded-lg text-[10px] font-bold uppercase tracking-[0.2em] data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm transition-all"
               >
                 {cat}
               </TabsTrigger>
@@ -255,72 +307,95 @@ export function SkillsForm() {
         </Tabs>
 
         {/* Toolkit Directory */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {filteredSkills.map((skill) => (
+        <SortableList
+          items={filteredSkills}
+          onReorder={handleReorder}
+          strategy={rectSortingStrategy}
+          className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5"
+          renderItem={(skill) => (
             <Card
               key={skill.id}
-              className="group relative rounded-xl bg-card border border-border/50 p-5 flex flex-col items-center justify-center shadow-sm hover:border-primary/40 hover:bg-card hover:shadow-md transition-all duration-300 overflow-hidden h-[150px]"
+              className="group relative rounded-xl bg-card border border-border/80 p-4 flex flex-col items-center justify-between h-[180px] hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 overflow-hidden"
             >
-              {/* Action Toolkit (Edit / Discard) */}
-              <div className="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 backdrop-blur-sm p-0.5 rounded-md border border-border/50 shadow-sm z-10">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => openEditModal(skill)}
-                  title="Modify Skill"
-                  className="size-6 rounded-sm text-foreground/60 hover:text-primary hover:bg-primary/10 transition-all"
-                >
-                  <Pencil className="size-3" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={(e) => removeSkill(skill.id, e)}
-                  title="Discard Skill"
-                  className="size-6 rounded-sm text-destructive/60 hover:text-destructive hover:bg-destructive/10 transition-all"
-                >
-                  <Trash2 className="size-3" />
-                </Button>
-              </div>
+              {/* TOP STRIP (Badges & Actions) */}
+              <div className="w-full flex items-center justify-between gap-2 relative z-20">
+                <div className="flex items-center gap-1.5">
+                  <Badge
+                    variant="outline"
+                    className={cn(
+                      'text-[9px] font-black uppercase tracking-widest px-1.5 py-0 border-none h-4.5 rounded-[0.25rem] bg-background/50 backdrop-blur-md shadow-sm',
+                      skill.category === 'hard' && 'text-blue-500',
+                      skill.category === 'soft' && 'text-emerald-500',
+                      skill.category === 'tool' && 'text-violet-500',
+                    )}
+                  >
+                    {skill.category}
+                  </Badge>
+                  <Badge
+                    variant="secondary"
+                    className={cn(
+                      'text-[9px] h-4.5 font-black uppercase tracking-widest px-1.5 py-0 border-none rounded-[0.25rem] bg-background/50 backdrop-blur-md shadow-sm transition-colors',
+                      skill.status === 'active'
+                        ? 'text-emerald-500'
+                        : 'text-muted-foreground/60',
+                    )}
+                  >
+                    {skill.status || 'active'}
+                  </Badge>
+                </div>
 
-              <div className="size-[56px] shrink-0 rounded-2xl bg-muted flex items-center justify-center group-hover:scale-110 mb-4 transition-all duration-500 shadow-inner">
-                <div className="text-foreground/70 group-hover:text-primary transition-colors">
-                  {skill.category === 'hard' && <Code2 className="size-6" />}
-                  {skill.category === 'soft' && <Cpu className="size-6" />}
-                  {skill.category === 'tool' && <Wrench className="size-6" />}
+                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all scale-95 group-hover:scale-100 duration-300">
+                  <Button
+                    variant="secondary"
+                    size="icon"
+                    onClick={() => openEditModal(skill)}
+                    className="size-6 rounded-lg bg-background border border-border shadow-sm text-foreground/60 hover:text-primary hover:border-primary/40 transition-all"
+                  >
+                    <Pencil className="size-3" />
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="icon"
+                    onClick={(e) => removeSkill(skill.id, e)}
+                    className="size-6 rounded-lg bg-background border border-border shadow-sm text-destructive/60 hover:text-destructive hover:border-destructive/40 transition-all"
+                  >
+                    <Trash2 className="size-3" />
+                  </Button>
                 </div>
               </div>
 
-              <div className="flex flex-col w-full text-center items-center space-y-2">
-                <h3 className="text-sm font-extrabold tracking-tight text-foreground line-clamp-1 w-full px-2">
+              {/* CENTER ANCHOR (Icon) */}
+              <div className="size-16 rounded-xl bg-muted/10 border border-border/40 flex items-center justify-center group-hover:scale-110 group-hover:border-primary/30 transition-all duration-700 relative overflow-hidden shrink-0">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="text-foreground/30 group-hover:text-primary transition-all duration-500 relative z-10 p-3 size-full flex items-center justify-center">
+                  <Icon
+                    icon={skill.icon || 'lucide:code'}
+                    className="size-full"
+                  />
+                </div>
+              </div>
+
+              {/* BOTTOM STRIP (Identity) */}
+              <div className="w-full text-center">
+                <h3 className="text-base font-bold tracking-tight text-foreground group-hover:text-primary transition-colors truncate">
                   {skill.name}
                 </h3>
-                <Badge
-                  variant="outline"
-                  className={cn(
-                    'text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md border-transparent',
-                    skill.category === 'hard' && 'bg-blue-500/15 text-blue-400',
-                    skill.category === 'soft' &&
-                      'bg-green-500/15 text-green-400',
-                    skill.category === 'tool' &&
-                      'bg-purple-500/15 text-purple-400',
-                  )}
-                >
-                  {skill.category}
-                </Badge>
               </div>
-            </Card>
-          ))}
 
-          {filteredSkills.length === 0 && (
-            <Card className="col-span-full py-16 text-center rounded-[1rem] border-2 border-dashed border-border bg-transparent shadow-none">
-              <Search className="size-10 mx-auto text-muted-foreground/40 mb-3" />
-              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 italic">
-                No technical competencies identified in this sector
-              </p>
+              {/* Decorative Subtle Background */}
+              <div className="absolute -bottom-8 -right-8 size-20 bg-primary/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
             </Card>
           )}
-        </div>
+        />
+
+        {filteredSkills.length === 0 && (
+          <Card className="col-span-full py-16 text-center rounded-[1rem] border-2 border-dashed border-border bg-transparent shadow-none">
+            <Search className="size-10 mx-auto text-muted-foreground/40 mb-3" />
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 italic">
+              No technical competencies identified in this sector
+            </p>
+          </Card>
+        )}
       </div>
     </div>
   );

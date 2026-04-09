@@ -7,6 +7,8 @@ export interface ImpactMetric {
   id: string;
   label: string; // e.g., 'Years of Experience'
   value: string; // e.g., '5+'
+  source: 'manual' | 'custom';
+  sourceKey?: string; // e.g., 'github_commits', 'npm_downloads'
 }
 
 export interface AboutData {

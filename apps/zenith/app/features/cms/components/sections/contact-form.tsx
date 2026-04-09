@@ -31,7 +31,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
+import { cn, generateId } from '@/lib/utils';
 
 /**
  * ContactForm (Constitution §XVII, §I)
@@ -48,7 +48,7 @@ export function ContactForm() {
 
   const addSocial = () => {
     const newSocial: SocialLink = {
-      id: Math.random().toString(36).substr(2, 9),
+      id: generateId('social'),
       type: 'github',
       url: '',
       active: true,
@@ -246,13 +246,22 @@ export function ContactForm() {
                         </SelectContent>
                       </Select>
                       <Separator className="flex-1 bg-border h-px" />
-                      <Checkbox
-                        checked={social.active}
-                        onCheckedChange={(checked) =>
-                          updateSocial(social.id, { active: !!checked })
-                        }
-                        className="rounded-sm min-w-4 min-h-4 border-primary/20 bg-transparent text-primary focus:ring-primary/20"
-                      />
+                      <div className="flex items-center gap-2 px-1">
+                        <Checkbox
+                          id={`active-${social.id}`}
+                          checked={social.active}
+                          onCheckedChange={(checked) =>
+                            updateSocial(social.id, { active: !!checked })
+                          }
+                          className="rounded-sm size-4 border-primary/20 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+                        />
+                        <Label
+                          htmlFor={`active-${social.id}`}
+                          className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground/40 cursor-pointer hover:text-primary transition-colors"
+                        >
+                          {social.active ? 'Visible' : 'Hidden'}
+                        </Label>
+                      </div>
                     </div>
 
                     <div className="flex gap-2">

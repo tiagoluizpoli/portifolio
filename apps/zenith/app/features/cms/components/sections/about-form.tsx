@@ -1,10 +1,18 @@
 import { Info, Plus, RefreshCcw, Trash2, Zap } from 'lucide-react';
 import { useCmsContext } from '../../context/cms-context';
 import type { ImpactMetric } from '../../types/about';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -13,6 +21,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { generateId } from '@/lib/utils';
 
 /**
  * AboutForm (Constitution §XVII, §I)
@@ -29,9 +38,10 @@ export function AboutForm() {
 
   const addStat = () => {
     const newStat: ImpactMetric = {
-      id: Math.random().toString(36).substr(2, 9),
+      id: generateId('stat'),
       label: 'New Metric',
       value: '0',
+      source: 'manual',
     };
     handleChange({ ...formData, stats: [...formData.stats, newStat] });
   };
@@ -148,13 +158,27 @@ export function AboutForm() {
                       <div className="flex items-center justify-between pr-8">
                         <div className="flex items-center gap-2">
                           <Zap className="size-3 text-primary/40" />
-                          <Input
-                            value={stat.value}
-                            onChange={(e) =>
-                              updateStat(stat.id, 'value', e.target.value)
-                            }
-                            className="h-6 max-w-[120px] bg-transparent border-none p-0 text-xl font-black tracking-tighter text-primary focus-visible:ring-0"
-                          />
+                          {stat.source === 'custom' ? (
+                            <div className="flex items-center gap-2">
+                              <span className="text-xl font-black tracking-tighter text-primary/40 italic">
+                                AUTO
+                              </span>
+                              <Badge
+                                variant="outline"
+                                className="text-[8px] bg-primary/5 text-primary border-primary/20 h-4"
+                              >
+                                LIVE
+                              </Badge>
+                            </div>
+                          ) : (
+                            <Input
+                              value={stat.value}
+                              onChange={(e) =>
+                                updateStat(stat.id, 'value', e.target.value)
+                              }
+                              className="h-6 max-w-[120px] bg-transparent border-none p-0 text-xl font-black tracking-tighter text-primary focus-visible:ring-0"
+                            />
+                          )}
                         </div>
                       </div>
                       <Input
@@ -164,6 +188,97 @@ export function AboutForm() {
                         }
                         className="h-5 bg-transparent border-none p-0 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40 focus-visible:ring-0"
                       />
+
+                      <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-border/50">
+                        <div className="flex items-center justify-between">
+                          <Label className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
+                            Source Mode
+                          </Label>
+                          <Select
+                            value={stat.source || 'manual'}
+                            onValueChange={(val) => {
+                              updateStat(
+                                stat.id,
+                                'source' as keyof ImpactMetric,
+                                val,
+                              );
+                              if (val === 'manual') {
+                                updateStat(
+                                  stat.id,
+                                  'sourceKey' as keyof ImpactMetric,
+                                  '',
+                                );
+                              }
+                            }}
+                          >
+                            <SelectTrigger className="h-6 w-fit bg-transparent border-none p-0 text-[10px] font-black uppercase tracking-widest text-primary hover:text-primary transition-colors focus:ring-0">
+                              <SelectValue placeholder="Source" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-popover border-border">
+                              <SelectItem
+                                value="manual"
+                                className="text-[10px] uppercase font-bold"
+                              >
+                                Manual
+                              </SelectItem>
+                              <SelectItem
+                                value="custom"
+                                className="text-[10px] uppercase font-bold"
+                              >
+                                Custom (Auto)
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        {stat.source === 'custom' && (
+                          <div className="flex items-center justify-between gap-4 animate-in fade-in slide-in-from-top-1 duration-300">
+                            <Label className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 shrink-0">
+                              Metric Key
+                            </Label>
+                            <Select
+                              value={stat.sourceKey || ''}
+                              onValueChange={(val) =>
+                                updateStat(
+                                  stat.id,
+                                  'sourceKey' as keyof ImpactMetric,
+                                  val,
+                                )
+                              }
+                            >
+                              <SelectTrigger className="h-7 flex-1 bg-muted/30 border-border/50 rounded-md px-2 text-[9px] font-bold uppercase tracking-tight text-foreground/70">
+                                <SelectValue placeholder="Select Metric Key..." />
+                              </SelectTrigger>
+                              <SelectContent className="bg-popover border-border">
+                                {[
+                                  'github_commits_total',
+                                  'github_stars_count',
+                                  'npm_downloads_monthly',
+                                  'wakatime_coding_hours',
+                                  'blog_posts_count',
+                                ].map((key) => (
+                                  <SelectItem
+                                    key={key}
+                                    value={key}
+                                    className="text-[10px] font-medium font-mono"
+                                  >
+                                    {key}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        )}
+
+                        {stat.source === 'custom' && stat.sourceKey && (
+                          <div className="flex items-center gap-2 mt-1 px-2 py-1.5 rounded-md bg-primary/5 border border-primary/10">
+                            <RefreshCcw className="size-2.5 text-primary animate-spin-slow" />
+                            <span className="text-[8px] font-black uppercase tracking-widest text-primary/80">
+                              Orchestrated Sync Active
+                            </span>
+                          </div>
+                        )}
+                      </div>
                     </div>
 
                     <div className="absolute top-2 right-2">

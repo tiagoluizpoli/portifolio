@@ -20,6 +20,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
+import { generateId } from '@/lib/utils';
 
 /**
  * ExperienceForm (Constitution §XVII, §I)
@@ -39,7 +40,7 @@ export function ExperienceForm() {
   const addItem = () => {
     const newItem: HistoryItem = {
       ...EMPTY_HISTORY_ITEM,
-      id: Math.random().toString(36).substr(2, 9),
+      id: generateId('exp'),
       type: 'experience',
       locale: currentLocale,
       mainTitle: 'New Role',
@@ -160,7 +161,7 @@ export function ExperienceForm() {
               {/* Expandable Form */}
               {expandedId === item.id && (
                 <CardContent className="pt-6 border-t border-border space-y-6 animate-in slide-in-from-top-2 duration-300">
-                  <div className="grid gap-8 md:grid-cols-2">
+                  <div className="grid gap-6 md:grid-cols-2">
                     <div className="space-y-3">
                       <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">
                         Role / Title
@@ -187,7 +188,7 @@ export function ExperienceForm() {
                     </div>
                   </div>
 
-                  <div className="grid gap-8 md:grid-cols-3">
+                  <div className="grid gap-6 md:grid-cols-3">
                     <div className="space-y-3">
                       <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">
                         Location
@@ -232,22 +233,22 @@ export function ExperienceForm() {
                     </div>
                   </div>
 
-                  <Card className="flex items-center gap-3 bg-transparent p-4 rounded-lg border border-border shadow-none">
+                  <div className="flex items-center gap-3 py-1">
                     <Checkbox
                       id={`current-${item.id}`}
                       checked={item.current}
                       onCheckedChange={(checked: boolean) =>
                         updateItem(item.id, { current: checked })
                       }
-                      className="border-primary/40 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+                      className="size-4 border-primary/40 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                     />
                     <Label
                       htmlFor={`current-${item.id}`}
-                      className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 cursor-pointer"
+                      className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40 cursor-pointer hover:text-primary transition-colors"
                     >
                       I am currently working in this role
                     </Label>
-                  </Card>
+                  </div>
 
                   <div className="space-y-3">
                     <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">

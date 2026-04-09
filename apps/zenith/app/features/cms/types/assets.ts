@@ -10,6 +10,7 @@ export interface Skill {
   name: string;
   category: SkillCategory;
   icon: string; // Iconify name
+  status: 'active' | 'archived';
 }
 
 export interface Solution {
@@ -24,6 +25,7 @@ export const EMPTY_SKILL: Omit<Skill, 'id'> = {
   name: '',
   category: 'hard',
   icon: 'lucide:code',
+  status: 'active',
 };
 
 export const EMPTY_SOLUTION: Omit<Solution, 'id'> = {
