@@ -589,10 +589,9 @@ function SidebarMenuSkeleton({
 }: React.ComponentProps<'div'> & {
   showIcon?: boolean;
 }) {
-  // Random width between 50 to 90%.
-  const [width] = React.useState(() => {
-    return `${Math.floor(Math.random() * 40) + 50}%`;
-  });
+  // Use a deterministic width to prevent hydration mismatch.
+  // We can vary this based on a fixed logic or just use a stable default.
+  const width = '70%';
 
   return (
     <div

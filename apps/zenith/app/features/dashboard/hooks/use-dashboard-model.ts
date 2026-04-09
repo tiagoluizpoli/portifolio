@@ -12,6 +12,7 @@ import { useMemo, useState } from 'react';
 import type { Region } from '../components/geo-distribution';
 import type { KpiCard } from '../components/kpi-cards';
 import type { AxisLabel, SparklineBar } from '../components/temporal-density';
+import { seededRandom } from '@/lib/utils';
 import { useMockAnalytics } from '@/services/mock-data-engine';
 
 // ---------------------------------------------------------------------------
@@ -90,7 +91,10 @@ export function useDashboardModel(isEmpty = false): DashboardModel {
   // Pre-calculate sparkline data for stable React keys (Guard §II)
   const sparklineData = useMemo<SparklineBar[]>(() => {
     return Array.from({ length: 48 }).map((_, i) => {
-      const height = 20 + Math.sin(i * 0.3) * 30 + Math.random() * 40;
+      // Use a stable seed for deterministic heights during SSR (Constitution §XV)
+      const seed = `zenith-sparkline-${i}`;
+      const randomFactor = seededRandom(seed);
+      const height = 20 + Math.sin(i * 0.3) * 30 + randomFactor * 40;
       const timeAgo = (48 - i) * 30; // 30-min intervals
       const hours = Math.floor(timeAgo / 60);
       const mins = timeAgo % 60;

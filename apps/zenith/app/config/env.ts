@@ -12,17 +12,30 @@ import { type AppwriteEnv, appwriteEnvSchema } from '@repo/appwrite-core';
 // Raw env collection (identical to before — no functional change here)
 // ---------------------------------------------------------------------------
 const rawEnv = {
-  APPWRITE_ENDPOINT: import.meta.env.VITE_APPWRITE_ENDPOINT || '',
-  APPWRITE_PROJECT_ID: import.meta.env.VITE_APPWRITE_PROJECT_ID || '',
+  APPWRITE_ENDPOINT:
+    process.env.APPWRITE_ENDPOINT ||
+    process.env.VITE_APPWRITE_ENDPOINT ||
+    import.meta.env.VITE_APPWRITE_ENDPOINT ||
+    '',
+  APPWRITE_PROJECT_ID:
+    process.env.APPWRITE_PROJECT_ID ||
+    process.env.VITE_APPWRITE_PROJECT_ID ||
+    import.meta.env.VITE_APPWRITE_PROJECT_ID ||
+    '',
   APPWRITE_API_KEY:
-    process.env.APPWRITE_API_KEY || import.meta.env.APPWRITE_API_KEY || '',
+    process.env.APPWRITE_API_KEY ||
+    process.env.VITE_APPWRITE_API_KEY ||
+    import.meta.env.VITE_APPWRITE_API_KEY ||
+    '',
   APPWRITE_DATABASE_ID:
     process.env.APPWRITE_DATABASE_ID ||
-    import.meta.env.APPWRITE_DATABASE_ID ||
+    process.env.VITE_APPWRITE_DATABASE_ID ||
+    import.meta.env.VITE_APPWRITE_DATABASE_ID ||
     '',
   APPWRITE_CURATOR_TEAM_ID:
     process.env.APPWRITE_CURATOR_TEAM_ID ||
-    import.meta.env.APPWRITE_CURATOR_TEAM_ID ||
+    process.env.VITE_APPWRITE_CURATOR_TEAM_ID ||
+    import.meta.env.VITE_APPWRITE_CURATOR_TEAM_ID ||
     '',
 };
 
@@ -33,7 +46,10 @@ const rawEnv = {
 /** Skip validation during CI/build if the flag is set */
 const shouldSkip =
   process.env.SKIP_ENV_VALIDATION === 'true' ||
-  import.meta.env.VITE_SKIP_ENV_VALIDATION === 'true';
+  import.meta.env.VITE_SKIP_ENV_VALIDATION === 'true' ||
+  process.env.NODE_ENV === 'test' ||
+  process.env.VITEST === 'true' ||
+  import.meta.env.MODE === 'test';
 
 /**
  * Safe parse result — use `envResult.success` to branch on validity.
@@ -42,6 +58,7 @@ const shouldSkip =
  * Type is inferred directly from `appwriteEnvSchema` (Zod v3) to avoid
  * cross-version type incompatibilities in the monorepo.
  */
+
 export const envResult = shouldSkip
   ? { success: true as const, data: rawEnv as AppwriteEnv, error: undefined }
   : appwriteEnvSchema.safeParse(rawEnv);
