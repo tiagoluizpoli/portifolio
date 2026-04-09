@@ -158,3 +158,5 @@ Before implementation, define the testing strategy using this structure:
 - [ ] **Is the loader too big?** Move heavy logic to a Server Function called by the loader.
 - [ ] **Hydration Mismatch?** Check if you're reading `session`, `localstorage`, or `window` during the initial render.
 - [ ] **Validation?** Use Zod validators on all Server Functions.
+- [ ] **Import Protection?** Ensure server-only code is isolated in `.server.ts` or `.functions.ts` to trigger Vite's protection.
+- [ ] **React 19 native?** Use `use(promise)` instead of `<Await>` where possible for cleaner code.

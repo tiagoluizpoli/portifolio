@@ -21,6 +21,7 @@ shadcn/ui is **not a component library**—it's a collection of reusable compone
 - **Complete customization**: Modify styling, behavior, and structure freely, including choosing between Radix UI or Base UI primitives
 - **No version lock-in**: Update components selectively at your own pace
 - **Zero runtime overhead**: No library bundle, just the code you need
+- **Tailwind v4 Optimized**: Components are designed to work with Tailwind v4's CSS-first configuration and Rust engine.
 
 ## Component Discovery and Installation
 
@@ -218,6 +219,10 @@ Blocks are organized by category:
 - **login**: Authentication flows
 - **sidebar**: Navigation sidebars
 - **products**: E-commerce components
+- **input-otp**: One-time password inputs
+- **breadcrumb**: Navigation hierarchies
+- **drawer**: Responsive bottom sheets
+- **resizable**: Adjustable panel layouts
 
 ## Accessibility
 
