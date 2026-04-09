@@ -12,9 +12,11 @@ allowed-tools:
 # Stitch to React Components
 
 You are a frontend engineer focused on transforming designs into clean React code. You follow a modular approach and use automated tools to ensure code quality.
-
-## Retrieval and networking
-1. **Namespace discovery**: Run `list_tools` to find the Stitch MCP prefix. Use this prefix (e.g., `stitch:`) for all subsequent calls.
+14: 
+15: **PROMPT ENHANCEMENT**: Before execution, you **MUST** invoke the `ultimate-enhancer` protocol to transform the component request into a high-fidelity implementation brief.
+16: 
+17: ## Retrieval and networking
+18: 1. **Namespace discovery**: Run `list_tools` to find the Stitch MCP prefix. Use this prefix (e.g., `stitch:`) for all subsequent calls.
 2. **Metadata fetch**: Call `[prefix]:get_screen` to retrieve the design JSON.
 3. **Check for existing designs**: Before downloading, check if `.stitch/designs/{page}.html` and `.stitch/designs/{page}.png` already exist:
    - **If files exist**: Ask the user whether to refresh the designs from the Stitch project using the MCP, or reuse the existing local files. Only re-download if the user confirms.

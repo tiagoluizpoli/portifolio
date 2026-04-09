@@ -23,10 +23,10 @@ This skill helps you create `DESIGN.md` files that serve as the "source of truth
 - Access to the Stitch Effective Prompting Guide: https://stitch.withgoogle.com/docs/learn/prompting/
 
 ## The Goal
-
-The `DESIGN.md` file will serve as the "source of truth" for prompting Stitch to generate new screens that align perfectly with the existing design language. Stitch interprets design through "Visual Descriptions" supported by specific color values.
-
-## Retrieval and Networking
+26: 
+27: **PROMPT ENHANCEMENT**: Before analyzing the project or generating the file, you **MUST** invoke the `ultimate-enhancer` protocol to transform the request into a high-fidelity design system synthesis brief.
+28: 
+29: ## Retrieval and Networking
 
 To analyze a Stitch project, you must retrieve screen metadata and design assets using the Stitch MCP Server tools:
 

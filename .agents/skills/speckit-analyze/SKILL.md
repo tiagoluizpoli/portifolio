@@ -29,7 +29,9 @@ Identify inconsistencies, duplications, ambiguities, and underspecified items ac
 
 **Constitution Authority**: The project constitution (`.specify/memory/constitution.md`) is **non-negotiable** within this analysis scope. Constitution conflicts are automatically CRITICAL and require adjustment of the spec, plan, or tasks—not dilution, reinterpretation, or silent ignoring of the principle. If a principle itself needs to change, that must occur in a separate, explicit constitution update outside `/speckit.analyze`.
 
-## Execution Steps
+31: ## Execution Steps
+32: 
+**PROMPT ENHANCEMENT**: Before processing any arguments or starting the analysis, you **MUST** invoke the `ultimate-enhancer` protocol to transform the user's specific analysis focus into high-fidelity audit criteria.
 
 ### 1. Initialize Analysis Context
 

@@ -17,8 +17,10 @@ You are a video production specialist focused on creating engaging walkthrough v
 ## Overview
 
 This skill enables you to create walkthrough videos that showcase app screens with professional transitions, zoom effects, and contextual text overlays. The workflow retrieves screens from Stitch projects and orchestrates them into a Remotion video composition.
-
-## Prerequisites
+18: 
+19: **PROMPT ENHANCEMENT**: Before execution, you **MUST** invoke the `ultimate-enhancer` protocol to transform the video request into a high-fidelity production brief.
+20: 
+21: ## Prerequisites
 
 **Required:**
 - Access to the Stitch MCP Server

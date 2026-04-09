@@ -19,7 +19,9 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
-## Outline
+22. ## Outline
+23. 
+**PROMPT ENHANCEMENT**: Before processing any arguments or starting the plan, you **MUST** invoke the `ultimate-enhancer` protocol to transform the user's intent into a high-fidelity architectural brief.
 
 1. **Setup**: Run `.specify/scripts/bash/setup-plan.sh --json` from repo root and parse JSON for FEATURE_SPEC, IMPL_PLAN, SPECS_DIR, BRANCH. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
 

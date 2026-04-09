@@ -33,9 +33,11 @@ Based on the user's request, follow one of these workflows:
 
 ---
 
-## 🎨 Prompt Enhancement Pipeline
+36: ## 🎨 Prompt Enhancement Pipeline
+37: 
+**UNIVERSAL ENHANCEMENT**: Before any Stitch-specific logic, you **MUST** invoke the `ultimate-enhancer` protocol to transform the user's high-level intent into a high-fidelity design brief. This brief will then be refined by the pipeline below.
 
-Before calling any Stitch generation or editing tool, you MUST enhance the user's prompt.
+38: Before calling any Stitch generation or editing tool, you MUST enhance the user's prompt.
 
 ### 1. Analyze Context
 - **Project Scope**: Maintain the current `projectId`. Use `list_projects` if unknown.

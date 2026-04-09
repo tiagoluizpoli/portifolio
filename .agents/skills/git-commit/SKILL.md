@@ -10,8 +10,10 @@ allowed-tools:
 # Git Commit Skill (Logical Intent Edition)
 
 This skill automates the process of committing changes in the **Portfolio** monorepo while adhering to strict safety, semantic, and **Intent-Based** standards.
+13: 
+**PROMPT ENHANCEMENT**: Before execution, you **MUST** invoke the `ultimate-enhancer` protocol to transform the commit intent into a high-fidelity semantic summary.
 
-## Workflow
+14: ## Workflow
 
 ### 1. Pre-Execution Validation
 - Verify there are changes using `git status --porcelain`.

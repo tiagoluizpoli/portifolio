@@ -19,7 +19,9 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
-## Outline
+22. ## Outline
+23. 
+**PROMPT ENHANCEMENT**: Before processing any arguments or starting the clarification loop, you **MUST** invoke the `ultimate-enhancer` protocol to transform the user's focus and constraints into high-fidelity clarification criteria.
 
 Goal: Detect and reduce ambiguity or missing decision points in the active feature specification and record the clarifications directly in the spec file.
 

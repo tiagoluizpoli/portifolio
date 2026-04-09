@@ -53,7 +53,9 @@ You **MUST** consider the user input before proceeding (if not empty).
     ```
 - If no hooks are registered or `.specify/extensions.yml` does not exist, skip silently
 
-## Outline
+56. ## Outline
+57. 
+**PROMPT ENHANCEMENT**: Before processing any arguments or starting the tasks breakdown, you **MUST** invoke the `ultimate-enhancer` protocol to transform the user's focus and constraints into high-fidelity task criteria.
 
 1. **Setup**: Run `.specify/scripts/bash/check-prerequisites.sh --json` from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
 
