@@ -10,6 +10,7 @@ import {
 import {
   arrayMove,
   SortableContext,
+  type SortingStrategy,
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
@@ -22,9 +23,10 @@ import { cn } from '@/lib/utils';
 interface SortableItemProps {
   id: string;
   children: React.ReactNode;
+  hideGrip?: boolean;
 }
 
-function SortableItem({ id, children }: SortableItemProps) {
+function SortableItem({ id, children, hideGrip }: SortableItemProps) {
   const {
     attributes,
     listeners,
@@ -44,21 +46,31 @@ function SortableItem({ id, children }: SortableItemProps) {
       ref={setNodeRef}
       style={style}
       className={cn(
-        'relative rounded-xl border border-border bg-card p-4 transition-all',
+        'relative rounded-xl transition-all',
         isDragging &&
           'z-50 shadow-2xl shadow-primary/20 scale-[1.02] border-primary/20 bg-primary/5',
       )}
     >
-      <div className="flex gap-4 items-start">
-        <button
-          type="button"
-          {...attributes}
-          {...listeners}
-          className="mt-1 cursor-grab active:cursor-grabbing text-muted-foreground/30 hover:text-primary transition-colors"
+      <div className="flex gap-4 items-start h-full">
+        {!hideGrip && (
+          <button
+            type="button"
+            {...attributes}
+            {...listeners}
+            className="mt-1 cursor-grab active:cursor-grabbing text-muted-foreground/30 hover:text-primary transition-colors"
+          >
+            <GripVertical className="size-4" />
+          </button>
+        )}
+        <div
+          className={cn(
+            'flex-1 min-w-0 h-full',
+            hideGrip && 'cursor-grab active:cursor-grabbing',
+          )}
+          {...(hideGrip ? { ...attributes, ...listeners } : {})}
         >
-          <GripVertical className="size-4" />
-        </button>
-        <div className="flex-1 min-w-0">{children}</div>
+          {children}
+        </div>
       </div>
     </div>
   );
@@ -68,6 +80,9 @@ interface SortableListProps<T extends { id: string }> {
   items: T[];
   onReorder: (items: T[]) => void;
   renderItem: (item: T) => React.ReactNode;
+  className?: string;
+  strategy?: SortingStrategy;
+  hideGrips?: boolean;
 }
 
 /**
@@ -79,6 +94,9 @@ export function SortableList<T extends { id: string }>({
   items,
   onReorder,
   renderItem,
+  className,
+  strategy = verticalListSortingStrategy,
+  hideGrips = false,
 }: SortableListProps<T>) {
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -104,13 +122,10 @@ export function SortableList<T extends { id: string }>({
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
     >
-      <SortableContext
-        items={items.map((i) => i.id)}
-        strategy={verticalListSortingStrategy}
-      >
-        <div className="space-y-2.5">
+      <SortableContext items={items.map((i) => i.id)} strategy={strategy}>
+        <div className={cn('space-y-2.5', className)}>
           {items.map((item) => (
-            <SortableItem key={item.id} id={item.id}>
+            <SortableItem key={item.id} id={item.id} hideGrip={hideGrips}>
               {renderItem(item)}
             </SortableItem>
           ))}

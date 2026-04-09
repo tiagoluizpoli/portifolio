@@ -1,18 +1,24 @@
 import {
   CheckCircle2,
-  Crop,
   File,
   ImageIcon,
+  RefreshCcw,
   UploadCloud,
   X,
 } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { Area, Point } from 'react-easy-crop';
 import Cropper from 'react-easy-crop';
+import {
+  getAssetPreview,
+  uploadAsset,
+} from '../../../../infrastructure/appwrite/server';
+import { getCroppedImg } from '../../lib/crop-utils';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -25,11 +31,13 @@ interface FileUploaderProps {
   value?: string; // fileId
   onChange?: (fileId: string) => void;
   variant?: 'image' | 'file';
+  bucketId?: string;
 }
 
 /**
  * FileUploader (Constitution §XVII, §I)
  * High-fidelity asset uploader for the Portfolio CMS with native 1:1 Image Cropping.
+ * Connected to Appwrite Storage via dedicated RPCs.
  */
 export function FileUploader({
   label,
@@ -37,6 +45,7 @@ export function FileUploader({
   value,
   onChange,
   variant = 'file',
+  bucketId = 'assets', // Standard bucket for portfolio assets
 }: FileUploaderProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [showCropModal, setShowCropModal] = useState(false);
@@ -45,9 +54,23 @@ export function FileUploader({
   // Crop state
   const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
-  const [_croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(
-    null,
-  );
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
+
+  // Preview management
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  // Resolve preview if value changes
+  useEffect(() => {
+    if (value && variant === 'image') {
+      // biome-ignore format: prevent expansion to keep @ts-expect-error aligned
+      // @ts-expect-error - TanStack Start payload inference issue in monorepo
+      getAssetPreview({ data: { bucketId, fileId: value } }).then((res) => {
+        setPreviewUrl(res.url);
+      });
+    } else {
+      setPreviewUrl(null);
+    }
+  }, [value, variant, bucketId]);
 
   const onCropComplete = useCallback(
     (_croppedArea: Area, _croppedAreaPixels: Area) => {
@@ -56,10 +79,18 @@ export function FileUploader({
     [],
   );
 
-  const handleUpload = (
+  const toBase64 = (file: Blob | File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () =>
+        resolve(reader.result?.toString().split(',')[1] || '');
+      reader.onerror = (error) => reject(error);
+    });
+
+  const handleUpload = async (
     e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent,
   ) => {
-    // If it's a file input event and we have files
     if (
       'target' in e &&
       (e.target as HTMLInputElement).files &&
@@ -78,22 +109,52 @@ export function FileUploader({
         reader.readAsDataURL(file);
         return;
       }
-    }
 
-    // Mock standard upload if no file target or not an image
-    if (variant === 'file' || ('type' in e && e.type === 'click')) {
-      triggerMockUpload();
+      // Standard file upload (PDF, etc)
+      try {
+        setIsUploading(true);
+        const base64 = await toBase64(file);
+        // biome-ignore format: prevent expansion to keep @ts-expect-error aligned
+        // @ts-expect-error - TanStack Start payload inference issue in monorepo
+        const asset = await uploadAsset({ data: { bucketId, file: base64, fileName: file.name } });
+        onChange?.(asset.id);
+        setIsUploading(false);
+      } catch (err) {
+        console.error('Upload failed:', err);
+        setIsUploading(false);
+      }
     }
   };
 
-  const triggerMockUpload = () => {
-    setIsUploading(true);
-    setTimeout(() => {
-      const mockId = `file-${Math.random().toString(36).substr(2, 9)}`;
-      onChange?.(mockId);
+  const onCropApply = async () => {
+    if (!imageSrc || !croppedAreaPixels) return;
+
+    try {
+      setIsUploading(true);
+      const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels);
+      if (croppedImage) {
+        // Convert the DataURL (from getCroppedImg) to a Blob then to Base64 for the RPC
+        const response = await fetch(croppedImage);
+        const blob = await response.blob();
+        const base64 = await toBase64(blob);
+
+        // biome-ignore format: prevent expansion to keep @ts-expect-error aligned
+        // @ts-expect-error - TanStack Start payload inference issue in monorepo
+        const asset = await uploadAsset({ data: { bucketId, file: base64, fileName: `avatar-${Date.now()}.png` } });
+
+        // biome-ignore format: prevent expansion to keep @ts-expect-error aligned
+        // @ts-expect-error - TanStack Start payload inference issue in monorepo
+        const previewRes = await getAssetPreview({ data: { bucketId, fileId: asset.id } });
+
+        setPreviewUrl(previewRes.url);
+        onChange?.(asset.id);
+      }
       setIsUploading(false);
       setShowCropModal(false);
-    }, 1500);
+    } catch (err) {
+      console.error('Failed to crop and upload image:', err);
+      setIsUploading(false);
+    }
   };
 
   const handleClear = (e: React.MouseEvent) => {
@@ -106,13 +167,6 @@ export function FileUploader({
     document
       .getElementById(`uploader-${label.replace(/\s+/g, '-').toLowerCase()}`)
       ?.click();
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      if (!value) triggerInput();
-    }
   };
 
   return (
@@ -131,14 +185,9 @@ export function FileUploader({
         onChange={handleUpload}
       />
 
-      <button
-        type="button"
-        tabIndex={0}
-        onClick={!value ? triggerInput : undefined}
-        onKeyDown={handleKeyDown}
-        aria-label={`Upload ${label}`}
+      <div
         className={cn(
-          'relative group cursor-pointer transition-all duration-500',
+          'relative group transition-all duration-500',
           'w-full rounded-xl overflow-hidden',
           variant === 'image'
             ? value
@@ -146,7 +195,6 @@ export function FileUploader({
               : 'h-48'
             : 'h-40',
           'border border-dashed border-border flex flex-col items-center justify-center',
-          !value && 'hover:bg-primary/5 hover:border-primary/30',
           isUploading && 'animate-pulse cursor-wait',
         )}
       >
@@ -155,7 +203,11 @@ export function FileUploader({
             {variant === 'image' ? (
               <div className="size-full bg-cover bg-center rounded-lg border border-border flex items-center justify-center overflow-hidden relative aspect-square">
                 <img
-                  src={imageSrc || 'https://ui.shadcn.com/avatars/02.png'}
+                  src={
+                    previewUrl ||
+                    imageSrc ||
+                    'https://ui.shadcn.com/avatars/02.png'
+                  }
                   alt="preview"
                   className="size-full object-cover"
                 />
@@ -186,7 +238,12 @@ export function FileUploader({
             )}
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-4">
+          <button
+            type="button"
+            onClick={triggerInput}
+            aria-label={`Upload ${label}`}
+            className="size-full flex flex-col items-center justify-center gap-4 hover:bg-primary/5 hover:border-primary/30 cursor-pointer transition-all duration-300"
+          >
             <div className="size-12 rounded-full bg-muted border border-border flex items-center justify-center group-hover:bg-primary/10 group-hover:border-primary/20 group-hover:text-primary transition-all duration-300">
               {variant === 'image' ? (
                 <ImageIcon className="size-5 transition-transform group-hover:scale-110" />
@@ -203,20 +260,24 @@ export function FileUploader({
                 {variant === 'image' ? 'JPG, PNG, WEBP (1:1)' : 'PDF, DOCX'}
               </span>
             </div>
-          </div>
+          </button>
         )}
-      </button>
+      </div>
 
       {/* Image Cropping Overlay */}
       <Dialog open={showCropModal} onOpenChange={setShowCropModal}>
-        <DialogContent className="max-w-md w-full border-border bg-background p-0 overflow-hidden gap-0">
-          <DialogHeader className="p-4 border-b border-border bg-muted/20">
-            <DialogTitle className="text-sm font-bold uppercase tracking-widest flex items-center gap-2 text-foreground/80">
-              <Crop className="size-4" /> Position & Scale
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold tracking-tight">
+              Visual Curation
             </DialogTitle>
+            <DialogDescription className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/60">
+              Precise 1:1 Aspect Ratio Transformation
+            </DialogDescription>
           </DialogHeader>
-          <div className="relative w-full h-[400px] bg-black/90">
-            {imageSrc && (
+
+          <div className="relative aspect-video w-full overflow-hidden bg-muted rounded-2xl border border-border/50 shadow-inner group mt-4">
+            {imageSrc ? (
               <Cropper
                 image={imageSrc}
                 crop={crop}
@@ -225,14 +286,19 @@ export function FileUploader({
                 onCropChange={setCrop}
                 onCropComplete={onCropComplete}
                 onZoomChange={setZoom}
-                classes={{ containerClassName: 'bg-transparent' }}
               />
+            ) : (
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground/40 italic">
+                <ImageIcon className="size-12 mb-4 opacity-10" />
+                <p className="text-sm font-medium">Ready for transformation</p>
+              </div>
             )}
           </div>
-          <DialogFooter className="p-4 border-t border-border bg-muted/20 flex items-center justify-between">
-            <div className="flex items-center gap-2 flex-1">
-              <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
-                Zoom
+
+          <div className="py-6 space-y-4">
+            <div className="flex items-center gap-6 px-1">
+              <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground/60 shrink-0">
+                Density
               </span>
               <input
                 type="range"
@@ -242,25 +308,42 @@ export function FileUploader({
                 step={0.1}
                 aria-label="Zoom"
                 onChange={(e) => setZoom(Number(e.target.value))}
-                className="flex-1 h-1 bg-border rounded-lg appearance-none cursor-pointer"
+                className="flex-1 accent-primary h-1.5 bg-muted rounded-lg appearance-none cursor-pointer"
               />
+              <span className="text-[10px] font-mono text-primary font-bold w-10 text-right">
+                {zoom.toFixed(1)}x
+              </span>
             </div>
-            <div className="flex items-center gap-3 ml-6">
+          </div>
+
+          <DialogFooter className="bg-muted/30 -mx-6 -mb-6 p-6 mt-2 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <div className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500/80">
+                Precision Core Active
+              </span>
+            </div>
+            <div className="flex items-center gap-3 w-full sm:w-auto">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowCropModal(false)}
-                className="text-[10px] font-bold uppercase tracking-widest h-8"
+                className="flex-1 sm:flex-none text-[10px] font-bold uppercase tracking-widest h-10 px-6 hover:bg-muted transition-all"
               >
                 Cancel
               </Button>
               <Button
-                onClick={triggerMockUpload}
+                onClick={onCropApply}
                 size="sm"
                 disabled={isUploading}
-                className="text-[10px] h-8 font-bold uppercase tracking-widest px-6 shadow-sm shadow-primary/20"
+                className="flex-1 sm:flex-none text-[10px] h-10 font-bold uppercase tracking-widest px-8 shadow-xl shadow-primary/20 bg-primary hover:bg-primary/90 transition-all"
               >
-                {isUploading ? 'Processing...' : 'Apply Crop'}
+                {isUploading ? (
+                  <RefreshCcw className="size-4 mr-2 animate-spin" />
+                ) : (
+                  <CheckCircle2 className="size-4 mr-2" />
+                )}
+                {isUploading ? 'Transforming...' : 'Commit Changes'}
               </Button>
             </div>
           </DialogFooter>

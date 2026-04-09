@@ -4,7 +4,7 @@ import { useMaturityAudit } from '../hooks/use-maturity-audit';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Switch } from '@/components/ui/switch';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 
 /**
@@ -55,22 +55,23 @@ export function CmsStatusFooter() {
 
       <div className="flex items-center gap-6">
         {/* Language Toggler */}
-        <ToggleGroup
-          type="single"
+        <Tabs
           value={currentLocale}
-          onValueChange={(val) => val && setLocale(val as 'en' | 'pt')}
-          className="p-1 bg-white/5 border border-white/5 rounded-lg"
+          onValueChange={(val) => setLocale(val as 'en' | 'pt')}
+          className="h-8"
         >
-          {(['en', 'pt'] as const).map((lang) => (
-            <ToggleGroupItem
-              key={lang}
-              value={lang}
-              className="px-3 h-6 rounded-md text-[10px] font-black uppercase tracking-widest transition-all data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:shadow-lg data-[state=on]:shadow-primary/20"
-            >
-              {lang}
-            </ToggleGroupItem>
-          ))}
-        </ToggleGroup>
+          <TabsList className="h-8 bg-muted/50 border border-border p-1">
+            {(['en', 'pt'] as const).map((lang) => (
+              <TabsTrigger
+                key={lang}
+                value={lang}
+                className="px-4 h-6 rounded-md text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm"
+              >
+                {lang}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
 
         {/* SC-004: Bilingual Maturity Lock */}
         <div className="flex items-center gap-3 border-l border-white/10 pl-6">

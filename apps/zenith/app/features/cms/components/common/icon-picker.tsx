@@ -1,12 +1,17 @@
-import { Grid, Search } from 'lucide-react';
+import { Icon } from '@iconify/react';
+import { useQuery } from '@tanstack/react-query';
+import { Grid, Loader2, Search } from 'lucide-react';
 import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { useDebounce } from '@/features/cms/hooks/use-debounce';
+import { searchIcons } from '@/infrastructure/appwrite/server';
 import { cn } from '@/lib/utils';
 
 interface IconPickerProps {
@@ -17,13 +22,33 @@ interface IconPickerProps {
 /**
  * IconPicker (Constitution §XVII, §I)
  * High-fidelity icon curation component.
- * Integrates search-based discovery (Iconify) with manual curation.
+ * Integrates search-based discovery (Iconify) with real-time SVG previews.
  */
 export function IconPicker({ value, onChange }: IconPickerProps) {
   const [search, setSearch] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const debouncedSearch = useDebounce(search, 300);
 
-  // Mocked icons for curation
+  const { data, isLoading } = useQuery({
+    queryKey: ['icon-search', debouncedSearch],
+    queryFn: async () => {
+      try {
+        const response = await (
+          searchIcons as unknown as (p: {
+            data: string;
+          }) => Promise<{ icons: string[]; total: number; error?: string }>
+        )({ data: debouncedSearch });
+        return response || { icons: [], total: 0 };
+      } catch (error) {
+        console.error('Icon query failed:', error);
+        return { icons: [], total: 0, error: 'Network error' };
+      }
+    },
+    enabled: isOpen && debouncedSearch.length >= 2,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+
+  // Curation defaults when no search is active
   const suggestedIcons = [
     'lucide:home',
     'lucide:user',
@@ -36,25 +61,35 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
     'lucide:layout',
   ];
 
+  const displayIcons =
+    debouncedSearch.length >= 2 ? data?.icons || [] : suggestedIcons;
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <button
           type="button"
-          className="flex items-center gap-3 px-4 py-2 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 transition-all group"
+          className="flex items-center gap-3 px-4 py-2 rounded-xl border border-border bg-muted/30 hover:bg-muted/50 transition-all group w-full"
         >
-          <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-            <Grid className="size-4" />
+          <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform overflow-hidden">
+            {value ? (
+              <Icon
+                icon={value}
+                className="size-5 opacity-60 group-hover:opacity-100 transition-opacity"
+              />
+            ) : (
+              <Grid className="size-4" />
+            )}
           </div>
-          <span className="text-sm font-medium text-muted-foreground">
+          <span className="text-sm font-medium text-muted-foreground truncate flex-1 text-left">
             {value || 'Select Icon...'}
           </span>
         </button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[425px] bg-black/90 backdrop-blur-3xl border-white/5 rounded-3xl p-0 overflow-hidden">
-        <DialogHeader className="p-6 pb-0">
-          <DialogTitle className="text-lg font-bold tracking-tight">
+      <DialogContent className="sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-bold tracking-tight">
             Icon Curation
           </DialogTitle>
           <div className="relative mt-4">
@@ -62,52 +97,72 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
             <input
               type="text"
               placeholder="Search icons (e.g. 'react', 'typescript')..."
-              className="w-full h-11 pl-10 pr-4 bg-white/5 border border-white/10 rounded-xl text-sm focus:outline-none focus:border-primary/50 transition-all font-sans"
+              className="w-full h-11 pl-10 pr-10 bg-muted border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-sans"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
+            {isLoading && (
+              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                <Loader2 className="size-4 animate-spin text-primary/40" />
+              </div>
+            )}
           </div>
         </DialogHeader>
 
-        <div className="p-6 pt-4 h-[300px] overflow-y-auto">
-          <div className="grid grid-cols-4 gap-3">
-            {suggestedIcons.map((icon) => (
-              <button
-                key={icon}
-                type="button"
-                onClick={() => {
-                  onChange?.(icon);
-                  setIsOpen(false);
-                }}
-                className={cn(
-                  'aspect-square rounded-xl border border-white/5 flex flex-col items-center justify-center gap-2 hover:bg-primary/10 hover:border-primary/20 transition-all group',
-                  value === icon &&
-                    'bg-primary/20 border-primary/40 text-primary',
-                )}
-              >
-                <div className="size-6 bg-white/5 rounded-md flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <span className="text-[8px] opacity-20 font-mono">ICON</span>
-                </div>
-                <span className="text-[10px] text-muted-foreground/60 scale-75 truncate w-full px-1 text-center">
-                  {icon.split(':')[1]}
-                </span>
-              </button>
-            ))}
-          </div>
+        <div className="py-4 h-[350px] overflow-y-auto mt-2">
+          {displayIcons.length > 0 ? (
+            <div className="grid grid-cols-4 sm:grid-cols-5 gap-3">
+              {displayIcons.map((icon: string) => (
+                <button
+                  key={icon}
+                  type="button"
+                  onClick={() => {
+                    onChange?.(icon);
+                    setIsOpen(false);
+                    setSearch('');
+                  }}
+                  className={cn(
+                    'aspect-square rounded-xl border border-border flex flex-col items-center justify-center gap-2 hover:bg-primary/5 hover:border-primary/20 transition-all group',
+                    value === icon &&
+                      'bg-primary/10 border-primary/40 text-primary',
+                  )}
+                >
+                  <div className="size-10 bg-muted rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner p-2">
+                    <Icon
+                      icon={icon}
+                      className="size-full opacity-40 group-hover:opacity-100 transition-opacity"
+                    />
+                  </div>
+                  <span className="text-[8px] text-muted-foreground/60 font-bold truncate w-full px-1 text-center uppercase tracking-tighter">
+                    {icon.includes(':') ? icon.split(':')[1] : icon}
+                  </span>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="h-full flex flex-col items-center justify-center text-center p-8">
+              <div className="size-12 rounded-full bg-muted border border-border flex items-center justify-center mb-4">
+                <Search className="size-5 text-muted-foreground/20" />
+              </div>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40">
+                No visual assets found for "{debouncedSearch}"
+              </p>
+            </div>
+          )}
         </div>
 
-        <div className="p-4 bg-white/5 border-t border-white/5 flex items-center justify-between">
-          <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
+        <DialogFooter className="bg-muted/30 -mx-6 -mb-6 p-4 mt-4 border-t border-border flex items-center justify-between">
+          <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-black">
             Iconify Integrated
           </span>
           <button
             type="button"
-            className="text-xs text-primary font-bold hover:underline"
+            className="text-xs text-primary font-bold hover:underline px-4 py-2"
             onClick={() => setIsOpen(false)}
           >
             Close
           </button>
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
