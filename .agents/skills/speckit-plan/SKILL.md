@@ -34,6 +34,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Phase 0: Generate research.md (resolve all NEEDS CLARIFICATION)
    - Phase 1: Generate data-model.md, contracts/, quickstart.md
    - Phase 1: Update agent context by running the agent script
+   - Phase 2: Generate test-plan.md (Mandatory BE, FE, and E2E scenarios)
    - Re-evaluate Constitution Check post-design
 
 4. **Stop and report**: Command ends after Phase 2 planning. Report branch, IMPL_PLAN path, and generated artifacts.
@@ -86,6 +87,24 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Preserve manual additions between markers
 
 **Output**: data-model.md, /contracts/*, quickstart.md, agent-specific file
+
+### Phase 2: Testing & Coverage Strategy
+
+**Prerequisites:** Phase 1 complete
+
+1. **Invoke Testing Specialists**: Call `test-coverage`, `test-backend`, `test-frontend`, and `test-e2e` to define the test architecture.
+
+2. **Generate and dispatch test design tasks**:
+   - For every Functional Requirement (FR) in the spec → Define Backend unit/integration test cases.
+   - For every User Story (US) in the spec → Define Frontend interaction test cases.
+   - For every critical mission flow (Auth, Sync, Assets) → Define E2E journey test cases.
+
+3. **Consolidate in `test-plan.md`**:
+   - Mappings: FR-XXX -> [Test Case Name] -> [Expected Outcome].
+   - Coverage: Define specific % targets for the current feature scope.
+   - Guardrails: Define any custom `pnpm guard` checks needed.
+
+**Output**: test-plan.md
 
 ## Key rules
 

@@ -1,8 +1,8 @@
 <!--
 Sync Impact Report:
-- Version change: 1.8.0 → 1.9.0
-- Added sections: Principle XVIII (Architecture-Level Test Plans), XIX (Explicit SOLID Mapping), XX (Security Boundary Mapping), XXI (Test Immutability)
-- Modified principles: None
+- Version change: 1.9.0 → 2.0.0
+- Added sections: None
+- Modified principles: XVIII (Architecture-Level Test Plans - Hardened to MANDATORY), XXI (Test Immutability - Hardened to AUTHORITATIVE)
 -->
 
 # Zenith Constitution
@@ -71,8 +71,8 @@ This gate is mandatory and MUST be verified before notifying the user of complet
 3. **Per-Screen Documentation**: Every screen must have its own `DESIGN.md` for full traceability.
 Every technical plan or frontend task must prioritize Stitch-generated designs as the authoritative baseline for implementation.
 
-### XVIII. Architecture-Level Test Plans
-**Definition**: No feature specification is considered complete without a mandatory "Architecture-Level Test Plan." This plan MUST define the high-level strategy for BDD (Playwright) and TDD (Vitest) BEFORE any implementation code is written. This ensures that testability is an architectural constraint, not an afterthought.
+### XVIII. Mandatory Test-First Architecture
+**Definition**: No feature implementation may begin without a completed `test-plan.md`. Testing is a mandatory architectural constraint. Every functional requirement (FR) MUST have a corresponding test case (Unit/Integration) and every user story (US) MUST have a corresponding E2E validation journey before a single line of production code is written.
 
 ### XIX. Explicit SOLID Mapping
 **Definition**: Every high-level technical design MUST explicitly state which SOLID principles are being applied and how. Rationale such as "Following Single Responsibility Principle to isolate data fetching from UI rendering" is mandatory to ensure architectural clarity and maintainability.
@@ -87,4 +87,4 @@ Every technical plan or frontend task must prioritize Stitch-generated designs a
 - The Roadmap and Constitution supersede all individual implementation decisions.
 - Changes to the Roadmap or Constitution require explicit documentation and rationale.
 
-**Version**: 1.9.0 | **Ratified**: 2026-03-27 | **Last Amended**: 2026-03-27
+**Version**: 2.0.0 | **Ratified**: 2026-04-10 | **Last Amended**: 2026-04-10

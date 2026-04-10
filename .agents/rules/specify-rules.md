@@ -1,6 +1,6 @@
 # portifolio Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-04-09
+Auto-generated from all feature plans. Last updated: 2026-04-10
 
 ## Active Technologies
 - TypeScript 5.7+ / React 19 + TanStack Start v1 (RC), Tailwind CSS v4, Shadcn UI, Geist Typography (004-ui-design-shadcn)
@@ -34,7 +34,6 @@ tests/
 ## Recent Changes
 - 007-wire-appwrite-cms: Added TypeScript 5.7+ | Node.js 22+ + `node-appwrite` (v22.1.3), `@tanstack/react-form`, `@tanstack/react-query`, `zod`.
 - 006-portfolio-manager-ui: Added TypeScript / React 19 / TanStack Start (v1 RC) + `dnd-kit` (Kinetic Sorting), `Iconify` (Visual curation), `Lucide` (Admin controls)
-- 005-refactor-zenith-architecture: Added TypeScript 5.7+ + TanStack Start v1 (RC), React 19, Zod
 
 
 <!-- MANUAL ADDITIONS START -->

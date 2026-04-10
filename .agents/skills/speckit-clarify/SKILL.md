@@ -59,6 +59,7 @@ Execution steps:
    - Scalability (horizontal/vertical, limits)
    - Reliability & availability (uptime, recovery expectations)
    - Observability (logging, metrics, tracing signals)
+   - Testability (unit, integration, and E2E coverage expectations)
    - Security & privacy (authN/Z, data protection, threat assumptions)
    - Compliance / regulatory constraints (if any)
 
