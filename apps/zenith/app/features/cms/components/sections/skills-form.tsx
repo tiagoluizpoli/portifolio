@@ -54,10 +54,8 @@ export function SkillsForm() {
       (item) =>
         ({
           id: item.id || generateId('sk'),
-          locale: item.locale || currentLocale,
           title: item.title || '',
           type: item.type || 'frontend',
-          level: item.level ?? 80,
           iconCode: item.iconCode || 'lucide:code',
           status: (item.status === 'archived' ? 'archived' : 'active') as
             | 'active'
@@ -90,10 +88,8 @@ export function SkillsForm() {
       ...prev,
       {
         id: generateId(),
-        locale: currentLocale,
         title: '',
         type: activeTab === 'all' ? 'frontend' : activeTab,
-        level: 80,
         iconCode: 'lucide:code',
         status: 'active',
         sort: prev.length,
@@ -308,37 +304,7 @@ export function SkillsForm() {
                           <Trash2 size={12} />
                         </Button>
                       </div>
-                      <div className="px-4 pb-3 flex items-center gap-3">
-                        <div className="flex-1 h-1.5 bg-muted/30 rounded-full overflow-hidden">
-                          <form.Field name={`items[${index}].level`}>
-                            {(subField) => (
-                              <div
-                                className="h-full bg-primary/50 transition-all duration-1000"
-                                style={{ width: `${subField.state.value}%` }}
-                              />
-                            )}
-                          </form.Field>
-                        </div>
-                        <form.Field name={`items[${index}].level`}>
-                          {(subField) => (
-                            <div className="flex items-center bg-primary/5 px-1.5 py-0.5 rounded border border-primary/20">
-                              <input
-                                type="number"
-                                value={subField.state.value}
-                                onChange={(
-                                  e: React.ChangeEvent<HTMLInputElement>,
-                                ) =>
-                                  subField.handleChange(Number(e.target.value))
-                                }
-                                className="w-5 bg-transparent border-none p-0 text-[10px] font-black text-primary text-center focus:ring-0"
-                              />
-                              <span className="text-[8px] font-black text-primary/50 ml-0.5">
-                                %
-                              </span>
-                            </div>
-                          )}
-                        </form.Field>
-                      </div>
+                      {/* Level fields removed to align with globalized schema */}
                     </CardContent>
                   </Card>
                 );

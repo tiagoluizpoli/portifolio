@@ -40,10 +40,9 @@ export function HomeForm() {
       downloadButtonText: 'Download CV',
       journeyStartedIn: new Date().getFullYear(),
     }) as HomeInput,
-    // @ts-ignore - TanStack Form depth limits (§XVII)
+    // @ts-expect-error - TanStack Form depth limits (§XVII)
     validatorAdapter: zodValidator(),
     validators: {
-      // @ts-ignore - TanStack Form depth limits (§XVII)
       onChange: homeSchema,
     },
     onSubmit: async ({ value }) => {

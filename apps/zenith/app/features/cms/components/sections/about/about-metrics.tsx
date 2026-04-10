@@ -37,6 +37,8 @@ export function AboutMetrics({ form, sources, aboutId }: AboutMetricsProps) {
       {
         id: generateId('metric'),
         aboutId: aboutId,
+        internalCode: `metric-${generateId()}`,
+        locale: form.getFieldValue('locale') || 'en',
         label: 'New Impact',
         value: '0',
         sourceId: 'manual',
@@ -191,7 +193,6 @@ export function AboutMetrics({ form, sources, aboutId }: AboutMetricsProps) {
                     variant="ghost"
                     size="icon"
                     onClick={() => {
-                      // @ts-ignore - TanStack Form depth limits (§XVII)
                       const new_metrics = field.state.value.filter(
                         (_: unknown, idx: number) => idx !== i,
                       );

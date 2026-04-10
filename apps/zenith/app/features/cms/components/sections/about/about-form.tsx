@@ -29,7 +29,7 @@ export function AboutForm() {
     }) as AboutInput,
     validatorAdapter: zodValidator(),
     validators: {
-      // @ts-ignore - TanStack Form depth limits (§XVII)
+      // @ts-expect-error - TanStack Form depth limits (§XVII)
       onChange: aboutSchema,
     },
     onSubmit: async ({ value }) => {

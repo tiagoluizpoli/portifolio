@@ -7,9 +7,12 @@ import { z } from 'zod';
 export const metricSchema = z.object({
   id: z.string().default(''),
   aboutId: z.string().default(''),
+  internalCode: z.string().default(''),
+  locale: z.string().default(''),
   label: z.string().min(1, 'Label is required'),
   value: z.string().min(1, 'Value is required'),
   sourceId: z.string().min(1, 'Source is required'),
+  sourceKey: z.string().optional(),
 });
 
 /**

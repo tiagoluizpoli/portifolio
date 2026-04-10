@@ -4,7 +4,6 @@ import { zodValidator } from '@tanstack/zod-form-adapter';
 import {
   Briefcase,
   GripVertical,
-  Link,
   Plus,
   RefreshCcw,
   Save,
@@ -40,7 +39,6 @@ export function SolutionsForm() {
             description: item.description || '',
             iconCode: item.iconCode || 'lucide:box',
             iconId: item.iconId || '',
-            url: item.url || '',
             sort: item.sort || 0,
           }) as Solution,
       ),
@@ -77,7 +75,6 @@ export function SolutionsForm() {
       description: '',
       iconCode: 'lucide:briefcase',
       iconId: '',
-      url: '',
       sort: form.getFieldValue('items').length,
     });
   };
@@ -262,31 +259,7 @@ export function SolutionsForm() {
                               )}
                             </form.Field>
 
-                            <form.Field name={`items[${index}].url`}>
-                              {(subField) => (
-                                <div className="space-y-2">
-                                  <Label
-                                    htmlFor={`sol-link-${index}`}
-                                    className="text-[10px] font-bold uppercase tracking-widest text-primary/60"
-                                  >
-                                    External Link (Optional)
-                                  </Label>
-                                  <div className="relative">
-                                    <Link className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/40" />
-                                    <Input
-                                      id={`sol-link-${index}`}
-                                      name={`items[${index}].url`}
-                                      value={subField.state.value ?? ''}
-                                      onChange={(e) =>
-                                        subField.handleChange(e.target.value)
-                                      }
-                                      placeholder="https://..."
-                                      className="pl-10 bg-transparent h-11 text-sm"
-                                    />
-                                  </div>
-                                </div>
-                              )}
-                            </form.Field>
+                            {/* URL field removed to align with Domain model */}
                           </div>
 
                           <div className="lg:col-span-2 space-y-4">
