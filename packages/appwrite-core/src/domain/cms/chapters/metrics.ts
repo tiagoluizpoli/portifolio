@@ -12,9 +12,12 @@ export interface MetricSource {
 export interface ImpactMetric {
   id: string;
   aboutId: string;
+  internalCode: string; // [NEW] Round 4 Parity Handle
+  locale: string; // [NEW] Round 4
   label: string;
   value: string;
   prefix?: string;
   suffix?: string;
   sourceId: string;
+  sourceKey?: string; // [NEW] Key for System Source telemetry
 }

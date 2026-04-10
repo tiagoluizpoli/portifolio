@@ -3,7 +3,10 @@ import type {
   ImpactMetric,
   MetricSource,
 } from '../../domain/cms/chapters/metrics.js';
-import type { IMetricSourceRepository } from '../../domain/repositories/interfaces.js';
+import type {
+  IMetricRepository,
+  IMetricSourceRepository,
+} from '../../domain/repositories/interfaces.js';
 import { AppWriteRepository } from './appwrite.repository.js';
 
 /**
@@ -42,18 +45,25 @@ export class MetricSourceRepository
 /**
  * MetricRepository
  * Hardened with strict type safety using ImpactMetric.
+ * Supports Semantic Parity via internalCode.
  */
-export class MetricRepository extends AppWriteRepository<ImpactMetric> {
+export class MetricRepository
+  extends AppWriteRepository<ImpactMetric>
+  implements IMetricRepository
+{
   constructor(client: Client, databaseId: string) {
     super(client, databaseId, 'impact_metrics');
   }
 
-  async getByAboutId(aboutId: string): Promise<ImpactMetric[]> {
+  async getByLocale(aboutId: string, locale: string): Promise<ImpactMetric[]> {
     try {
       const response = await this.tables.listRows({
         databaseId: this.databaseId,
         tableId: this.tableId,
-        queries: [Query.equal('aboutId', aboutId)],
+        queries: [
+          Query.equal('aboutId', aboutId),
+          Query.equal('locale', locale),
+        ],
       });
       return response.rows.map((row) =>
         this.mapToModel(row as unknown as Models.Document),
@@ -64,29 +74,46 @@ export class MetricRepository extends AppWriteRepository<ImpactMetric> {
     }
   }
 
-  async saveByAboutId(aboutId: string, metrics: ImpactMetric[]): Promise<void> {
+  async save(
+    aboutId: string,
+    locale: string,
+    metrics: ImpactMetric[],
+  ): Promise<void> {
     try {
-      // 1. Get existing metrics for this aboutId
-      const existing = await this.getByAboutId(aboutId);
-      const existingIds = existing.map((m) => m.id);
+      // 1. Get existing metrics for this locale
+      const existing = await this.getByLocale(aboutId, locale);
       const incomingIds = metrics.filter((m) => m.id).map((m) => m.id);
 
-      // 2. Delete metrics removed from the list
-      const toDelete = existingIds.filter((id) => !incomingIds.includes(id));
-      for (const id of toDelete) {
-        await this.delete(id);
+      // 2. Delete removed
+      const toDelete = existing.filter((m) => !incomingIds.includes(m.id));
+      for (const item of toDelete) {
+        await this.delete(item.id);
       }
 
-      // 3. Update or create remaining
-      for (const metric of metrics) {
-        const data = { ...metric, aboutId };
-        if (metric.id) {
-          await this.update(metric.id, data);
+      // 3. Upsert
+      for (const item of metrics) {
+        const data = { ...item, aboutId, locale };
+        if (item.id) {
+          await this.update(item.id, data);
         } else {
-          // New metric creation
-          const { id: _, ...createData } = data;
-          await this.create(createData as Omit<ImpactMetric, 'id'>);
+          await this.create(data);
         }
+      }
+    } catch (error: unknown) {
+      this.handleError(error);
+    }
+  }
+
+  async deleteByInternalCode(internalCode: string): Promise<void> {
+    try {
+      const response = await this.tables.listRows({
+        databaseId: this.databaseId,
+        tableId: this.tableId,
+        queries: [Query.equal('internalCode', internalCode)],
+      });
+
+      for (const row of response.rows) {
+        await this.delete(row.$id);
       }
     } catch (error: unknown) {
       this.handleError(error);

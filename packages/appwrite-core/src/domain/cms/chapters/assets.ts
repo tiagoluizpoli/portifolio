@@ -5,10 +5,8 @@
 
 export interface Skill {
   id: string;
-  locale: string;
   title: string;
   type: 'frontend' | 'backend' | 'fullstack' | 'hard' | 'soft' | 'tool';
-  level: number;
   iconCode: string;
   iconId?: string;
   status: 'active' | 'archived';
@@ -22,6 +20,5 @@ export interface Solution {
   description?: string;
   iconCode: string;
   iconId?: string;
-  url?: string;
   sort?: number;
 }

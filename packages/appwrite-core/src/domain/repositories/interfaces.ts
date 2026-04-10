@@ -5,6 +5,7 @@ import type { ContactData } from '../cms/chapters/contact.js';
 import type { HistoryItem } from '../cms/chapters/history.js';
 import type { HomeData } from '../cms/chapters/home.js';
 import type { ImpactMetric, MetricSource } from '../cms/chapters/metrics.js';
+import type { Platform } from '../cms/chapters/platforms.js';
 
 export interface IRepository<T> {
   findById(id: string): Promise<T | null>;
@@ -54,10 +55,7 @@ export interface ICmsRepository<T> {
 }
 
 export interface IHomeRepository extends ICmsRepository<HomeData> {}
-export interface IAboutRepository extends ICmsRepository<AboutData> {
-  getMetrics(aboutId: string): Promise<ImpactMetric[]>;
-  saveMetrics(aboutId: string, metrics: ImpactMetric[]): Promise<void>;
-}
+export interface IAboutRepository extends ICmsRepository<AboutData> {}
 
 export interface IHistoryRepository {
   getByLocale(
@@ -72,8 +70,8 @@ export interface IHistoryRepository {
 }
 
 export interface ISkillRepository {
-  getByLocale(locale: string): Promise<Skill[]>;
-  save(locale: string, items: Skill[]): Promise<void>;
+  findAll(): Promise<Skill[]>;
+  save(items: Skill[]): Promise<void>;
 }
 
 export interface ISolutionRepository {
@@ -81,9 +79,20 @@ export interface ISolutionRepository {
   save(locale: string, items: Solution[]): Promise<void>;
 }
 
+export interface IMetricRepository {
+  getByLocale(aboutId: string, locale: string): Promise<ImpactMetric[]>;
+  save(aboutId: string, locale: string, items: ImpactMetric[]): Promise<void>;
+  deleteByInternalCode(internalCode: string): Promise<void>;
+}
+
 export interface IMetricSourceRepository {
   findAll(): Promise<MetricSource[]>;
   save(sources: MetricSource[]): Promise<void>;
+}
+
+export interface IPlatformRepository {
+  findAll(): Promise<Platform[]>;
+  save(items: Platform[]): Promise<void>;
 }
 
 export interface IContactRepository extends ICmsRepository<ContactData> {}

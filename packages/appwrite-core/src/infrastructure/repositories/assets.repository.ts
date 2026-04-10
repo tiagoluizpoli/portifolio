@@ -11,16 +11,18 @@ export class SkillRepository
   extends AppWriteRepository<Skill>
   implements ISkillRepository
 {
+  private storage: StorageRepository;
+
   constructor(client: Client, databaseId: string) {
     super(client, databaseId, 'skills');
+    this.storage = new StorageRepository();
   }
 
-  async getByLocale(locale: string): Promise<Skill[]> {
+  async findAll(): Promise<Skill[]> {
     try {
       const response = await this.tables.listRows({
         databaseId: this.databaseId,
         tableId: this.tableId,
-        queries: [Query.equal('locale', locale)],
       });
       return response.rows.map((row) =>
         this.mapToModel(row as unknown as Models.Document),
@@ -31,19 +33,18 @@ export class SkillRepository
     }
   }
 
-  async save(locale: string, items: Skill[]): Promise<void> {
+  async save(items: Skill[]): Promise<void> {
     try {
       // 1. Get existing skills
-      const existing = await this.getByLocale(locale);
+      const existing = await this.findAll();
       const incomingIds = items.filter((s) => s.id).map((s) => s.id);
 
       // 2. Delete removed
       const toDelete = existing.filter((s) => !incomingIds.includes(s.id));
-      const storage = new StorageRepository();
 
       for (const item of toDelete) {
         if (item.iconId) {
-          await storage.moveFile('assets', 'trash', item.iconId);
+          await this.storage.moveFile('assets', 'trash', item.iconId);
         }
         await this.delete(item.id);
       }
@@ -53,18 +54,15 @@ export class SkillRepository
         if (item.id) {
           const old = existing.find((s) => s.id === item.id);
           if (old?.iconId && old.iconId !== item.iconId) {
-            await storage.moveFile('assets', 'trash', old.iconId);
+            await this.storage.moveFile('assets', 'trash', old.iconId);
           }
-          await this.update(item.id, { ...item, locale });
+          await this.update(item.id, item);
         } else {
           await this.tables.createRow({
             databaseId: this.databaseId,
             tableId: this.tableId,
             rowId: ID.unique(),
-            data: this.prepareData({
-              ...item,
-              locale,
-            }) as unknown as Record<string, unknown>,
+            data: this.prepareData(item) as unknown as Record<string, unknown>,
           });
         }
       }
@@ -83,8 +81,11 @@ export class SolutionRepository
   extends AppWriteRepository<Solution>
   implements ISolutionRepository
 {
+  private storage: StorageRepository;
+
   constructor(client: Client, databaseId: string) {
     super(client, databaseId, 'solutions');
+    this.storage = new StorageRepository();
   }
 
   async getByLocale(locale: string): Promise<Solution[]> {
@@ -105,38 +106,35 @@ export class SolutionRepository
 
   async save(locale: string, items: Solution[]): Promise<void> {
     try {
-      // 1. Get existing
+      // 1. Get existing for this locale
       const existing = await this.getByLocale(locale);
       const incomingIds = items.filter((s) => s.id).map((s) => s.id);
 
       // 2. Delete removed
       const toDelete = existing.filter((s) => !incomingIds.includes(s.id));
-      const storage = new StorageRepository();
 
       for (const item of toDelete) {
         if (item.iconId) {
-          await storage.moveFile('assets', 'trash', item.iconId);
+          await this.storage.moveFile('assets', 'trash', item.iconId);
         }
         await this.delete(item.id);
       }
 
       // 3. Upsert
       for (const item of items) {
+        const data = { ...item, locale };
         if (item.id) {
           const old = existing.find((s) => s.id === item.id);
           if (old?.iconId && old.iconId !== item.iconId) {
-            await storage.moveFile('assets', 'trash', old.iconId);
+            await this.storage.moveFile('assets', 'trash', old.iconId);
           }
-          await this.update(item.id, { ...item, locale });
+          await this.update(item.id, data);
         } else {
           await this.tables.createRow({
             databaseId: this.databaseId,
             tableId: this.tableId,
             rowId: ID.unique(),
-            data: this.prepareData({
-              ...item,
-              locale,
-            }) as unknown as Record<string, unknown>,
+            data: this.prepareData(data) as unknown as Record<string, unknown>,
           });
         }
       }

@@ -73,7 +73,7 @@ export class CmsService {
     const about = await this.aboutRepo.getByLocale(locale);
     if (!about) return null;
 
-    const metrics = await this.metricRepo.getByAboutId(about.id);
+    const metrics = await this.metricRepo.getByLocale(about.id, locale);
     return { ...about, metrics };
   }
 
@@ -89,7 +89,7 @@ export class CmsService {
 
     const about = await this.aboutRepo.updateByLocale(locale, aboutDto);
     if (metrics) {
-      await this.metricRepo.saveByAboutId(about.id, metrics);
+      await this.metricRepo.save(about.id, locale, metrics);
     }
     return this.getAbout(locale);
   }
@@ -120,12 +120,12 @@ export class CmsService {
   }
 
   // --- Assets ---
-  async getSkills(locale: string): Promise<Skill[]> {
-    return this.skillRepo.getByLocale(locale);
+  async getSkills(_locale: string): Promise<Skill[]> {
+    return this.skillRepo.findAll();
   }
 
-  async saveSkills(locale: string, skills: Skill[]): Promise<void> {
-    return this.skillRepo.save(locale, skills);
+  async saveSkills(_locale: string, skills: Skill[]): Promise<void> {
+    return this.skillRepo.save(skills);
   }
 
   async getSolutions(locale: string): Promise<Solution[]> {
