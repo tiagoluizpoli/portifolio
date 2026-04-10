@@ -109,19 +109,7 @@ export class MigratePortfolioUseCase {
             }
           }
 
-          if (batch.tableId === 'impact_metrics') {
-            const sourceKey = row.sourceKey as string;
-            if (sourceKey) {
-              const sourceName = sourceKey.split('_')[0]; // simple heuristic: github_commits -> github
-              const slugified = sourceName
-                .toLowerCase()
-                .replace(/[^\w\s-]/g, '')
-                .replace(/[\s_]+/g, '-')
-                .replace(/^-+|-+$/g, '')
-                .substring(0, 30);
-              row.sourceId = `ms-${slugified}`;
-            }
-          }
+          // Transformation now handled in DataParser.parse()
 
           const pictureId = row.pictureId as string | undefined;
           const cvId = row.cvId as string | undefined;
@@ -215,7 +203,7 @@ export class MigratePortfolioUseCase {
       case 'metric_sources':
         return `ms-${slugify((row.name as string) || 'unknown')}`;
       case 'impact_metrics':
-        return `im-${slugify((row.label as string) || 'unknown')}-${row.aboutId}`;
+        return `im-${slugify((row.internalCode as string) || (row.label as string))}-${row.aboutId}`;
       case 'experience':
         return `exp-${slugify((row.company as string) || 'unknown')}-${locale}`;
       case 'education':

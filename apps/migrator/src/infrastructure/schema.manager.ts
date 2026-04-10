@@ -58,6 +58,7 @@ export class SchemaManager {
     await this.createEducationTable();
     await this.createSkillsTable();
     await this.createSolutionsTable();
+    await this.createPlatformsTable();
     await this.createSocialsTable();
     await this.createContactInfoTable();
   }
@@ -122,6 +123,8 @@ export class SchemaManager {
       tableId: 'impact_metrics',
       name: 'Impact Metrics',
       columns: [
+        { key: 'internalCode', type: 'string', size: 255, required: true },
+        { key: 'locale', type: 'string', size: 10, required: true },
         { key: 'label', type: 'string', size: 255, required: true },
         { key: 'value', type: 'string', size: 100, required: true },
         { key: 'sourceId', type: 'string', size: 50, required: true },
@@ -130,6 +133,11 @@ export class SchemaManager {
       ],
       indexes: [
         { key: 'idx_about', type: IndexType.Key, attributes: ['aboutId'] },
+        {
+          key: 'idx_parity',
+          type: IndexType.Unique,
+          attributes: ['locale', 'internalCode'],
+        },
       ],
     });
   }
@@ -181,14 +189,9 @@ export class SchemaManager {
         { key: 'iconCode', type: 'string', size: 100, required: true },
         { key: 'type', type: 'string', size: 50, required: true },
         { key: 'sort', type: 'integer', required: true },
-        { key: 'locale', type: 'string', size: 10, required: true },
         { key: 'status', type: 'string', size: 50, required: true },
-        { key: 'level', type: 'integer', required: true },
       ],
-      indexes: [
-        { key: 'idx_sort', type: IndexType.Key, attributes: ['sort'] },
-        { key: 'idx_locale', type: IndexType.Key, attributes: ['locale'] },
-      ],
+      indexes: [{ key: 'idx_sort', type: IndexType.Key, attributes: ['sort'] }],
     });
   }
 
@@ -200,7 +203,6 @@ export class SchemaManager {
         { key: 'title', type: 'string', size: 255, required: true },
         { key: 'description', type: 'string', size: 2000, required: true },
         { key: 'iconCode', type: 'string', size: 100, required: true },
-        { key: 'url', type: 'string', size: 500, required: false },
         { key: 'sort', type: 'integer', required: true },
         { key: 'locale', type: 'string', size: 10, required: true },
       ],
@@ -208,6 +210,21 @@ export class SchemaManager {
         { key: 'idx_sort', type: IndexType.Key, attributes: ['sort'] },
         { key: 'idx_locale', type: IndexType.Key, attributes: ['locale'] },
       ],
+    });
+  }
+
+  private async createPlatformsTable() {
+    await this.ensureTable({
+      tableId: 'platforms',
+      name: 'Platforms',
+      columns: [
+        { key: 'title', type: 'string', size: 255, required: true },
+        { key: 'urlTemplate', type: 'string', size: 500, required: true },
+        { key: 'iconCode', type: 'string', size: 100, required: true },
+        { key: 'sort', type: 'integer', required: true },
+        { key: 'status', type: 'string', size: 50, required: true },
+      ],
+      indexes: [{ key: 'idx_sort', type: IndexType.Key, attributes: ['sort'] }],
     });
   }
 

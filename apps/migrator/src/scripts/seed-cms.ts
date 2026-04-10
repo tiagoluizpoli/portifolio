@@ -56,6 +56,8 @@ async function seed() {
           {
             id: 'metric-1',
             aboutId: 'about-1',
+            internalCode: 'lines-of-code',
+            locale,
             label: 'Lines of Code',
             value: '1M+',
             sourceId: 'manual',
@@ -63,6 +65,8 @@ async function seed() {
           {
             id: 'metric-2',
             aboutId: 'about-1',
+            internalCode: 'coffee-cups',
+            locale,
             label: 'Coffee Cups',
             value: '500+',
             sourceId: 'manual',
@@ -90,20 +94,16 @@ async function seed() {
       await service.saveSkills(locale, [
         {
           id: 'skill-1',
-          locale,
           title: 'React',
           type: 'frontend',
-          level: 95,
           sort: 0,
           iconCode: 'lucide:code',
           status: 'active',
         },
         {
           id: 'skill-2',
-          locale,
           title: 'Node.js',
           type: 'backend',
-          level: 90,
           sort: 1,
           iconCode: 'lucide:server',
           status: 'active',

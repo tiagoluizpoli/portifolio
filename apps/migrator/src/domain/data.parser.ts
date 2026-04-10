@@ -181,10 +181,9 @@ export class DataParser {
 
     const skillsRows = (data.skills || []).map((s: SkillItem, idx: number) => ({
       title: s.title,
-      iconCode: s.icon, // Map icon to iconCode
+      iconCode: s.icon,
       type: s.type,
       sort: idx + 1,
-      locale: 'en',
       status: 'active',
     }));
 
@@ -192,14 +191,33 @@ export class DataParser {
       (c: ContactItem, idx: number) => ({
         type: c.type,
         value: c.value,
-        iconCode: c.icon, // Map icon to iconCode
+        iconCode: c.icon,
         sort: c.sort || idx + 1,
         locale: 'en',
       }),
     );
 
     const metricSourcesRows = data.metricSources || [];
-    const impactMetricsRows = data.impactMetrics || [];
+
+    // 6. Impact Metrics Transformation (Semantic Parity)
+    const impactMetricsRows: Record<string, unknown>[] = [];
+    for (const metric of data.impactMetrics || []) {
+      const sourceKey = (metric.sourceKey as string) || '';
+      const sourceName = sourceKey.split('_')[0] || 'manual';
+      const sourceId = `ms-${sourceName.toLowerCase()}`;
+
+      for (const lang of locales) {
+        impactMetricsRows.push({
+          internalCode: sourceKey, // Use sourceKey as internal semantic link
+          locale: lang,
+          label: metric.label,
+          value: metric.value,
+          sourceId,
+          sourceKey,
+          aboutId: `about-${lang}`,
+        });
+      }
+    }
 
     return {
       home: homeRows,
