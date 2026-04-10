@@ -1,55 +1,48 @@
-# Data Model - Zenith CMS Refinement
+# Data Model: Zenith CMS Refinement
 
-This document defines the schema changes and new entities for the Zenith Portifolio CMS.
+Definitions for updated and new entities in `@repo/appwrite-core`.
 
-## Entities
+## 1. Skill (Update: Globalized)
+Represents a professional competency.
+- **Table**: `skills`
+- **Scope**: Global (No `locale` attribute)
+- **Attributes**:
+  - `id`: string (Appwrite ID)
+  - `title`: string
+  - `iconCode`: string (Iconify identifier)
+  - `type`: 'frontend' | 'backend' | 'fullstack' | 'hard' | 'soft' | 'tool'
+  - `status`: 'active' | 'archived'
+  - `sort`: integer
 
-### 1. Skill (Modified)
-Represents a professional competency. Now has global scope.
+## 2. ImpactMetric (Update: Linked)
+Represents a quantifiable achievement with cross-locale parity.
+- **Table**: `impact_metrics`
+- **Scope**: Localized (belongs to `About`)
+- **Attributes**:
+  - `id`: string
+  - `aboutId`: string (Reference to localized About record)
+  - `internalCode`: string (Semantic kebab-case slug; e.g., 'active-users')
+  - `label`: string
+  - `value`: string (Localized value for manual entries)
+  - `locale`: string (The language of this specific record)
+  - `sourceId`: string (Reference to MetricSource)
+  - `sourceKey`: string (Field key in dynamic source)
 
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| `id` | `string` | Unique identifier (Appwrite ID). |
-| `title` | `string` | Display name of the skill. |
-| `icon` | `string` | Iconify code. |
-| `type` | `string` | Category (Frontend, Backend, etc.). |
-| `status` | `string` | Publication status (Draft, Published). |
-| `sort` | `number` | Display order. |
+## Constraints
+- **Unique Linkage**: The combination of `(locale, internalCode)` MUST be unique at the database level.
+- **Metric -> Source**: 1:1 via `sourceId`.
 
-> [!NOTE]
-> The `locale` field is removed. The system fetches a single collection for all languages.
-
----
-
-### 2. ImpactMetric (Modified)
-Represents a quantifiable achievement. Linked across locales via `internalCode`.
-
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| `id` | `string` | Unique identifier (Appwrite ID). |
-| `internalCode` | `string` | Semantic kebab-case name linking translations (e.g., `active-users`). |
-| `label` | `string` | Localized name. |
-| `value` | `string` | Localized value (if manual). |
-| `sourceId` | `string` | ID of the dynamic source (if applicable). |
-| `sourceKey` | `string` | Field key in the dynamic source (if applicable). |
-| `locale` | `string` | The language of this specific record. |
-
-> [!IMPORTANT]
-> **Constraint**: The combination of `(locale, internalCode)` MUST be unique.
-
----
-
-### 3. Platform (New)
-Managed entity for social networks and external branding.
-
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| `id` | `string` | Unique identifier (Appwrite ID). |
-| `name` | `string` | Internal name (e.g., GitHub, LinkedIn). |
-| `iconCode` | `string` | Iconify code (e.g., `simple-icons:github`). |
-| `status` | `string` | active / inactive. |
+## 3. Platform (New: Managed)
+Branding entities for social and professional networks.
+- **Table**: `platforms`
+- **Scope**: Global
+- **Attributes**:
+  - `id`: string
+  - `name`: string (e.g., 'LinkedIn', 'GitHub')
+  - `iconCode`: string
+  - `status`: 'active' | 'inactive'
 
 ## Relationships
-
-- **ImpactMetric → Source**: One Metric can optionally link to a dynamic source table (manual creation in Appwrite).
-- **Contact → Platform**: Social contacts will select an existing `Platform` ID instead of entering a platform name/icon manually.
+- **Metric -> Source**: 1:1 via `sourceId`.
+- **Metric -> Locale Parity**: Multi-locale linkage via `internalCode`.
+- **Skill -> Locale**: N/A (Promotion to Global).

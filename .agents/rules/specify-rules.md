@@ -32,6 +32,7 @@ tests/
 : Follow standard conventions
 
 ## Recent Changes
+- 008-zenith-cms-refinement: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
 - 007-wire-appwrite-cms: Added TypeScript 5.7+ | Node.js 22+ + `node-appwrite` (v22.1.3), `@tanstack/react-form`, `@tanstack/react-query`, `zod`.
 - 006-portfolio-manager-ui: Added TypeScript / React 19 / TanStack Start (v1 RC) + `dnd-kit` (Kinetic Sorting), `Iconify` (Visual curation), `Lucide` (Admin controls)
 

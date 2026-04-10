@@ -5,11 +5,12 @@ This is the mandatory Architecture-Level Test Plan for the Zenith CMS Refinement
 ## 1. Backend & Domain Logic (Vitest)
 
 ### Global Skills Migration (FR-004)
-- **TC-BE-001**: Verify that `SkillRepository.getByLocale` returns the same payload regardless of the locale input string.
-- **TC-BE-002**: Verify that adding a skill updates the single global collection.
+- **TC-BE-001**: Verify that `SkillRepository.getByLocale` (or the new global fetch) returns ONLY skills originally from the 'en' locale.
+- **TC-BE-002**: Verify that deleting a skill updates the single global collection across all administrative views.
+- **TC-BE-005**: Verify that the migration script correctly deletes all non-EN skills while preserving EN skills without data loss.
 
 ### Impact Metric Parity (FR-006)
-- **TC-BE-003**: Verify that saving a new `ImpactMetric` record triggers a domain-service event that creates records with the same semantic `internalCode` (kebab-case) for all available locales in `SUPPORTED_LOCALES`.
+- **TC-BE-003**: Verify that saving a new `ImpactMetric` record triggers a domain-service event that creates "Ghost Row" records with the same semantic `internalCode`.
 - **TC-BE-004**: Verify that deleting an `ImpactMetric` by its `internalCode` triggers a cascading deletion for all records sharing that code.
 
 ---
@@ -17,37 +18,34 @@ This is the mandatory Architecture-Level Test Plan for the Zenith CMS Refinement
 ## 2. Frontend Interaction (RTL / Vitest)
 
 ### Split-Screen Home (US3)
-- **TC-FE-001**: Verify that the Home section renders the metadata form and the media preview side-by-side at resolutions > 1024px.
-- **TC-FE-002**: Verify that updating the "Experience Start Date" field as a number correctly updates the local state.
+- **TC-FE-001**: Verify that the Home section renders in a perfect 1:1 split-layout at resolutions > 1024px.
+- **TC-FE-007**: Verify that the right column displays a Picture uploader/viewer and a CV uploader/viewer side-by-side or stacked correctly.
+- **TC-FE-009**: Verify "Journey Started" number input does NOT show browser increment/decrement spinners.
 
 ### Metric Creation Dialog (US2)
 - **TC-FE-003**: Verify that selecting "System Source" disables and hides the "Manual Value" input field.
-- **TC-FE-004**: Verify that the form validation requires either a manual value OR a selected source field.
+- **TC-FE-004**: Verify that form validation requires exactly one of [Manual Value, System Source] to be provided.
 
-### Platform Management (FR-003)
-- **TC-FE-005**: Verify that clicking the "Platform Management" side-drawer button opens the CRUD interface.
+### Platform & Solution Management (FR-003, FR-008)
+- **TC-FE-005**: Verify that the Platform management side-drawer enables creating new platforms with `IconPicker`.
+- **TC-FE-006**: Verify that the Solutions list renders as a card-based grid with icons and titles.
+- **TC-FE-008**: Verify `IconPicker` correctly updates the `iconCode` field in Skills, Metrics, and Solutions.
 
 ---
 
 ## 3. End-to-End Journeys (Playwright)
 
-### Rebranding Verification (FR-001)
-- **TC-E2E-001**: Verify that the Page Title and Sidebar Header display "Portfolio CMS".
+### Rebranding & Routing
+- **TC-E2E-001**: Verify "Portfolio CMS" branding appears in Page Title, Sidebar Header, and persistent Save buttons.
+- **TC-E2E-003**: Verify all administrative sections are prefixed with `/portfolio-cms/` and old routes redirect or 404.
 
-### Metric Ghost-Row Sync (FR-006)
-- **TC-E2E-002**:
-    1. Log in to `/portfolio-cms/en/metrics`.
-    2. Create a new metric: Label "Active Users" | Value "5000" | Code "active-users".
-    3. Switch locale to `pt`.
-    4. Verify that a record with Code "active-users" appears in the list as a "Ghost Row".
+### Globalized Skill Lifecycle
+- **TC-E2E-004**: Create a skill in `en`, switch to `pt`, and verify the skill exists and is identical.
 
-### Routing Prefix (FR-002)
-- **TC-E2E-003**: Verify that navigating to old routes (e.g., `/portfolio/home`) results in a 404 or redirects to `/portfolio-cms/home`.
+### Metric Parity Journey
+- **TC-E2E-002**: Create a metric with internal code "active-users" in `en`, verify "Ghost Row" appears in `pt` metric list.
 
-## Coverage Targets
-
-| Domain | Target | Logic |
-| :--- | :--- | :--- |
-| **Domain Sync Services** | 95% | Critical for data integrity across locales. |
-| **Shell/Routing** | 90% | Ensures consistent access to the CMS. |
-| **UI Components** | 80% | Standardized CmsSaveButton and layout components. |
+## 4. Quality Gate Targets
+- **Linting**: Zero `biome` warnings.
+- **Types**: Zero `tsc` errors.
+- **Coverage**: 100% functionality coverage for Round-based deliverables.
