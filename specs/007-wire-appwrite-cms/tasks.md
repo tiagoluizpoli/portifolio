@@ -3,11 +3,11 @@
 **Feature**: `007-wire-appwrite-cms` | **Implementation Strategy**: Incremental Section Implementation (Setup -> Foundational -> US1-7)
 
 ## Phase 1: Setup & Dependency Sync
-- [ ] T001 Synchronize `@tanstack/*` package versions to `latest` RC in `packages/appwrite-core` and `apps/zenith`
-- [ ] T002 Ensure `Biome` is configured and passing for the `appwrite-core` package
+- [x] T001 Synchronize `@tanstack/*` package versions to `latest` RC in `packages/appwrite-core` and `apps/zenith`
+- [x] T002 Ensure `Biome` is configured and passing for the `appwrite-core` package
 
 ## Phase 2: Foundational (Data Layer & Infrastructure)
-- [ ] T003 Update `SchemaManager` in `apps/migrator/src/infrastructure/schema.manager.ts` to include `metric_sources`, `about`, and normalized `impact_metrics`
+- [x] T003 Update `SchemaManager` in `apps/migrator/src/infrastructure/schema.manager.ts` to include `metric_sources`, `about`, and normalized `impact_metrics`
 - [ ] T004 Define CMS repository interfaces in `packages/appwrite-core/src/domain/repositories/interfaces.ts`
 - [ ] T005 [P] Implement `HomeRepository` in `packages/appwrite-core/src/infrastructure/repositories/home.repository.ts` with split identity mapping
 - [ ] T006 [P] Implement `MetricSourceRepository` and `MetricRepository` in `packages/appwrite-core` to handle normalized impact data
