@@ -1,8 +1,5 @@
-import { useMemo } from 'react';
 import { useCmsContext } from '../context/cms-context';
-import { MaturityAuditService } from '../services/maturity-audit-service';
-
-export type MaturityStatus = 'pending' | 'draft' | 'mature';
+import type { MaturityStatus } from '../services/maturity-audit-service';
 
 interface MaturityData {
   progress: number;
@@ -15,25 +12,10 @@ interface MaturityData {
  * Dynamically calculates bilingual completion metrics from the global CMS state.
  */
 export function useMaturityAudit(): MaturityData {
-  const { state, currentLocale } = useCmsContext();
+  const { maturity } = useCmsContext();
 
-  return useMemo(() => {
-    // Audit all chapters for the CURRENT locale
-    const dataForLocale = {
-      home: state.home[currentLocale],
-      about: state.about[currentLocale],
-      experience: state.experience[currentLocale],
-      education: state.education[currentLocale],
-      skills: state.skills[currentLocale],
-      solutions: state.solutions[currentLocale],
-      contact: state.contact[currentLocale],
-    };
-
-    const result = MaturityAuditService.audit(dataForLocale);
-
-    return {
-      progress: result.progress,
-      status: result.status,
-    };
-  }, [state, currentLocale]);
+  return {
+    progress: maturity.progress,
+    status: maturity.status,
+  };
 }

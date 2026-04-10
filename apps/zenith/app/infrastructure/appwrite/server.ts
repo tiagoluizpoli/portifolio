@@ -140,9 +140,44 @@ export const uploadAsset = createServerFn({ method: 'POST' }).handler(
 
 export const getAssetPreview = createServerFn({ method: 'GET' }).handler(
   async ({ data: payload }) => {
-    const { data } = getAssetPreviewSchema.parse({ data: payload });
-    const service = getPortfolioService();
-    const url = service.getAssetPreview(data.bucketId, data.fileId);
-    return { url: url.toString() };
+    try {
+      const { data } = getAssetPreviewSchema.parse({ data: payload });
+      const service = getPortfolioService();
+      const url = await service.getAssetPreview(data.bucketId, data.fileId);
+      return { url: url.toString() };
+    } catch (error) {
+      console.error('[Appwrite Storage] Failed to resolve preview:', error);
+      // Return null URL to allow the frontend to gracefully show the "Select Asset" state
+      // instead of crashing the entire server route.
+      return { url: null };
+    }
+  },
+);
+
+export const getAssetView = createServerFn({ method: 'GET' }).handler(
+  async ({ data: payload }) => {
+    try {
+      const { data } = getAssetPreviewSchema.parse({ data: payload });
+      const service = getPortfolioService();
+      const url = await service.getAssetView(data.bucketId, data.fileId);
+      return { url: url.toString() };
+    } catch (error) {
+      console.error('[Appwrite Storage] Failed to resolve view:', error);
+      return { url: null };
+    }
+  },
+);
+
+export const getAssetInfo = createServerFn({ method: 'GET' }).handler(
+  async ({ data: payload }) => {
+    try {
+      const { data } = getAssetPreviewSchema.parse({ data: payload });
+      const service = getPortfolioService();
+      const asset = await service.getAssetInfo(data.bucketId, data.fileId);
+      return { asset };
+    } catch (error) {
+      console.error('[Appwrite Storage] Failed to resolve file info:', error);
+      return { asset: null };
+    }
   },
 );

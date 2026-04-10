@@ -1,27 +1,27 @@
+import { z } from 'zod';
+
 /**
- * About Entity Types (Constitution §XV, §I)
- * Aligned with Appwrite Schema and Portfolio Manager Data Model.
+ * ImpactMetric Schema (Zenith UI)
+ * Aligned with @repo/appwrite-core/domain/ImpactMetric
  */
+export const metricSchema = z.object({
+  id: z.string().default(''),
+  aboutId: z.string().default(''),
+  label: z.string().min(1, 'Label is required'),
+  value: z.string().min(1, 'Value is required'),
+  sourceId: z.string().min(1, 'Source is required'),
+});
 
-export interface ImpactMetric {
-  id: string;
-  label: string; // e.g., 'Years of Experience'
-  value: string; // e.g., '5+'
-  source: 'manual' | 'custom';
-  sourceKey?: string; // e.g., 'github_commits', 'npm_downloads'
-}
+/**
+ * About Schema (Zenith UI)
+ * Aligned with @repo/appwrite-core/domain/AboutData
+ */
+export const aboutSchema = z.object({
+  id: z.string(),
+  locale: z.string(),
+  content: z.string(),
+  metrics: z.array(metricSchema).max(3),
+});
 
-export interface AboutData {
-  id: string; // e.g., 'about-en'
-  locale: 'en' | 'pt';
-  content: string; // Professional bio narrative
-  stats: ImpactMetric[];
-}
-
-export type AboutFormState = Omit<AboutData, 'id'>;
-
-export const EMPTY_ABOUT: AboutFormState = {
-  locale: 'en',
-  content: '',
-  stats: [],
-};
+export type AboutInput = z.infer<typeof aboutSchema>;
+export type ImpactMetricInput = z.infer<typeof metricSchema>;

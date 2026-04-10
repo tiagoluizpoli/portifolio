@@ -1,25 +1,17 @@
-/**
- * MaturityAuditService (Constitution §XVII, §XIX)
- * Authoritative client-side logic for calculating portfolio bilingual maturity.
- * Follows the "7-Section Rule" where 100% maturity requires full content in both EN and PT.
- */
+import type {
+  AboutData,
+  ContactData,
+  HistoryItem,
+  HomeData,
+  Skill,
+  Solution,
+} from '@repo/appwrite-core/domain';
 
-import type { AboutData } from '../types/about';
-import type { Skill, Solution } from '../types/assets';
-import type { ContactData } from '../types/contact';
-import type { HistoryItem } from '../types/history';
-import type { HomeData } from '../types/home';
+export type MaturityStatus = 'pending' | 'draft' | 'mature';
 
-export interface MaturityResult {
-  progress: number; // 0-100
-  status: 'pending' | 'draft' | 'mature';
-  sections: Record<string, SectionStatus>;
-}
-
-export interface SectionStatus {
-  completed: boolean;
-  score: number; // 0-1
-  missingFields: string[];
+export interface AuditResult {
+  progress: number;
+  status: MaturityStatus;
 }
 
 export interface AuditData {
@@ -32,102 +24,87 @@ export interface AuditData {
   contact: ContactData;
 }
 
-export const MaturityAuditService = {
+/**
+ * MaturityAuditService (Constitution §XVII, §I)
+ * Pure logic for calculating bilingual portfolio completion.
+ * Enforces strict validation rules for "Mature" status.
+ */
+// biome-ignore lint/complexity/noStaticOnlyClass: Architectural singleton (§XVII)
+export class MaturityAuditService {
   /**
-   * Performance-optimized audit of global CMS state.
-   * Target Latency: <300ms (Rule XVII)
+   * Performs a comprehensive audit across all portfolio segments.
    */
-  audit(data: AuditData): MaturityResult {
-    const sections = {
-      home: auditHome(data.home),
-      about: auditSimple(data.about),
-      experience: auditList(data.experience),
-      education: auditList(data.education),
-      skills: auditList(data.skills),
-      solutions: auditList(data.solutions),
-      contact: auditContact(data.contact),
+  static audit(data: AuditData): AuditResult {
+    const weights = {
+      home: 20,
+      about: 15,
+      experience: 15,
+      education: 10,
+      skills: 15,
+      solutions: 15,
+      contact: 10,
     };
 
-    const totalWeight = Object.keys(sections).length;
-    const totalScore = Object.values(sections).reduce(
-      (acc, curr) => acc + curr.score,
+    const completion = {
+      home: MaturityAuditService.auditHome(data.home),
+      about: MaturityAuditService.auditAbout(data.about),
+      experience: MaturityAuditService.auditHistory(data.experience),
+      education: MaturityAuditService.auditHistory(data.education),
+      skills: MaturityAuditService.auditSkills(data.skills),
+      solutions: MaturityAuditService.auditSolutions(data.solutions),
+      contact: MaturityAuditService.auditContact(data.contact),
+    };
+
+    const totalProgress = Object.entries(weights).reduce(
+      (acc, [key, weight]) => {
+        return (
+          acc + completion[key as keyof typeof completion] * (weight / 100)
+        );
+      },
       0,
     );
-    const progress = Math.round((totalScore / totalWeight) * 100);
 
-    let status: MaturityResult['status'] = 'pending';
-    if (progress > 80) status = 'mature';
-    else if (progress > 20) status = 'draft';
+    const progress = Math.round(totalProgress);
 
-    return {
-      progress,
-      status,
-      sections,
-    };
-  },
-};
+    let status: MaturityStatus = 'pending';
+    if (progress >= 100) status = 'mature';
+    else if (progress > 30) status = 'draft';
 
-function auditHome(home: HomeData): SectionStatus {
-  const required: (keyof HomeData)[] = [
-    'name',
-    'title',
-    'description',
-    'profilePictureId',
-    'cvId',
-  ];
-  const missing = required.filter(
-    (f) => !home?.[f] || (typeof home[f] === 'string' && home[f].trim() === ''),
-  );
-  const score = (required.length - missing.length) / required.length;
+    return { progress, status };
+  }
 
-  return {
-    completed: missing.length === 0,
-    score,
-    missingFields: missing as string[],
-  };
-}
+  private static auditHome(data?: HomeData): number {
+    if (!data) return 0;
+    const fields: (keyof HomeData)[] = [
+      'firstName',
+      'lastName',
+      'title',
+      'description',
+      'pictureId',
+    ];
+    const filled = fields.filter((f) => !!data[f]).length;
+    return (filled / fields.length) * 100;
+  }
 
-function auditSimple(data: AboutData): SectionStatus {
-  const hasContent =
-    data?.content &&
-    typeof data.content === 'string' &&
-    data.content.trim().length > 0;
-  const score = hasContent ? 1 : 0;
-  return {
-    completed: score === 1,
-    score,
-    missingFields: score === 0 ? ['content'] : [],
-  };
-}
+  private static auditAbout(data?: AboutData): number {
+    if (!data?.content || data.content.length < 50) return 0;
+    return 100;
+  }
 
-function auditList(list: unknown[]): SectionStatus {
-  const score = Array.isArray(list) && list.length > 0 ? 1 : 0;
-  return {
-    completed: score === 1,
-    score,
-    missingFields: score === 0 ? ['items'] : [],
-  };
-}
+  private static auditHistory(items: HistoryItem[]): number {
+    return items.length > 0 ? 100 : 0;
+  }
 
-function auditContact(contact: ContactData): SectionStatus {
-  const required: (keyof ContactData)[] = ['email', 'phone', 'location'];
-  const missing = required.filter(
-    (f) =>
-      !contact?.[f] ||
-      (typeof contact[f] === 'string' && contact[f].trim() === ''),
-  );
+  private static auditSkills(items: Skill[]): number {
+    return items.length >= 3 ? 100 : 0;
+  }
 
-  // Check socials - at least one active social link
-  const hasSocials =
-    Array.isArray(contact?.socials) &&
-    contact.socials.some((s) => s.active && s.url.trim() !== '');
-  if (!hasSocials) missing.push('socials');
+  private static auditSolutions(items: Solution[]): number {
+    return items.length >= 2 ? 100 : 0;
+  }
 
-  const score = (required.length + 1 - missing.length) / (required.length + 1);
-
-  return {
-    completed: missing.length === 0,
-    score,
-    missingFields: missing as string[],
-  };
+  private static auditContact(data?: ContactData): number {
+    if (!data?.email || !data?.location) return 0;
+    return 100;
+  }
 }

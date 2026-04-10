@@ -1,143 +1,231 @@
-import type { ReactNode } from 'react';
+import type {
+  AboutData,
+  ContactData,
+  HistoryItem,
+  HomeData,
+  Skill,
+  Solution,
+} from '@repo/appwrite-core/domain';
 import {
   createContext,
+  use,
   useCallback,
-  useContext,
   useMemo,
   useState,
+  useTransition,
 } from 'react';
-import type { AboutData } from '../types/about';
-import { EMPTY_ABOUT } from '../types/about';
-import type { Skill, Solution } from '../types/assets';
-import type { ContactData } from '../types/contact';
-import { EMPTY_CONTACT } from '../types/contact';
-import type { HistoryItem } from '../types/history';
-import type { HomeData } from '../types/home';
-import { EMPTY_HOME } from '../types/home';
+import {
+  saveAboutSection,
+  saveContactSection,
+  saveHistorySection,
+  saveHomeSection,
+  saveSkillsSection,
+  saveSolutionsSection,
+} from '../../../infrastructure/cms/server';
+import {
+  useAboutQuery,
+  useContactQuery,
+  useHistoryQuery,
+  useHomeQuery,
+  useSkillsQuery,
+  useSolutionsQuery,
+} from '../hooks/use-cms-queries';
+import {
+  type AuditResult,
+  MaturityAuditService,
+} from '../services/maturity-audit-service';
 
-export type Locale = 'en' | 'pt';
-
-export interface CmsState {
-  home: Record<Locale, HomeData>;
-  about: Record<Locale, AboutData>;
-  experience: Record<Locale, HistoryItem[]>;
-  education: Record<Locale, HistoryItem[]>;
-  skills: Record<Locale, Skill[]>;
-  solutions: Record<Locale, Solution[]>;
-  contact: Record<Locale, ContactData>;
-}
-
-type SectionData =
-  | HomeData
-  | AboutData
-  | HistoryItem[]
-  | Skill[]
-  | Solution[]
-  | ContactData;
-
-interface CmsContextType {
-  state: CmsState;
-  currentLocale: Locale;
-  setLocale: (locale: Locale) => void;
-  updateSection: (section: keyof CmsState, data: SectionData) => void;
-  isSaving: boolean;
-  saveChanges: () => Promise<void>;
-  isPublished: boolean;
-  setPublished: (published: boolean) => void;
-}
-
-const INITIAL_STATE: CmsState = {
-  home: {
-    en: { ...EMPTY_HOME, id: 'home-en', locale: 'en' },
-    pt: { ...EMPTY_HOME, id: 'home-pt', locale: 'pt' },
-  },
-  about: {
-    en: { ...EMPTY_ABOUT, id: 'about-en', locale: 'en' },
-    pt: { ...EMPTY_ABOUT, id: 'about-pt', locale: 'pt' },
-  },
-  experience: { en: [], pt: [] },
-  education: { en: [], pt: [] },
-  skills: { en: [], pt: [] },
-  solutions: { en: [], pt: [] },
-  contact: {
-    en: { ...EMPTY_CONTACT, id: 'contact-en' },
-    pt: { ...EMPTY_CONTACT, id: 'contact-pt' },
-  },
+type SectionState<T> = {
+  data: T | null;
+  isLoading: boolean;
+  isError: boolean;
 };
 
-const CmsContext = createContext<CmsContextType | undefined>(undefined);
+type CmsContextType = {
+  currentLocale: string;
+  setLocale: (locale: string) => void;
+  // Local states for real-time editing
+  home: SectionState<HomeData>;
+  about: SectionState<AboutData>;
+  experience: SectionState<HistoryItem[]>;
+  education: SectionState<HistoryItem[]>;
+  skills: SectionState<Skill[]>;
+  solutions: SectionState<Solution[]>;
+  contact: SectionState<ContactData>;
+  // Global audit result (maturity)
+  maturity: AuditResult;
+  // Generic save dispatcher
+  saveSection: (section: string, data: unknown) => Promise<void>;
+  isSaving: boolean;
+};
 
-export function CmsProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<CmsState>(INITIAL_STATE);
-  const [currentLocale, setCurrentLocale] = useState<Locale>('en');
-  const [isSaving, setIsSaving] = useState(false);
-  const [isPublished, setIsPublished] = useState(false);
+const CmsContext = createContext<CmsContextType | null>(null);
 
-  const setLocale = useCallback((locale: Locale) => {
-    setCurrentLocale(locale);
-  }, []);
+export function CmsProvider({ children }: { children: React.ReactNode }) {
+  const [currentLocale, setLocale] = useState('en');
+  const [isSaving, startSaving] = useTransition();
 
-  const updateSection = useCallback(
-    (section: keyof CmsState, data: SectionData) => {
-      setState((prev) => {
-        const newState = { ...prev };
+  // 1. Fetch data for all sections
+  const homeQuery = useHomeQuery(currentLocale);
+  const aboutQuery = useAboutQuery(currentLocale);
+  const expQuery = useHistoryQuery('experience', currentLocale);
+  const eduQuery = useHistoryQuery('education', currentLocale);
+  const skillsQuery = useSkillsQuery(currentLocale);
+  const solutionsQuery = useSolutionsQuery(currentLocale);
+  const contactQuery = useContactQuery(currentLocale);
 
-        if (section === 'home') {
-          const homeData = data as HomeData;
-          newState.home = {
-            en: {
-              ...prev.home.en,
-              ...(currentLocale === 'en' ? homeData : {}),
-              profilePictureId: homeData.profilePictureId,
-            },
-            pt: {
-              ...prev.home.pt,
-              ...(currentLocale === 'pt' ? homeData : {}),
-              profilePictureId: homeData.profilePictureId,
-            },
-          };
-        } else {
-          // Type-safe assignment for other sections
-          const updatedSection = {
-            ...prev[section],
-            [currentLocale]: data,
-          };
-          // biome-ignore lint/suspicious/noExplicitAny: Necessary due to TypeScript's union key assignment limitations
-          (newState as any)[section] = updatedSection;
+  // 2. Compute global maturity audit
+  const maturity = useMemo(() => {
+    return MaturityAuditService.audit({
+      home: (homeQuery.data as HomeData) || null,
+      about: (aboutQuery.data as AboutData) || null,
+      experience: (expQuery.data as HistoryItem[]) || [],
+      education: (eduQuery.data as HistoryItem[]) || [],
+      skills: (skillsQuery.data as Skill[]) || [],
+      solutions: (solutionsQuery.data as Solution[]) || [],
+      contact: (contactQuery.data as ContactData) || null,
+    });
+  }, [
+    homeQuery.data,
+    aboutQuery.data,
+    expQuery.data,
+    eduQuery.data,
+    skillsQuery.data,
+    solutionsQuery.data,
+    contactQuery.data,
+  ]);
+
+  // 3. Centralized Save Strategy
+  const saveSection = useCallback(
+    async (section: string, data: unknown) => {
+      startSaving(async () => {
+        try {
+          const payload = { locale: currentLocale, data };
+          switch (section) {
+            case 'home':
+              // biome-ignore lint/suspicious/noExplicitAny: infrastructure-level cast
+              await (saveHomeSection as any)({ data: payload });
+              await homeQuery.refetch();
+              break;
+            case 'about':
+              // biome-ignore lint/suspicious/noExplicitAny: infrastructure-level cast
+              await (saveAboutSection as any)({ data: payload });
+              await aboutQuery.refetch();
+              break;
+            case 'experience':
+              // biome-ignore lint/suspicious/noExplicitAny: infrastructure-level cast
+              await (saveHistorySection as any)({
+                data: {
+                  type: 'experience',
+                  locale: currentLocale,
+                  items: data as HistoryItem[],
+                },
+              });
+              await expQuery.refetch();
+              break;
+            case 'education':
+              // biome-ignore lint/suspicious/noExplicitAny: infrastructure-level cast
+              await (saveHistorySection as any)({
+                data: {
+                  type: 'education',
+                  locale: currentLocale,
+                  items: data as HistoryItem[],
+                },
+              });
+              await eduQuery.refetch();
+              break;
+            case 'skills':
+              // biome-ignore lint/suspicious/noExplicitAny: infrastructure-level cast
+              await (saveSkillsSection as any)({
+                data: { locale: currentLocale, items: data as Skill[] },
+              });
+              await skillsQuery.refetch();
+              break;
+            case 'solutions':
+              // biome-ignore lint/suspicious/noExplicitAny: infrastructure-level cast
+              await (saveSolutionsSection as any)({
+                data: { locale: currentLocale, items: data as Solution[] },
+              });
+              await solutionsQuery.refetch();
+              break;
+            case 'contact':
+              // biome-ignore lint/suspicious/noExplicitAny: infrastructure-level cast
+              await (saveContactSection as any)({ data: payload });
+              await contactQuery.refetch();
+              break;
+          }
+        } catch (error) {
+          console.error(`[Zenith] Failed to save section ${section}:`, error);
         }
-
-        return newState;
       });
     },
-    [currentLocale],
+    [
+      currentLocale,
+      homeQuery,
+      aboutQuery,
+      expQuery,
+      eduQuery,
+      skillsQuery,
+      solutionsQuery,
+      contactQuery,
+    ],
   );
-
-  const saveChanges = useCallback(async () => {
-    setIsSaving(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsSaving(false);
-  }, []);
 
   const value = useMemo(
     () => ({
-      state,
       currentLocale,
       setLocale,
-      updateSection,
+      home: {
+        data: homeQuery.data as HomeData,
+        isLoading: homeQuery.isLoading,
+        isError: homeQuery.isError,
+      },
+      about: {
+        data: aboutQuery.data as AboutData,
+        isLoading: aboutQuery.isLoading,
+        isError: aboutQuery.isError,
+      },
+      experience: {
+        data: expQuery.data as HistoryItem[],
+        isLoading: expQuery.isLoading,
+        isError: expQuery.isError,
+      },
+      education: {
+        data: eduQuery.data as HistoryItem[],
+        isLoading: eduQuery.isLoading,
+        isError: eduQuery.isError,
+      },
+      skills: {
+        data: skillsQuery.data as Skill[],
+        isLoading: skillsQuery.isLoading,
+        isError: skillsQuery.isError,
+      },
+      solutions: {
+        data: solutionsQuery.data as Solution[],
+        isLoading: solutionsQuery.isLoading,
+        isError: solutionsQuery.isError,
+      },
+      contact: {
+        data: contactQuery.data as ContactData,
+        isLoading: contactQuery.isLoading,
+        isError: contactQuery.isError,
+      },
+      maturity,
+      saveSection,
       isSaving,
-      saveChanges,
-      isPublished,
-      setPublished: setIsPublished,
     }),
     [
-      state,
       currentLocale,
+      homeQuery,
+      aboutQuery,
+      expQuery,
+      eduQuery,
+      skillsQuery,
+      solutionsQuery,
+      contactQuery,
+      maturity,
+      saveSection,
       isSaving,
-      isPublished,
-      setLocale,
-      updateSection,
-      saveChanges,
     ],
   );
 
@@ -145,8 +233,8 @@ export function CmsProvider({ children }: { children: ReactNode }) {
 }
 
 export function useCmsContext() {
-  const context = useContext(CmsContext);
-  if (context === undefined) {
+  const context = use(CmsContext);
+  if (!context) {
     throw new Error('useCmsContext must be used within a CmsProvider');
   }
   return context;

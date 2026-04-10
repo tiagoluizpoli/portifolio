@@ -17,6 +17,11 @@ const rawEnv = {
     process.env.VITE_APPWRITE_ENDPOINT ||
     import.meta.env.VITE_APPWRITE_ENDPOINT ||
     '',
+  APPWRITE_ENDPOINT_PUBLIC:
+    process.env.APPWRITE_ENDPOINT_PUBLIC ||
+    process.env.VITE_APPWRITE_ENDPOINT_PUBLIC ||
+    import.meta.env.VITE_APPWRITE_ENDPOINT_PUBLIC ||
+    '',
   APPWRITE_PROJECT_ID:
     process.env.APPWRITE_PROJECT_ID ||
     process.env.VITE_APPWRITE_PROJECT_ID ||
