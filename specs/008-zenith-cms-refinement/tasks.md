@@ -8,15 +8,15 @@ This project is executed in isolated **Verification Rounds**. Each round must be
 ## Phase 1: Infrastructure & Round 1 Foundation
 **Goal**: Synchronize database schema and promote EN-source globalization.
 
-- [ ] T001 [P] Remove `locale` and `level` fields from `Skill` domain model in `packages/appwrite-core/src/domain/cms/chapters/assets.ts`
-- [ ] T002 [P] Purge `url` from `Solution` domain model in `packages/appwrite-core/src/domain/cms/chapters/assets.ts`
-- [ ] T003 [P] Expand `ImpactMetric` entity with `internalCode`, `locale`, and `sourceKey` in `packages/appwrite-core/src/domain/cms/chapters/metrics.ts`
-- [ ] T004 [P] Create `Platform` domain entity in `packages/appwrite-core/src/domain/cms/chapters/platforms.ts`
-- [ ] T005 Update `SkillRepository` (Global) and `MetricRepository` (Semantic Parity) interfaces in `packages/appwrite-core/src/domain/repositories/interfaces.ts`
-- [ ] T006 [P] Implement `PlatformRepository` in `packages/appwrite-core/src/infrastructure/repositories/platform.repository.ts`
-- [ ] T007 Implement Migrator schema updates: Skills removal, Metric uniqueness index `(locale, internalCode)`, and Platforms collection in `apps/migrator/src/infrastructure/schema.manager.ts`
-- [ ] T008 [TEST] [BE] Verify EN-source Skill globalization (TC-BE-001, TC-BE-005) in `packages/appwrite-core/__tests__/domain/skills.spec.ts`
-- [ ] T009 [TEST] [BE] Verify Metric parity sync and uniqueness (TC-BE-003, TC-BE-004, TC-BE-006) in `packages/appwrite-core/__tests__/domain/metrics.spec.ts`
+- [x] T001 [P] Remove `locale` and `level` fields from `Skill` domain model in `packages/appwrite-core/src/domain/cms/chapters/assets.ts`
+- [x] T002 [P] Purge `url` from `Solution` domain model in `packages/appwrite-core/src/domain/cms/chapters/assets.ts`
+- [x] T003 [P] Expand `ImpactMetric` entity with `internalCode`, `locale`, and `sourceKey` in `packages/appwrite-core/src/domain/cms/chapters/metrics.ts`
+- [x] T004 [P] Create `Platform` domain entity in `packages/appwrite-core/src/domain/cms/chapters/platforms.ts`
+- [x] T005 Update `SkillRepository` (Global), `SolutionRepository` (Localized), and `MetricRepository` (Semantic Parity) interfaces in `packages/appwrite-core/src/domain/repositories/interfaces.ts`
+- [x] T006 [P] Implement `PlatformRepository` in `packages/appwrite-core/src/infrastructure/repositories/platform.repository.ts`
+- [x] T007 Implement Migrator schema updates: Skills removal, Metric uniqueness index `(locale, internalCode)`, and Platforms collection in `apps/migrator/src/infrastructure/schema.manager.ts`
+- [x] T008 [TEST] [BE] Verify EN-source Skill globalization (TC-BE-001, TC-BE-005) in `packages/appwrite-core/__tests__/domain/skills.spec.ts`
+- [x] T009 [TEST] [BE] Verify Metric parity sync and uniqueness (TC-BE-003, TC-BE-004, TC-BE-006) in `packages/appwrite-core/__tests__/domain/metrics.spec.ts`
 
 **Checkpoint**: Round 1 verification complete.
 
@@ -39,9 +39,15 @@ This project is executed in isolated **Verification Rounds**. Each round must be
 ## Phase 3: [US1] Global Skills & [US5] Solutions Grid (Round 3)
 **Goal**: High-density list refactor and link/level removal.
 
+| Round | Title | Core Objective | Status |
+| :--- | :--- | :--- | :--- |
+| **Round 1** | **Infrastructure (Infra)** | 'en-source' Skill globalization, Localized Solutions, Schema hardening, and Platforms. | DONE ✅ |
+| **Round 2** | **Global Shell (Global)** | "/portfolio-cms/" routing prefix and `CmsSaveButton` unification. | PENDING |
+| **Round 3** | **Feature: Skills/Solutions** | Globalized Skill Grid and Localized Solution Grid refactor. | PENDING |
+
 - [ ] T016 [P] [US1] [US5] [TEST] [FE] Define interaction tests for Skills and Solutions grids (TC-FE-002, TC-FE-006, TC-FE-008).
 - [ ] T017 [US1] Refactor Skill List to high-density grid (compact cards, no mastery) in `apps/zenith/app/routes/portfolio-cms/skills.tsx`
-- [ ] T018 [US5] Refactor Solution List to card-based grid (purging all link UI) in `apps/zenith/app/routes/portfolio-cms/solutions.tsx`
+- [ ] T018 [P] Refactor Solution List to card-based grid (Localized preservation) in `apps/zenith/app/routes/portfolio-cms/solutions.tsx`
 - [ ] T019 [P] [US1] [US5] Integrate `IconPicker` for Skill and Solution thumbnails.
 - [ ] T020 [P] [US1] [US5] Integrate `CmsSaveButton` and implement manual `TanStack Form v12+` refactor if code > 300 lines.
 

@@ -24,9 +24,9 @@ To ensure maximum focus and regression safety, implementation is divided into **
 
 | Round | Title | Core Objective | Status |
 | :--- | :--- | :--- | :--- |
-| **Round 1** | **Infrastructure (Infra)** | 'en-source' Skill globalization, Schema hardening, and Platform Repository. | PENDING |
+| **Round 1** | **Infrastructure (Infra)** | 'en-source' Skill globalization, Localized Solutions, Schema hardening, and Platforms. | DONE |
 | **Round 2** | **Global Shell (Global)** | "/portfolio-cms/" routing prefix and `CmsSaveButton` unification. | PENDING |
-| **Round 3** | **Feature: Skills/Solutions** | High-density grid refactor and `IconPicker` integration. | PENDING |
+| **Round 3** | **Feature: Skills/Solutions** | Globalized Skill Grid and Localized Solution Grid refactor. | PENDING |
 | **Round 4** | **Feature: Metrics** | Semantic parity engine implementation (kebab-case/Ghost Row sync). | PENDING |
 | **Round 5** | **Feature: Home** | Deployment of the 1:1 split dashboard and Asset Previews. | PENDING |
 | **Round 6** | **Feature: Platforms** | Managed social network side-drawer CRUD and pre-seeding. | PENDING |
