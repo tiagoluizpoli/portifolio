@@ -2,6 +2,11 @@ import { type Client, ID, type Models, TablesDB } from 'node-appwrite';
 import type { IRepository } from '../../domain/repositories/interfaces.js';
 import { ExceptionMapper } from '../../domain/services/exception-mapper.js';
 
+/**
+ * AppWriteRepository
+ * Base class for all Appwrite-backed repositories.
+ * Hardened with strict type safety to satisfy the IRepository interface.
+ */
 export abstract class AppWriteRepository<T extends { id: string }>
   implements IRepository<T>
 {
@@ -25,7 +30,6 @@ export abstract class AppWriteRepository<T extends { id: string }>
       });
       return this.mapToModel(row as unknown as Models.Document);
     } catch (error: unknown) {
-      // Direct check for 404 to avoid throwing on "not found"
       const err = error as { code?: number };
       if (err.code === 404) return null;
       this.handleError(err);
@@ -52,7 +56,7 @@ export abstract class AppWriteRepository<T extends { id: string }>
         databaseId: this.databaseId,
         tableId: this.tableId,
         rowId: ID.unique(),
-        data: data as unknown as Record<string, unknown>,
+        data: this.prepareData(data) as unknown as Record<string, unknown>,
       });
       return this.mapToModel(row as unknown as Models.Document);
     } catch (error: unknown) {
@@ -66,12 +70,27 @@ export abstract class AppWriteRepository<T extends { id: string }>
         databaseId: this.databaseId,
         tableId: this.tableId,
         rowId: id,
-        data: data as unknown as Record<string, unknown>,
+        data: this.prepareData(data) as unknown as Record<string, unknown>,
       });
       return this.mapToModel(row as unknown as Models.Document);
     } catch (error: unknown) {
       this.handleError(error);
     }
+  }
+
+  // biome-ignore lint/suspicious/noExplicitAny: infrastructure-level generic handling
+  protected prepareData(data: any): any {
+    const {
+      id,
+      $id,
+      $databaseId,
+      $collectionId,
+      $createdAt,
+      $updatedAt,
+      $permissions,
+      ...cleanData
+    } = data;
+    return cleanData;
   }
 
   async delete(id: string): Promise<void> {

@@ -14,6 +14,10 @@
       "import": "./src/server.ts",
       "types": "./src/server.ts"
     },
+    "./domain": {
+      "import": "./src/domain/index.ts",
+      "types": "./src/domain/index.ts"
+    },
     "./domain/exceptions": {
       "import": "./src/domain/exceptions/index.ts",
       "types": "./src/domain/exceptions/index.ts"
@@ -21,6 +25,10 @@
     "./domain/repositories": {
       "import": "./src/domain/repositories/interfaces.ts",
       "types": "./src/domain/repositories/interfaces.ts"
+    },
+    "./infrastructure": {
+      "import": "./src/infrastructure/index.ts",
+      "types": "./src/infrastructure/index.ts"
     }
   },
   "scripts": {

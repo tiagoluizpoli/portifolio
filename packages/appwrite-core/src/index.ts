@@ -5,8 +5,7 @@
 // ---------------------------------------------------------------------------
 
 // Domain & Interfaces
-export * from './domain/exceptions/index.js';
-export * from './domain/repositories/interfaces.js';
+export * from './domain/index.js';
 // Schemas & Types
 export type { AppwriteEnv } from './infrastructure/appwrite.client.js';
 export {

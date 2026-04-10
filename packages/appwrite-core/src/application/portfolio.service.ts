@@ -66,8 +66,22 @@ export class PortfolioService {
   /**
    * Generates a preview URL for a stored asset.
    */
-  getAssetPreview(bucketId: string, fileId: string): URL {
+  async getAssetPreview(bucketId: string, fileId: string): Promise<URL> {
     return this.storageRepository.getFilePreview(bucketId, fileId);
+  }
+
+  /**
+   * Generates a high-fidelity view URL for a stored asset.
+   */
+  async getAssetView(bucketId: string, fileId: string): Promise<URL> {
+    return this.storageRepository.getFileView(bucketId, fileId);
+  }
+
+  /**
+   * Fetches metadata for an uploaded asset.
+   */
+  async getAssetInfo(bucketId: string, fileId: string): Promise<Asset> {
+    return await this.storageRepository.getFile(bucketId, fileId);
   }
 
   /**
