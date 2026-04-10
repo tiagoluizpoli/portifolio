@@ -1,8 +1,8 @@
 import { validateAppwriteEnv } from '@repo/appwrite-core';
 import { AppwriteProvider } from '@repo/appwrite-core/server';
 import dotenv from 'dotenv';
-import { MigratePortfolioUseCase } from '../application/migrate-portfolio.use-case';
-import { SchemaManager } from '../infrastructure/schema.manager'; // Assuming this is the new import path
+import { MigratePortfolioUseCase } from '../application/migrate-portfolio.use-case.js';
+import { SchemaManager } from '../infrastructure/schema.manager.js';
 
 dotenv.config();
 

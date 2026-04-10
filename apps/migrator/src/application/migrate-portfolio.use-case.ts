@@ -93,7 +93,11 @@ export class MigratePortfolioUseCase {
         for (const row of batch.rows) {
           // Track and map asset IDs
           if (batch.tableId === 'home') {
-            if (row.pictureId === 'profile-pic' && realProfileId) {
+            if (
+              (row.pictureId === 'profile-pic' ||
+                row.pictureId === '1eb8d18b-3d9a-4dcc-9168-82c93c4cd95d') &&
+              realProfileId
+            ) {
               row.pictureId = realProfileId;
             }
             if (
@@ -105,12 +109,35 @@ export class MigratePortfolioUseCase {
             }
           }
 
+          if (batch.tableId === 'impact_metrics') {
+            const sourceKey = row.sourceKey as string;
+            if (sourceKey) {
+              const sourceName = sourceKey.split('_')[0]; // simple heuristic: github_commits -> github
+              const slugified = sourceName
+                .toLowerCase()
+                .replace(/[^\w\s-]/g, '')
+                .replace(/[\s_]+/g, '-')
+                .replace(/^-+|-+$/g, '')
+                .substring(0, 30);
+              row.sourceId = `ms-${slugified}`;
+            }
+          }
+
           const pictureId = row.pictureId as string | undefined;
           const cvId = row.cvId as string | undefined;
 
-          if (pictureId && pictureId !== 'profile-pic')
+          if (
+            pictureId &&
+            pictureId !== 'profile-pic' &&
+            pictureId !== '1eb8d18b-3d9a-4dcc-9168-82c93c4cd95d'
+          )
             usedFileIds.add(pictureId);
-          if (cvId && cvId !== 'cv-pdf') usedFileIds.add(cvId);
+          if (
+            cvId &&
+            cvId !== 'cv-pdf' &&
+            cvId !== '296aaaa8-3b32-4d20-96d8-e58d769334fb'
+          )
+            usedFileIds.add(cvId);
 
           // 2.15: Deterministic IDs
           const rowId = this.generateDeterministicId(
@@ -141,14 +168,24 @@ export class MigratePortfolioUseCase {
 
       console.log('--- Migration: PASS (Atomic Sync) ---');
     } catch (error) {
-      console.error('[CRITICAL] Migration Failed. Rolling back...', error);
+      console.error(
+        '[CRITICAL] Migration Failed during ingestion. Original error:',
+        error,
+      );
 
       if (transaction) {
         // 2.14: Automatic Rollback
-        await this.tables.updateTransaction({
-          transactionId: transaction.$id,
-          rollback: true,
-        });
+        try {
+          await this.tables.updateTransaction({
+            transactionId: transaction.$id,
+            rollback: true,
+          });
+        } catch (rollbackError) {
+          console.error(
+            '[WARN] Failed to rollback transaction:',
+            rollbackError,
+          );
+        }
       }
 
       throw new Error(
@@ -173,6 +210,12 @@ export class MigratePortfolioUseCase {
     switch (tableId) {
       case 'home':
         return `home-${locale}`;
+      case 'about':
+        return `about-${locale}`;
+      case 'metric_sources':
+        return `ms-${slugify((row.name as string) || 'unknown')}`;
+      case 'impact_metrics':
+        return `im-${slugify((row.label as string) || 'unknown')}-${row.aboutId}`;
       case 'experience':
         return `exp-${slugify((row.company as string) || 'unknown')}-${locale}`;
       case 'education':

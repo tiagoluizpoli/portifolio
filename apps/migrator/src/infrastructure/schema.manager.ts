@@ -51,6 +51,9 @@ export class SchemaManager {
 
   private async setupTables() {
     await this.createHomeTable();
+    await this.createAboutTable();
+    await this.createMetricSourcesTable();
+    await this.createImpactMetricsTable();
     await this.createExperienceTable();
     await this.createEducationTable();
     await this.createSkillsTable();
@@ -82,6 +85,51 @@ export class SchemaManager {
       ],
       indexes: [
         { key: 'idx_locale', type: IndexType.Key, attributes: ['locale'] },
+      ],
+    });
+  }
+
+  private async createAboutTable() {
+    await this.ensureTable({
+      tableId: 'about',
+      name: 'About',
+      columns: [
+        { key: 'content', type: 'string', size: 5000, required: true },
+        { key: 'locale', type: 'string', size: 10, required: true },
+      ],
+      indexes: [
+        { key: 'idx_locale', type: IndexType.Key, attributes: ['locale'] },
+      ],
+    });
+  }
+
+  private async createMetricSourcesTable() {
+    await this.ensureTable({
+      tableId: 'metric_sources',
+      name: 'Metric Sources',
+      columns: [
+        { key: 'name', type: 'string', size: 255, required: true },
+        { key: 'type', type: 'string', size: 50, required: true },
+        { key: 'iconCode', type: 'string', size: 100, required: true },
+        { key: 'status', type: 'string', size: 50, required: true },
+      ],
+      indexes: [],
+    });
+  }
+
+  private async createImpactMetricsTable() {
+    await this.ensureTable({
+      tableId: 'impact_metrics',
+      name: 'Impact Metrics',
+      columns: [
+        { key: 'label', type: 'string', size: 255, required: true },
+        { key: 'value', type: 'string', size: 100, required: true },
+        { key: 'sourceId', type: 'string', size: 50, required: true },
+        { key: 'sourceKey', type: 'string', size: 255, required: false },
+        { key: 'aboutId', type: 'string', size: 50, required: true },
+      ],
+      indexes: [
+        { key: 'idx_about', type: IndexType.Key, attributes: ['aboutId'] },
       ],
     });
   }
@@ -134,6 +182,8 @@ export class SchemaManager {
         { key: 'type', type: 'string', size: 50, required: true },
         { key: 'sort', type: 'integer', required: true },
         { key: 'locale', type: 'string', size: 10, required: true },
+        { key: 'status', type: 'string', size: 50, required: true },
+        { key: 'level', type: 'integer', required: true },
       ],
       indexes: [
         { key: 'idx_sort', type: IndexType.Key, attributes: ['sort'] },
@@ -150,6 +200,7 @@ export class SchemaManager {
         { key: 'title', type: 'string', size: 255, required: true },
         { key: 'description', type: 'string', size: 2000, required: true },
         { key: 'iconCode', type: 'string', size: 100, required: true },
+        { key: 'url', type: 'string', size: 500, required: false },
         { key: 'sort', type: 'integer', required: true },
         { key: 'locale', type: 'string', size: 10, required: true },
       ],
@@ -169,6 +220,7 @@ export class SchemaManager {
         { key: 'url', type: 'string', size: 500, required: true },
         { key: 'iconCode', type: 'string', size: 100, required: true },
         { key: 'sort', type: 'integer', required: true },
+        { key: 'status', type: 'string', size: 50, required: true },
       ],
       indexes: [{ key: 'idx_sort', type: IndexType.Key, attributes: ['sort'] }],
     });
@@ -261,6 +313,9 @@ export class SchemaManager {
       }
     }
 
+    // Wait for columns to be available (Guideline 1.9)
+    await this.waitForColumns(params.tableId, params.columns.length);
+
     // Explicitly create indexes
     for (const idx of params.indexes) {
       try {
@@ -276,9 +331,6 @@ export class SchemaManager {
         if ((error as { code: number }).code !== 409) throw error;
       }
     }
-
-    // Wait for columns to be available (Guideline 1.9)
-    await this.waitForColumns(params.tableId, params.columns.length);
   }
 
   private async waitForColumns(tableId: string, expectedCount: number) {

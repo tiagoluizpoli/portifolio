@@ -255,5 +255,51 @@
       "icon": "material-symbols:location-on",
       "sort": 3
     }
+  ],
+  "metricSources": [
+    {
+      "name": "GitHub",
+      "type": "Code",
+      "iconCode": "fa6-brands:github",
+      "status": "active"
+    },
+    {
+      "name": "LinkedIn",
+      "type": "Network",
+      "iconCode": "fa6-brands:linkedin",
+      "status": "active"
+    },
+    {
+      "name": "Appwrite",
+      "type": "Cloud",
+      "iconCode": "simple-icons:appwrite",
+      "status": "active"
+    }
+  ],
+  "impactMetrics": [
+    {
+      "label": "Total Commits",
+      "value": "1576",
+      "sourceKey": "github_commits",
+      "aboutId": "about-en"
+    },
+    {
+      "label": "Total Repositories",
+      "value": "87",
+      "sourceKey": "github_repos",
+      "aboutId": "about-en"
+    },
+    {
+      "label": "Cloud Functions",
+      "value": "12",
+      "sourceKey": "appwrite_functions",
+      "aboutId": "about-en"
+    },
+    {
+      "label": "Network Connections",
+      "value": "500+",
+      "sourceKey": "linkedin_conns",
+      "aboutId": "about-en"
+    }
   ]
 }

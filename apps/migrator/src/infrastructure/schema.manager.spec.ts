@@ -57,11 +57,14 @@ describe('SchemaManager', () => {
         }
         const counts: Record<string, number> = {
           home: 10,
+          about: 2,
+          metric_sources: 4,
+          impact_metrics: 5,
           experience: 6,
           education: 6,
-          skills: 5,
-          solutions: 5,
-          socials: 4,
+          skills: 7,
+          solutions: 6,
+          socials: 5,
           contact_info: 5,
         };
         return {

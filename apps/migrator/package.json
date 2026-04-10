@@ -2,8 +2,10 @@
   "name": "@repo/migrator",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "tsx src/main/index.ts",
+    "seed": "tsx src/main/seed.ts",
     "lint": "biome check src",
     "test": "vitest run src",
     "typecheck": "tsc --noEmit"
