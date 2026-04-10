@@ -96,9 +96,11 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground/40" />
             <input
               type="text"
+              id="icon-search"
+              name="icon-search"
               placeholder="Search icons (e.g. 'react', 'typescript')..."
               className="w-full h-11 pl-10 pr-10 bg-muted border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-sans"
-              value={search}
+              value={search ?? ''}
               onChange={(e) => setSearch(e.target.value)}
             />
             {isLoading && (

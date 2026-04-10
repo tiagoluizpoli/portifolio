@@ -1,257 +1,375 @@
+import type { Solution } from '@repo/appwrite-core';
+import { useForm } from '@tanstack/react-form';
+import { zodValidator } from '@tanstack/zod-form-adapter';
 import {
-  ChevronDown,
-  ChevronUp,
-  ExternalLink,
-  Globe,
+  Briefcase,
+  GripVertical,
+  Link,
   Plus,
   RefreshCcw,
-  Rocket,
+  Save,
   Trash2,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useCmsContext } from '../../context/cms-context';
-import type { Solution } from '../../types/assets';
-import { EMPTY_SOLUTION } from '../../types/assets';
-import { IconPicker } from '../common/icon-picker';
+import { type SolutionsInput, solutionsListSchema } from '../../types/assets';
+import { SortableList } from '../common/sortable-list';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
+import { generateId } from '@/lib/utils';
 
 /**
  * SolutionsForm (Constitution §XVII, §I)
- * Section 06: Success Stories.
- * Connected to live cms-context for outcome-oriented case study management.
+ * Section 06: Professional Offerings & Solution Architectures.
+ * Wired to Appwrite via TanStack Form + CmsContext.
  */
 export function SolutionsForm() {
-  const { state, currentLocale, updateSection } = useCmsContext();
-  const solutions = state.solutions[currentLocale];
+  const { solutions, saveSection, isSaving } = useCmsContext();
+  const initialValues = useMemo(
+    () => ({
+      items: (solutions.data || []).map(
+        (item) =>
+          ({
+            id: item.id || generateId('so'),
+            locale: item.locale || 'en',
+            title: item.title || '',
+            description: item.description || '',
+            iconCode: item.iconCode || 'lucide:box',
+            iconId: item.iconId || '',
+            url: item.url || '',
+            sort: item.sort || 0,
+          }) as Solution,
+      ),
+    }),
+    [solutions.data],
+  );
 
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const form = useForm({
+    defaultValues: initialValues as SolutionsInput,
+    // biome-ignore format: preserve ts-expect-error
+    // @ts-expect-error - TanStack Form depth limits + adapter type signature mismatch (§XVII)
+    validatorAdapter: zodValidator(),
+    validators: {
+      onChange: solutionsListSchema,
+    },
+    onSubmit: async ({ value }) => {
+      await saveSection('solutions', value.items as unknown as Solution[]);
+    },
+  });
 
-  const handleChange = (newSolutions: Solution[]) => {
-    updateSection('solutions', newSolutions);
-  };
+  // Reactive reset when data arrives (§V)
+  useEffect(() => {
+    if (solutions.data) {
+      form.reset(initialValues as SolutionsInput);
+    }
+  }, [solutions.data, form.reset, initialValues]);
 
   const addSolution = () => {
-    const newSolution: Solution = {
-      ...EMPTY_SOLUTION,
-      id: Math.random().toString(36).substr(2, 9),
-    };
-    handleChange([newSolution, ...solutions]);
-    setExpandedId(newSolution.id);
+    const currentLocale = form.getFieldValue('items')[0]?.locale || 'en';
+    form.pushFieldValue('items', {
+      id: generateId('sol'),
+      locale: currentLocale,
+      title: '',
+      description: '',
+      iconCode: 'lucide:briefcase',
+      iconId: '',
+      url: '',
+      sort: form.getFieldValue('items').length,
+    });
   };
 
-  const removeSolution = (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    handleChange(solutions.filter((s) => s.id !== id));
-    if (expandedId === id) setExpandedId(null);
+  const removeSolution = (index: number) => {
+    form.removeFieldValue('items', index);
   };
 
-  const updateSolution = (id: string, updates: Partial<Solution>) => {
-    handleChange(
-      solutions.map((s) => (s.id === id ? { ...s, ...updates } : s)),
+  const handleReorder = (newItems: Solution[]) => {
+    form.setFieldValue(
+      'items',
+      newItems.map((item, index) => ({ ...item, sort: index })),
     );
   };
 
+  if (solutions.isLoading) {
+    return (
+      <div className="space-y-8">
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-4 w-64" />
+          </div>
+          <div className="flex gap-2">
+            <Skeleton className="h-8 w-20" />
+            <Skeleton className="h-8 w-32" />
+          </div>
+        </div>
+        <div className="space-y-6">
+          {[1, 2, 3].map((id) => {
+            return (
+              <Card
+                key={`sol-skel-${id}`}
+                className="bg-card/30 border-border/50"
+              >
+                <div className="p-6 space-y-4">
+                  <div className="flex justify-between">
+                    <Skeleton className="h-6 w-1/3" />
+                    <div className="flex gap-2">
+                      <Skeleton className="h-8 w-8 rounded-md" />
+                      <Skeleton className="h-8 w-8 rounded-md" />
+                    </div>
+                  </div>
+                  <Skeleton className="h-20 w-full" />
+                  <Skeleton className="h-8 w-1/2" />
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 w-full mb-8">
-      {/* Editorial Header */}
-      <div className="flex items-end justify-between border-b border-border pb-8">
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-extrabold tracking-tighter text-foreground font-display">
-            Solutions{' '}
-            <span className="text-primary/40 font-medium">
-              / Success Stories
-            </span>
-          </h1>
-          <p className="text-sm text-muted-foreground/60 mt-2 font-medium uppercase tracking-widest">
-            Section 06 — Orchestrating the Outcomes
+          <h2 className="text-2xl font-black uppercase tracking-tighter text-foreground">
+            Professional Offerings
+          </h2>
+          <p className="text-xs text-muted-foreground/60 uppercase tracking-widest font-bold mt-1">
+            Orchestrate your solution architectures and specialized services
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-xs font-bold uppercase tracking-widest hover:bg-muted"
-          >
-            <RefreshCcw className="size-3 mr-2" />
-            Reset
-          </Button>
-          <Button
-            onClick={addSolution}
-            variant="outline"
-            className="border-primary/20 text-primary hover:bg-primary/5 font-bold uppercase tracking-widest text-[10px] px-6 rounded-lg transition-all"
-          >
-            <Plus className="size-3 mr-2" />
-            Add Project
-          </Button>
-        </div>
+        <form.Subscribe
+          selector={(state) => [state.canSubmit, state.isPristine]}
+        >
+          {([canSubmit, isPristine]) => (
+            <div className="flex items-center gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={isPristine || isSaving}
+                onClick={() => form.reset()}
+                className="text-[10px] font-bold uppercase tracking-widest h-8"
+              >
+                <RefreshCcw size={12} className="mr-2" />
+                Reset
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                disabled={!canSubmit || isSaving}
+                onClick={() => form.handleSubmit()}
+                className="bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-widest h-8 shadow-lg shadow-primary/20"
+              >
+                {isSaving ? (
+                  'Saving...'
+                ) : (
+                  <>
+                    <Save size={12} className="mr-2" />
+                    Save Solutions
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
+        </form.Subscribe>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 w-full">
-        {solutions.map((solution) => (
-          <Card
-            key={solution.id}
-            className={cn(
-              'group relative rounded-xl bg-transparent border border-border p-5 transition-all duration-500 overflow-hidden shadow-none',
-              expandedId === solution.id
-                ? 'col-span-full border-primary/20 shadow-2xl shadow-primary/5'
-                : 'hover:border-primary/10 hover:bg-primary/5',
-            )}
-          >
-            {/* Solution Icon & Title */}
-            <div className="flex items-start justify-between gap-4">
-              <div className="size-14 rounded-2xl bg-muted flex items-center justify-center text-primary group-hover:scale-105 group-hover:-rotate-3 transition-all duration-500">
-                <Rocket className="size-7" />
-              </div>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={(e) => removeSolution(solution.id, e)}
-                  title="Discard Solution"
-                  className="size-7 rounded-sm text-destructive/60 hover:text-destructive hover:bg-destructive/10 transition-all opacity-100 bg-background/50 backdrop-blur-sm shadow-sm border border-border/50"
-                >
-                  <Trash2 className="size-3.5" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setExpandedId(
-                      expandedId === solution.id ? null : solution.id,
+      <div className="space-y-6">
+        <form.Field name="items">
+          {(field) => (
+            <>
+              {solutions.isLoading ? (
+                [1, 2, 3].map((id) => {
+                  return (
+                    <Card
+                      key={`sol-skeleton-${id}`}
+                      className="bg-card/30 border border-border/50 p-6 relative group mb-4"
+                    >
+                      <div className="grid gap-8 lg:grid-cols-3 pl-6">
+                        <div className="space-y-4">
+                          <div className="space-y-2">
+                            <Skeleton className="h-3 w-24" />
+                            <Skeleton className="h-11 w-full" />
+                          </div>
+                          <div className="space-y-2">
+                            <Skeleton className="h-3 w-32" />
+                            <Skeleton className="h-11 w-full" />
+                          </div>
+                        </div>
+                        <div className="lg:col-span-2 space-y-4">
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <Skeleton className="h-3 w-48" />
+                              <Skeleton className="h-6 w-16" />
+                            </div>
+                            <Skeleton className="h-[100px] w-full" />
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <Skeleton className="h-3 w-12" />
+                            <Skeleton className="h-8 w-48" />
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+                  );
+                })
+              ) : (
+                <SortableList
+                  items={field.state.value}
+                  onReorder={handleReorder}
+                  renderItem={(solution) => {
+                    const index = field.state.value.findIndex(
+                      (s) => s.id === solution.id,
+                    );
+                    return (
+                      <Card className="bg-card/30 border border-border/50 p-6 relative group mb-4">
+                        <div className="absolute left-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing">
+                          <GripVertical className="size-4 text-muted-foreground/20" />
+                        </div>
+
+                        <div className="grid gap-8 lg:grid-cols-3 pl-6">
+                          <div className="space-y-4">
+                            <form.Field name={`items[${index}].title`}>
+                              {(subField) => (
+                                <div className="space-y-2">
+                                  <Label
+                                    htmlFor={`sol-title-${index}`}
+                                    className="text-[10px] font-bold uppercase tracking-widest text-primary/60"
+                                  >
+                                    Solution Title
+                                  </Label>
+                                  <div className="relative">
+                                    <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/40" />
+                                    <Input
+                                      id={`sol-title-${index}`}
+                                      name={`items[${index}].title`}
+                                      value={subField.state.value ?? ''}
+                                      onChange={(e) =>
+                                        subField.handleChange(e.target.value)
+                                      }
+                                      placeholder="Cloud Architecture Strategy"
+                                      className="pl-10 bg-transparent h-11 text-sm font-bold"
+                                    />
+                                  </div>
+                                </div>
+                              )}
+                            </form.Field>
+
+                            <form.Field name={`items[${index}].url`}>
+                              {(subField) => (
+                                <div className="space-y-2">
+                                  <Label
+                                    htmlFor={`sol-link-${index}`}
+                                    className="text-[10px] font-bold uppercase tracking-widest text-primary/60"
+                                  >
+                                    External Link (Optional)
+                                  </Label>
+                                  <div className="relative">
+                                    <Link className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/40" />
+                                    <Input
+                                      id={`sol-link-${index}`}
+                                      name={`items[${index}].url`}
+                                      value={subField.state.value ?? ''}
+                                      onChange={(e) =>
+                                        subField.handleChange(e.target.value)
+                                      }
+                                      placeholder="https://..."
+                                      className="pl-10 bg-transparent h-11 text-sm"
+                                    />
+                                  </div>
+                                </div>
+                              )}
+                            </form.Field>
+                          </div>
+
+                          <div className="lg:col-span-2 space-y-4">
+                            <form.Field name={`items[${index}].description`}>
+                              {(subField) => (
+                                <div className="space-y-2">
+                                  <div className="flex items-center justify-between">
+                                    <Label className="text-[10px] font-bold uppercase tracking-widest text-primary/60">
+                                      Narrative & Value Proposition
+                                    </Label>
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => removeSolution(index)}
+                                      className="h-6 text-[9px] font-bold uppercase tracking-widest text-muted-foreground/30 hover:text-destructive hover:bg-destructive/10"
+                                    >
+                                      <Trash2 size={12} className="mr-2" />
+                                      Remove
+                                    </Button>
+                                  </div>
+                                  <Textarea
+                                    id={`sol-desc-${index}`}
+                                    name={`items[${index}].description`}
+                                    value={subField.state.value ?? ''}
+                                    onChange={(e) =>
+                                      subField.handleChange(e.target.value)
+                                    }
+                                    placeholder="Describe the solution, methodology, and primary outcomes..."
+                                    className="bg-transparent min-h-[100px] text-sm resize-none leading-relaxed"
+                                  />
+                                </div>
+                              )}
+                            </form.Field>
+
+                            <form.Field name={`items[${index}].iconCode`}>
+                              {(subField) => (
+                                <div className="flex items-center gap-3">
+                                  <Label
+                                    htmlFor={`sol-icon-${index}`}
+                                    className="text-[9px] font-bold text-muted-foreground/50 uppercase tracking-wider whitespace-nowrap"
+                                  >
+                                    Icon ID
+                                  </Label>
+                                  <Input
+                                    id={`sol-icon-${index}`}
+                                    name={`items[${index}].iconCode`}
+                                    value={subField.state.value ?? ''}
+                                    onChange={(e) =>
+                                      subField.handleChange(e.target.value)
+                                    }
+                                    placeholder="lucide:briefcase"
+                                    className="bg-transparent h-8 text-[10px] w-48"
+                                  />
+                                </div>
+                              )}
+                            </form.Field>
+                          </div>
+                        </div>
+                      </Card>
                     );
                   }}
-                  className={cn(
-                    'size-7 rounded-sm transition-all',
-                    expandedId === solution.id
-                      ? 'bg-primary/20 text-primary opacity-100'
-                      : 'text-muted-foreground/40 hover:text-primary hover:bg-primary/5 opacity-100',
-                  )}
-                >
-                  {expandedId === solution.id ? (
-                    <ChevronUp className="size-3.5" />
-                  ) : (
-                    <ChevronDown className="size-3.5" />
-                  )}
-                </Button>
-              </div>
-            </div>
-
-            <div className="mt-5 space-y-3">
-              {expandedId === solution.id ? (
-                <Input
-                  value={solution.title}
-                  onChange={(e) =>
-                    updateSolution(solution.id, { title: e.target.value })
-                  }
-                  className="h-8 text-lg font-bold tracking-tight bg-transparent border-none p-0 focus-visible:ring-0 text-foreground"
                 />
-              ) : (
-                <h3 className="text-base font-bold tracking-tight text-foreground truncate">
-                  {solution.title}
-                </h3>
               )}
+            </>
+          )}
+        </form.Field>
 
-              <p
-                className={cn(
-                  'text-[13px] text-muted-foreground/60 leading-relaxed font-medium transition-all',
-                  expandedId === solution.id ? 'hidden' : 'line-clamp-2',
-                )}
-              >
-                {solution.description ||
-                  'No description provided yet. Orchestrate the success story...'}
-              </p>
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full h-16 border-dashed border-border/60 bg-transparent hover:bg-primary/5 hover:border-primary/40 group transition-all"
+          onClick={addSolution}
+        >
+          <div className="flex items-center gap-2">
+            <div className="size-6 rounded-full border border-dashed border-muted-foreground/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Plus size={14} className="text-muted-foreground/40" />
             </div>
-
-            {/* Expanded Editorial Mode */}
-            {expandedId === solution.id && (
-              <div className="mt-8 pt-8 border-t border-border space-y-8 animate-in slide-in-from-top-4 duration-500">
-                <div className="space-y-4">
-                  <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">
-                    Success Story Narrative
-                  </Label>
-                  <Textarea
-                    value={solution.description}
-                    onChange={(e) =>
-                      updateSolution(solution.id, {
-                        description: e.target.value,
-                      })
-                    }
-                    className="min-h-[160px] bg-transparent border-border rounded-lg p-4 text-sm leading-loose focus:ring-primary/20"
-                    placeholder="Describe the challenge, your solution, and the measurable outcome..."
-                  />
-                </div>
-
-                <div className="grid gap-8 md:grid-cols-2">
-                  <div className="space-y-4">
-                    <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">
-                      Reference URL / Case Study
-                    </Label>
-                    <div className="relative">
-                      <Globe className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/40" />
-                      <Input
-                        value={solution.url || ''}
-                        onChange={(e) =>
-                          updateSolution(solution.id, { url: e.target.value })
-                        }
-                        className="pl-10 bg-transparent border-border rounded-lg h-11"
-                        placeholder="https://..."
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">
-                      Visual Anchor
-                    </Label>
-                    <IconPicker
-                      value={solution.icon}
-                      onChange={(icon) => updateSolution(solution.id, { icon })}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {!expandedId && solution.url && (
-              <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
-                <a
-                  href={solution.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[10px] font-bold uppercase tracking-widest text-primary/60 hover:text-primary flex items-center gap-2 transition-colors"
-                >
-                  <ExternalLink className="size-3" />
-                  View Result
-                </a>
-                <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-                  Outcome Validated
-                </span>
-              </div>
-            )}
-          </Card>
-        ))}
-
-        {solutions.length === 0 && (
-          <Card className="col-span-full py-20 text-center rounded-[2rem] border-2 border-dashed border-border bg-transparent shadow-none">
-            <Rocket className="size-12 mx-auto text-muted-foreground/40 mb-4" />
-            <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground/60 italic">
-              No success stories archived yet
-            </p>
-            <Button
-              variant="ghost"
-              onClick={addSolution}
-              className="mt-4 text-primary font-bold uppercase tracking-widest text-[10px]"
-            >
-              Start Archiving
-            </Button>
-          </Card>
-        )}
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/40">
+              Add Professional Offering
+            </span>
+          </div>
+        </Button>
       </div>
     </div>
   );

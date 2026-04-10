@@ -1,304 +1,408 @@
-import {
-  Dribbble,
-  Facebook,
-  Github,
-  Globe,
-  Instagram,
-  Linkedin,
-  Mail,
-  MapPin,
-  Phone,
-  Plus,
-  RefreshCcw,
-  Trash2,
-  Twitch,
-  Twitter,
-  Youtube,
-} from 'lucide-react';
+import type { ContactData } from '@repo/appwrite-core';
+import { useForm } from '@tanstack/react-form';
+import { Mail, MapPin, Phone, Plus, Save, Trash2 } from 'lucide-react';
+import { useEffect, useMemo } from 'react';
 import { useCmsContext } from '../../context/cms-context';
-import type { SocialLink, SocialType } from '../../types/contact';
-import { SortableList } from '../common/sortable-list';
+import {
+  type ContactInput,
+  contactSchema,
+  type SocialLinkInput,
+} from '../../types/contact';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
-import { cn, generateId } from '@/lib/utils';
+import { Skeleton } from '@/components/ui/skeleton';
+import { generateId } from '@/lib/utils';
 
 /**
  * ContactForm (Constitution §XVII, §I)
- * Section 07: Communication Channels.
- * Connected to live cms-context for global contact orchestration.
+ * Section 07: Professional Outreach.
  */
 export function ContactForm() {
-  const { state, currentLocale, updateSection } = useCmsContext();
-  const formData = state.contact[currentLocale];
+  const { currentLocale, contact, saveSection, isSaving } = useCmsContext();
 
-  const handleChange = (data: typeof formData) => {
-    updateSection('contact', data);
-  };
+  const initialData = useMemo(() => {
+    const defaults = {
+      id: generateId(),
+      locale: currentLocale,
+      email: '',
+      phone: '',
+      location: '',
+      socials: [],
+    };
+    const data = (contact.data || {}) as Record<string, unknown>;
+    return {
+      ...defaults,
+      ...data,
+      socials:
+        (data.socials as SocialLinkInput[]) ||
+        (data.socialLinks as SocialLinkInput[]) ||
+        (data.social_links as SocialLinkInput[]) ||
+        [],
+    } as ContactInput;
+  }, [contact.data, currentLocale]);
+
+  const form = useForm({
+    defaultValues: initialData as ContactInput,
+    validators: {
+      // @ts-expect-error - TanStack Form depth limits (§XVII)
+      onChange: contactSchema,
+    },
+    onSubmit: async ({ value }) => {
+      await saveSection('contact', value as unknown as ContactData);
+    },
+  });
+
+  // Reactive reset when data arrives (§V)
+  useEffect(() => {
+    if (contact.data) {
+      form.reset(initialData as ContactInput);
+    }
+  }, [contact.data, form.reset, initialData]);
 
   const addSocial = () => {
-    const newSocial: SocialLink = {
-      id: generateId('social'),
-      type: 'github',
+    form.pushFieldValue('socials', {
+      id: generateId('soc'),
+      platform: '',
       url: '',
+      iconId: '',
       active: true,
-    };
-    handleChange({ ...formData, socials: [...formData.socials, newSocial] });
-  };
-
-  const removeSocial = (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    handleChange({
-      ...formData,
-      socials: formData.socials.filter((s) => s.id !== id),
+      sort: 0,
     });
   };
 
-  const updateSocial = (id: string, updates: Partial<SocialLink>) => {
-    handleChange({
-      ...formData,
-      socials: formData.socials.map((s) =>
-        s.id === id ? { ...s, ...updates } : s,
-      ),
-    });
+  const removeSocial = (index: number) => {
+    form.removeFieldValue('socials', index);
   };
 
-  const getSocialIcon = (type: SocialType) => {
-    const props = { className: 'size-5', fill: 'currentColor' };
-    switch (type) {
-      case 'github':
-        return <Github {...props} />;
-      case 'linkedin':
-        return <Linkedin {...props} />;
-      case 'twitter':
-        return <Twitter {...props} />;
-      case 'instagram':
-        return <Instagram {...props} />;
-      case 'facebook':
-        return <Facebook {...props} />;
-      case 'youtube':
-        return <Youtube {...props} />;
-      case 'twitch':
-        return <Twitch {...props} />;
-      case 'dribbble':
-        return <Dribbble {...props} />;
-      default:
-        return <Globe className="size-5" />;
-    }
-  };
+  if (contact.isLoading) {
+    return (
+      <div className="space-y-8">
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-4 w-64" />
+          </div>
+          <div className="flex gap-2">
+            <Skeleton className="h-8 w-20" />
+            <Skeleton className="h-8 w-32" />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[1, 2, 3].map((id) => (
+            <Skeleton
+              key={`contact-skel-${id}`}
+              className="h-24 w-full rounded-xl"
+            />
+          ))}
+        </div>
+        <div className="space-y-4">
+          <Skeleton className="h-6 w-32" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[1, 2, 3, 4].map((id) => (
+              <Skeleton
+                key={`social-skel-${id}`}
+                className="h-20 w-full rounded-xl"
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 w-full mb-8">
-      {/* Editorial Header */}
-      <div className="flex items-end justify-between border-b border-border pb-8">
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-extrabold tracking-tighter text-foreground font-display">
-            Contact{' '}
-            <span className="text-primary/40 font-medium">
-              / Communication Channels
-            </span>
-          </h1>
-          <p className="text-sm text-muted-foreground/60 mt-2 font-medium uppercase tracking-widest">
-            Section 07 — Orchestrating the Visual Orbit
+          <h2 className="text-2xl font-black uppercase tracking-tighter text-foreground">
+            Contact Channels
+          </h2>
+          <p className="text-xs text-muted-foreground/60 uppercase tracking-widest font-bold mt-1">
+            Orchestrate your professional outreach and social presence
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-xs font-bold uppercase tracking-widest hover:bg-muted"
-          >
-            <RefreshCcw className="size-3 mr-2" />
-            Reset
-          </Button>
-        </div>
+        <form.Subscribe
+          selector={(state) => [state.canSubmit, state.isPristine]}
+        >
+          {([canSubmit, isPristine]) => (
+            <div className="flex items-center gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={isPristine || isSaving}
+                onClick={() => form.reset()}
+                className="text-[10px] font-bold uppercase tracking-widest h-8"
+              >
+                Reset
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                disabled={!canSubmit || isSaving}
+                onClick={() => form.handleSubmit()}
+                className="bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-widest h-8 shadow-lg shadow-primary/20"
+              >
+                {isSaving ? (
+                  'Saving...'
+                ) : (
+                  <>
+                    <Save size={12} className="mr-2" />
+                    Save Channels
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
+        </form.Subscribe>
       </div>
 
       <div className="grid gap-8 lg:grid-cols-2">
-        {/* Core Contact Info */}
-        <div className="space-y-8">
-          <Card className="p-4 bg-transparent border border-border space-y-6 shadow-none rounded-lg">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground/40">
-              Reachability Grid
-            </h3>
-
+        {/* Core Channels */}
+        <div className="space-y-6">
+          {contact.isLoading ? (
             <div className="space-y-6">
-              <div className="space-y-3">
-                <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">
-                  Primary Email
-                </Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/40" />
-                  <Input
-                    value={formData.email}
-                    onChange={(e) =>
-                      handleChange({ ...formData, email: e.target.value })
-                    }
-                    className="pl-10 bg-transparent border-border h-11 rounded-lg w-full"
-                  />
-                </div>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-11 w-full" />
               </div>
-
-              <div className="space-y-3">
-                <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">
-                  Official Phone
-                </Label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/40" />
-                  <Input
-                    value={formData.phone}
-                    onChange={(e) =>
-                      handleChange({ ...formData, phone: e.target.value })
-                    }
-                    className="pl-10 bg-transparent border-border h-11 rounded-lg w-full"
-                  />
-                </div>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-11 w-full" />
               </div>
-
-              <div className="space-y-3">
-                <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">
-                  Base Location
-                </Label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/40" />
-                  <Input
-                    value={formData.location}
-                    onChange={(e) =>
-                      handleChange({ ...formData, location: e.target.value })
-                    }
-                    className="pl-10 bg-transparent border-border h-11 rounded-lg w-full"
-                  />
-                </div>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-11 w-full" />
               </div>
             </div>
-          </Card>
+          ) : (
+            <>
+              <form.Field name="email">
+                {(field) => (
+                  <div className="space-y-3">
+                    <Label
+                      htmlFor="contactEmail"
+                      className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60"
+                    >
+                      Primary Email
+                    </Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/40" />
+                      <Input
+                        id="contactEmail"
+                        name="email"
+                        value={field.state.value ?? ''}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="pl-10 bg-transparent border-border h-11"
+                      />
+                    </div>
+                  </div>
+                )}
+              </form.Field>
+
+              <form.Field name="phone">
+                {(field) => (
+                  <div className="space-y-3">
+                    <Label
+                      htmlFor="contactPhone"
+                      className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60"
+                    >
+                      Professional Line
+                    </Label>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/40" />
+                      <Input
+                        id="contactPhone"
+                        name="phone"
+                        value={field.state.value ?? ''}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="pl-10 bg-transparent border-border h-11"
+                      />
+                    </div>
+                  </div>
+                )}
+              </form.Field>
+
+              <form.Field name="location">
+                {(field) => (
+                  <div className="space-y-3">
+                    <Label
+                      htmlFor="contactLocation"
+                      className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60"
+                    >
+                      Geo Location
+                    </Label>
+                    <div className="relative">
+                      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/40" />
+                      <Input
+                        id="contactLocation"
+                        name="location"
+                        value={field.state.value ?? ''}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="pl-10 bg-transparent border-border h-11"
+                      />
+                    </div>
+                  </div>
+                )}
+              </form.Field>
+            </>
+          )}
         </div>
 
-        {/* Social Curation */}
-        <div className="space-y-8">
-          <Card className="p-4 bg-card border border-border space-y-6 shadow-none rounded-lg">
-            <div className="flex items-center justify-between">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground/40">
-                Social Presence
-              </h3>
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-8 border-primary/20 text-primary hover:bg-primary/5 transition-all text-[10px] font-bold uppercase tracking-widest"
-                onClick={addSocial}
-              >
-                <Plus className="size-3.5 mr-2" />
-                Add Link
-              </Button>
-            </div>
+        {/* Social Meta */}
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">
+              Social Presence
+            </Label>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={addSocial}
+              className="h-7 text-[9px] font-bold uppercase tracking-widest text-primary"
+            >
+              <Plus size={12} className="mr-1" />
+              Add Social
+            </Button>
+          </div>
 
-            <SortableList
-              items={formData.socials}
-              onReorder={(newSocials) =>
-                handleChange({ ...formData, socials: newSocials })
-              }
-              renderItem={(social) => (
-                <div className="flex items-start gap-4 w-full group/card transition-all">
-                  {/* Icon Block */}
-                  <div
-                    className={cn(
-                      'size-[76px] shrink-0 rounded-xl flex items-center justify-center transition-all',
-                      social.active
-                        ? 'bg-primary/10 text-primary'
-                        : 'bg-muted text-muted-foreground/40',
-                    )}
-                  >
-                    {getSocialIcon(social.type)}
-                  </div>
-
-                  <div className="flex-1 flex flex-col justify-between space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Select
-                        value={social.type}
-                        onValueChange={(val) =>
-                          updateSocial(social.id, { type: val as SocialType })
-                        }
-                      >
-                        <SelectTrigger className="h-6 min-h-0 bg-transparent border-none p-0 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 focus:ring-0 w-fit hover:text-primary transition-colors">
-                          <SelectValue placeholder="Type" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-background border-border">
-                          <SelectItem value="github">GitHub</SelectItem>
-                          <SelectItem value="linkedin">LinkedIn</SelectItem>
-                          <SelectItem value="twitter">Twitter</SelectItem>
-                          <SelectItem value="instagram">Instagram</SelectItem>
-                          <SelectItem value="facebook">Facebook</SelectItem>
-                          <SelectItem value="youtube">YouTube</SelectItem>
-                          <SelectItem value="twitch">Twitch</SelectItem>
-                          <SelectItem value="dribbble">Dribbble</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Separator className="flex-1 bg-border h-px" />
-                      <div className="flex items-center gap-2 px-1">
-                        <Checkbox
-                          id={`active-${social.id}`}
-                          checked={social.active}
-                          onCheckedChange={(checked) =>
-                            updateSocial(social.id, { active: !!checked })
-                          }
-                          className="rounded-sm size-4 border-primary/20 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
-                        />
-                        <Label
-                          htmlFor={`active-${social.id}`}
-                          className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground/40 cursor-pointer hover:text-primary transition-colors"
-                        >
-                          {social.active ? 'Visible' : 'Hidden'}
-                        </Label>
+          <form.Field name="socials">
+            {(field) => (
+              <div className="space-y-4">
+                {contact.isLoading ? (
+                  [1, 2, 3].map((id) => (
+                    <Card
+                      key={`social-skeleton-${id}`}
+                      className="bg-card/30 border border-border/50 p-4 relative group"
+                    >
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <div className="space-y-2">
+                          <Skeleton className="h-3 w-16" />
+                          <Skeleton className="h-9 w-full" />
+                        </div>
+                        <div className="space-y-2">
+                          <Skeleton className="h-3 w-20" />
+                          <Skeleton className="h-9 w-full" />
+                        </div>
                       </div>
-                    </div>
-
-                    <div className="flex gap-2">
-                      <Input
-                        value={social.url}
-                        onChange={(e) =>
-                          updateSocial(social.id, { url: e.target.value })
-                        }
-                        placeholder="https://..."
-                        className="h-9 bg-transparent border-border rounded-md text-xs w-full"
-                      />
-
-                      {/* Standardized Remove Icon visible by default */}
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={(e) => removeSocial(social.id, e)}
-                        className="size-9 shrink-0 rounded-md text-destructive/60 hover:text-destructive hover:bg-destructive/10 transition-all opacity-100 bg-background/50 shadow-sm border border-border/50"
-                        title="Discard Link"
+                      <div className="flex items-center justify-between mt-4">
+                        <div className="flex items-center gap-3">
+                          <Skeleton className="h-3 w-12" />
+                          <Skeleton className="h-8 w-32" />
+                        </div>
+                        <Skeleton className="h-8 w-24" />
+                      </div>
+                    </Card>
+                  ))
+                ) : (
+                  <>
+                    {field.state.value.map((link, index) => (
+                      <Card
+                        key={link.id}
+                        className="bg-card/30 border border-border/50 p-4 relative group"
                       >
-                        <Trash2 className="size-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              )}
-            />
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          <form.Field name={`socials[${index}].platform`}>
+                            {(subField) => (
+                              <div className="space-y-2">
+                                <Label
+                                  htmlFor={`social-platform-${index}`}
+                                  className="text-[9px] font-bold text-muted-foreground/50 uppercase tracking-wider"
+                                >
+                                  Platform
+                                </Label>
+                                <Input
+                                  id={`social-platform-${index}`}
+                                  name={`socials[${index}].platform`}
+                                  value={subField.state.value ?? ''}
+                                  onChange={(e) =>
+                                    subField.handleChange(e.target.value)
+                                  }
+                                  placeholder="e.g. LinkedIn"
+                                  className="bg-transparent h-9 text-xs"
+                                />
+                              </div>
+                            )}
+                          </form.Field>
 
-            {formData.socials.length === 0 && (
-              <Card className="text-center py-10 border-2 border-dashed border-border rounded-2xl bg-transparent shadow-none">
-                <Globe className="size-10 mx-auto text-muted-foreground/10 mb-4" />
-                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/20 italic">
-                  No social links curated
-                </p>
-              </Card>
+                          <form.Field name={`socials[${index}].url`}>
+                            {(subField) => (
+                              <div className="space-y-2">
+                                <Label
+                                  htmlFor={`social-url-${index}`}
+                                  className="text-[9px] font-bold text-muted-foreground/50 uppercase tracking-wider"
+                                >
+                                  Profile URL
+                                </Label>
+                                <Input
+                                  id={`social-url-${index}`}
+                                  name={`socials[${index}].url`}
+                                  value={subField.state.value ?? ''}
+                                  onChange={(e) =>
+                                    subField.handleChange(e.target.value)
+                                  }
+                                  placeholder="https://..."
+                                  className="bg-transparent h-9 text-xs"
+                                />
+                              </div>
+                            )}
+                          </form.Field>
+                        </div>
+
+                        <div className="flex items-center justify-between mt-4">
+                          <form.Field name={`socials[${index}].iconId`}>
+                            {(subField) => (
+                              <div className="flex items-center gap-3">
+                                <Label
+                                  htmlFor={`social-icon-${index}`}
+                                  className="text-[9px] font-bold text-muted-foreground/50 uppercase tracking-wider whitespace-nowrap"
+                                >
+                                  Icon ID
+                                </Label>
+                                <Input
+                                  id={`social-icon-${index}`}
+                                  name={`socials[${index}].iconId`}
+                                  value={subField.state.value ?? ''}
+                                  onChange={(e) =>
+                                    subField.handleChange(e.target.value)
+                                  }
+                                  placeholder="lucide:link"
+                                  className="bg-transparent h-8 text-[10px] w-32"
+                                />
+                              </div>
+                            )}
+                          </form.Field>
+
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removeSocial(index)}
+                            className="h-8 text-[9px] font-bold uppercase tracking-widest text-muted-foreground/30 hover:text-destructive hover:bg-destructive/10"
+                          >
+                            <Trash2 size={12} className="mr-2" />
+                            Remove
+                          </Button>
+                        </div>
+                      </Card>
+                    ))}
+
+                    {field.state.value.length === 0 && (
+                      <div className="h-32 border border-dashed border-border/60 rounded-lg flex items-center justify-center bg-card/10">
+                        <p className="text-[10px] text-muted-foreground/40 font-bold uppercase tracking-[0.2em]">
+                          No social links
+                        </p>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
             )}
-          </Card>
+          </form.Field>
         </div>
       </div>
     </div>

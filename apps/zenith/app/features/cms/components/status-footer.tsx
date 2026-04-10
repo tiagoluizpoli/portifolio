@@ -1,9 +1,6 @@
-import { Save } from 'lucide-react';
 import { useCmsContext } from '../context/cms-context';
 import { useMaturityAudit } from '../hooks/use-maturity-audit';
-import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 
@@ -14,14 +11,7 @@ import { cn } from '@/lib/utils';
  */
 export function CmsStatusFooter() {
   const { progress, status } = useMaturityAudit();
-  const {
-    currentLocale,
-    setLocale,
-    isSaving,
-    saveChanges,
-    isPublished,
-    setPublished,
-  } = useCmsContext();
+  const { currentLocale, setLocale } = useCmsContext();
 
   const isMature = progress === 100;
 
@@ -73,39 +63,7 @@ export function CmsStatusFooter() {
           </TabsList>
         </Tabs>
 
-        {/* SC-004: Bilingual Maturity Lock */}
-        <div className="flex items-center gap-3 border-l border-white/10 pl-6">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-            {isPublished ? 'Live' : 'Draft'}
-          </span>
-          <Switch
-            disabled={!isMature || isSaving}
-            checked={isPublished}
-            onCheckedChange={setPublished}
-            className="data-[state=checked]:bg-primary"
-            title={
-              !isMature
-                ? 'Requires 100% Maturity to Publish'
-                : 'Toggle Live Status'
-            }
-          />
-        </div>
-
-        {/* Global Save Execution */}
-        <Button
-          onClick={saveChanges}
-          disabled={isSaving}
-          className="bg-primary text-primary-foreground font-bold uppercase tracking-widest text-[10px] px-6 rounded-md shadow-md shadow-primary/20 hover:scale-105 transition-transform h-8 ml-2"
-        >
-          {isSaving ? (
-            'Synchronizing...'
-          ) : (
-            <>
-              <Save size={12} className="mr-2" />
-              Save Changes
-            </>
-          )}
-        </Button>
+        {/* Status indicator for Draft/Live would go here once integrated with domain */}
       </div>
     </footer>
   );
