@@ -9,7 +9,6 @@ import {
 } from '@dnd-kit/core';
 import {
   arrayMove,
-  rectSortingStrategy,
   SortableContext,
   type SortingStrategy,
   sortableKeyboardCoordinates,
@@ -20,8 +19,6 @@ import { CSS } from '@dnd-kit/utilities';
 import { GripVertical } from 'lucide-react';
 import type React from 'react';
 import { cn } from '@/lib/utils';
-
-export { rectSortingStrategy, verticalListSortingStrategy };
 
 interface SortableItemProps {
   id: string;

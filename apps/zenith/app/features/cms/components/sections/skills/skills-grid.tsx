@@ -1,5 +1,6 @@
+import { rectSortingStrategy } from '@dnd-kit/sortable';
 import type { Skill } from '@repo/appwrite-core/domain';
-import { rectSortingStrategy, SortableList } from '../../common/sortable-list';
+import { SortableList } from '../../common/sortable-list';
 import { SkillCard } from './skill-card';
 import type { SkillCategory } from './skills-filters';
 
