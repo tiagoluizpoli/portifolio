@@ -37,8 +37,14 @@ export class MetricSourceRepository
   }
 
   protected mapToModel(doc: Models.Document): MetricSource {
-    const { $id, ...data } = doc;
-    return { id: $id, ...data } as unknown as MetricSource;
+    const { $id, name, ...data } = doc as Models.Document & { name?: string };
+    const sourceData = data as Record<string, unknown>;
+    return {
+      id: $id,
+      title:
+        (name as string) || (sourceData.title as string) || 'Unknown Source',
+      ...data,
+    } as unknown as MetricSource;
   }
 }
 
@@ -71,6 +77,29 @@ export class MetricRepository
     } catch (error: unknown) {
       this.handleError(error);
       return [];
+    }
+  }
+
+  async findByParity(
+    aboutId: string,
+    locale: string,
+    internalCode: string,
+  ): Promise<ImpactMetric | null> {
+    try {
+      const response = await this.tables.listRows({
+        databaseId: this.databaseId,
+        tableId: this.tableId,
+        queries: [
+          Query.equal('aboutId', aboutId),
+          Query.equal('locale', locale),
+          Query.equal('internalCode', internalCode),
+        ],
+      });
+      if (response.total === 0) return null;
+      return this.mapToModel(response.rows[0] as unknown as Models.Document);
+    } catch (error: unknown) {
+      this.handleError(error);
+      return null;
     }
   }
 

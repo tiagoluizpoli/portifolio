@@ -20,4 +20,5 @@ export interface ImpactMetric {
   suffix?: string;
   sourceId: string;
   sourceKey?: string; // [NEW] Key for System Source telemetry
+  iconCode?: string; // [NEW] Round 4 Iconography Support
 }

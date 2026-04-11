@@ -6,3 +6,4 @@ export * from './cms/chapters/home.js';
 export * from './cms/chapters/metrics.js';
 export * from './repositories/interfaces.js';
 export * from './services/exception-mapper.js';
+export * from './services/metric-sync.service.js';

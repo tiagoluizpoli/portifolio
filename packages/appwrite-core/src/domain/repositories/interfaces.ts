@@ -79,8 +79,13 @@ export interface ISolutionRepository {
   save(locale: string, items: Solution[]): Promise<void>;
 }
 
-export interface IMetricRepository {
+export interface IMetricRepository extends IRepository<ImpactMetric> {
   getByLocale(aboutId: string, locale: string): Promise<ImpactMetric[]>;
+  findByParity(
+    aboutId: string,
+    locale: string,
+    internalCode: string,
+  ): Promise<ImpactMetric | null>;
   save(aboutId: string, locale: string, items: ImpactMetric[]): Promise<void>;
   deleteByInternalCode(internalCode: string): Promise<void>;
 }

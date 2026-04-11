@@ -8,6 +8,7 @@ import type {
   ImpactMetric,
   MetricSource,
 } from '../domain/cms/chapters/metrics.js';
+import { MetricSyncService } from '../domain/services/metric-sync.service.js';
 import { AboutRepository } from '../infrastructure/repositories/about.repository.js';
 import {
   SkillRepository,
@@ -36,8 +37,13 @@ export class CmsService {
   private metricSourceRepo: MetricSourceRepository;
   private contactRepo: ContactRepository;
   private storageRepo: StorageRepository;
+  private metricSyncService: MetricSyncService;
 
-  constructor(client: Client, databaseId: string) {
+  constructor(
+    client: Client,
+    databaseId: string,
+    locales: string[] = ['en', 'pt'],
+  ) {
     this.homeRepo = new HomeRepository(client, databaseId);
     this.aboutRepo = new AboutRepository(client, databaseId);
     this.historyRepo = new HistoryRepository(client, databaseId);
@@ -47,6 +53,7 @@ export class CmsService {
     this.metricSourceRepo = new MetricSourceRepository(client, databaseId);
     this.contactRepo = new ContactRepository(client, databaseId);
     this.storageRepo = new StorageRepository();
+    this.metricSyncService = new MetricSyncService(this.metricRepo, locales);
   }
 
   // --- Home ---
@@ -90,6 +97,10 @@ export class CmsService {
     const about = await this.aboutRepo.updateByLocale(locale, aboutDto);
     if (metrics) {
       await this.metricRepo.save(about.id, locale, metrics);
+      // Synchronize parity across locales (Round 4 Safeguard)
+      for (const metric of metrics) {
+        await this.metricSyncService.sync(about.id, metric);
+      }
     }
     return this.getAbout(locale);
   }
