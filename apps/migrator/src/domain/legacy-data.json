@@ -52,16 +52,28 @@
       "title": "About me",
       "description": "I am a committed and dedicated professional who is always eager to learn new things and continuously improve my skills. Development is not only work for me, it's my passion.",
       "info": [
-        { "name": "Nationality", "value": "Brazilian" },
-        { "name": "Languages", "value": "Portuguese, English" }
+        {
+          "name": "Nationality",
+          "value": "Brazilian"
+        },
+        {
+          "name": "Languages",
+          "value": "Portuguese, English"
+        }
       ]
     },
     "pt": {
       "title": "Sobre mim",
       "description": "Sou um profissional comprometido e dedicado, sempre disposto a aprender coisas novas e aprimorar minhas habilidades continuamente. Desenvolvimento não é apenas trabalho pra mim, é a minha paixão.",
       "info": [
-        { "name": "Nacionalidade", "value": "Brasileiro" },
-        { "name": "Idiomas", "value": "Português, Inglês" }
+        {
+          "name": "Nacionalidade",
+          "value": "Brasileiro"
+        },
+        {
+          "name": "Idiomas",
+          "value": "Português, Inglês"
+        }
       ]
     }
   },
@@ -72,7 +84,10 @@
         "en": "Senior Fullstack Analyst",
         "pt": "Analista Fullstack Senior"
       },
-      "duration": { "en": "2023 - Present", "pt": "2023 - Atualmente" },
+      "duration": {
+        "en": "2023 - Present",
+        "pt": "2023 - Atualmente"
+      },
       "sort": 1
     },
     {
@@ -110,32 +125,79 @@
         "en": "System development and analysis",
         "pt": "Análise e desenvolvimento de sistemas"
       },
-      "duration": { "en": "2024 - Present", "pt": "2024 - Atualmente" },
+      "duration": {
+        "en": "2024 - Present",
+        "pt": "2024 - Atualmente"
+      },
       "sort": 1
     }
   ],
   "skills": [
-    { "title": "node.js", "icon": "logos:nodejs-icon", "type": "backend" },
-    { "title": "express.js", "icon": "logos:express", "type": "backend" },
-    { "title": "fastify.js", "icon": "logos:fastify-icon", "type": "backend" },
-    { "title": "nest.js", "icon": "logos:nestjs", "type": "backend" },
-    { "title": ".net", "icon": "logos:dotnet", "type": "backend" },
-    { "title": "prisma", "icon": "logos:prisma", "type": "backend" },
-    { "title": "drizzle.js", "icon": "logos:drizzle-icon", "type": "backend" },
-    { "title": "postgresql", "icon": "logos:postgresql", "type": "backend" },
-    { "title": "Mysql", "icon": "logos:mysql", "type": "backend" },
+    {
+      "title": "node.js",
+      "icon": "logos:nodejs-icon",
+      "type": "backend"
+    },
+    {
+      "title": "express.js",
+      "icon": "logos:express",
+      "type": "backend"
+    },
+    {
+      "title": "fastify.js",
+      "icon": "logos:fastify-icon",
+      "type": "backend"
+    },
+    {
+      "title": "nest.js",
+      "icon": "logos:nestjs",
+      "type": "backend"
+    },
+    {
+      "title": ".net",
+      "icon": "logos:dotnet",
+      "type": "backend"
+    },
+    {
+      "title": "prisma",
+      "icon": "logos:prisma",
+      "type": "backend"
+    },
+    {
+      "title": "drizzle.js",
+      "icon": "logos:drizzle-icon",
+      "type": "backend"
+    },
+    {
+      "title": "postgresql",
+      "icon": "logos:postgresql",
+      "type": "backend"
+    },
+    {
+      "title": "Mysql",
+      "icon": "logos:mysql",
+      "type": "backend"
+    },
     {
       "title": "sql server",
       "icon": "logos:microsoft-sql-server",
       "type": "backend"
     },
-    { "title": "sqlite", "icon": "logos:sqlite", "type": "backend" },
+    {
+      "title": "sqlite",
+      "icon": "logos:sqlite",
+      "type": "backend"
+    },
     {
       "title": "amazon dynamodb",
       "icon": "logos:aws-dynamodb",
       "type": "backend"
     },
-    { "title": "aws", "icon": "logos:aws", "type": "fullstack" },
+    {
+      "title": "aws",
+      "icon": "logos:aws",
+      "type": "fullstack"
+    },
     {
       "title": "digital ocean",
       "icon": "logos:digital-ocean",
@@ -151,36 +213,116 @@
       "icon": "logos:typescript-icon",
       "type": "fullstack"
     },
-    { "title": "next.js", "icon": "logos:nextjs-icon", "type": "fullstack" },
-    { "title": "git", "icon": "logos:git-icon", "type": "fullstack" },
-    { "title": "html 5", "icon": "logos:html-5", "type": "frontend" },
-    { "title": "css 3", "icon": "logos:css-3", "type": "frontend" },
-    { "title": "javascript", "icon": "logos:javascript", "type": "frontend" },
-    { "title": "react.js", "icon": "logos:react", "type": "frontend" },
-    { "title": "vite.js", "icon": "logos:vitejs", "type": "frontend" },
+    {
+      "title": "next.js",
+      "icon": "logos:nextjs-icon",
+      "type": "fullstack"
+    },
+    {
+      "title": "git",
+      "icon": "logos:git-icon",
+      "type": "fullstack"
+    },
+    {
+      "title": "html 5",
+      "icon": "logos:html-5",
+      "type": "frontend"
+    },
+    {
+      "title": "css 3",
+      "icon": "logos:css-3",
+      "type": "frontend"
+    },
+    {
+      "title": "javascript",
+      "icon": "logos:javascript",
+      "type": "frontend"
+    },
+    {
+      "title": "react.js",
+      "icon": "logos:react",
+      "type": "frontend"
+    },
+    {
+      "title": "vite.js",
+      "icon": "logos:vitejs",
+      "type": "frontend"
+    },
     {
       "title": "tanstack query",
       "icon": "logos:react-query-icon",
       "type": "frontend"
     },
-    { "title": "Material UI", "icon": "logos:material-ui", "type": "frontend" },
-    { "title": "shadcn UI", "icon": "logos:shadcn-ui", "type": "frontend" },
+    {
+      "title": "Material UI",
+      "icon": "logos:material-ui",
+      "type": "frontend"
+    },
+    {
+      "title": "shadcn UI",
+      "icon": "logos:shadcn-ui",
+      "type": "frontend"
+    },
     {
       "title": "tailwind.css",
       "icon": "logos:tailwindcss-icon",
       "type": "frontend"
     },
-    { "title": "gitlab", "icon": "logos:gitlab", "type": "fullstack" },
-    { "title": "github", "icon": "logos:github-icon", "type": "fullstack" },
-    { "title": "bitbucket", "icon": "logos:bitbucket", "type": "fullstack" },
-    { "title": "firebase", "icon": "logos:firebase", "type": "backend" },
-    { "title": "vitest", "icon": "logos:vitest", "type": "fullstack" },
-    { "title": "axios.js", "icon": "logos:axios", "type": "fullstack" },
-    { "title": "s3 - storage", "icon": "logos:aws-s3", "type": "backend" },
-    { "title": "docker", "icon": "logos:docker-icon", "type": "backend" },
-    { "title": "ec2", "icon": "logos:aws-ec2", "type": "backend" },
-    { "title": "lambda", "icon": "logos:aws-lambda", "type": "backend" },
-    { "title": "Zod", "icon": "logos:zod", "type": "fullstack" }
+    {
+      "title": "gitlab",
+      "icon": "logos:gitlab",
+      "type": "fullstack"
+    },
+    {
+      "title": "github",
+      "icon": "logos:github-icon",
+      "type": "fullstack"
+    },
+    {
+      "title": "bitbucket",
+      "icon": "logos:bitbucket",
+      "type": "fullstack"
+    },
+    {
+      "title": "firebase",
+      "icon": "logos:firebase",
+      "type": "backend"
+    },
+    {
+      "title": "vitest",
+      "icon": "logos:vitest",
+      "type": "fullstack"
+    },
+    {
+      "title": "axios.js",
+      "icon": "logos:axios",
+      "type": "fullstack"
+    },
+    {
+      "title": "s3 - storage",
+      "icon": "logos:aws-s3",
+      "type": "backend"
+    },
+    {
+      "title": "docker",
+      "icon": "logos:docker-icon",
+      "type": "backend"
+    },
+    {
+      "title": "ec2",
+      "icon": "logos:aws-ec2",
+      "type": "backend"
+    },
+    {
+      "title": "lambda",
+      "icon": "logos:aws-lambda",
+      "type": "backend"
+    },
+    {
+      "title": "Zod",
+      "icon": "logos:zod",
+      "type": "fullstack"
+    }
   ],
   "solutions": [
     {
@@ -280,25 +422,25 @@
     {
       "label": "Total Commits",
       "value": "1576",
-      "sourceKey": "github_commits",
+      "sourceKey": "github-commits",
       "aboutId": "about-en"
     },
     {
       "label": "Total Repositories",
       "value": "87",
-      "sourceKey": "github_repos",
+      "sourceKey": "github-repos",
       "aboutId": "about-en"
     },
     {
       "label": "Cloud Functions",
       "value": "12",
-      "sourceKey": "appwrite_functions",
+      "sourceKey": "appwrite-functions",
       "aboutId": "about-en"
     },
     {
       "label": "Network Connections",
       "value": "500+",
-      "sourceKey": "linkedin_conns",
+      "sourceKey": "linkedin-conns",
       "aboutId": "about-en"
     }
   ]

@@ -17,6 +17,7 @@ async function seed() {
     const service = new CmsService(
       AppwriteProvider.client,
       config.APPWRITE_DATABASE_ID,
+      ['en', 'pt'],
     );
 
     const locales = ['en', 'pt'];
