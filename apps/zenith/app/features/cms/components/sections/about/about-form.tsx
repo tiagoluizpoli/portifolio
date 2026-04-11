@@ -1,6 +1,6 @@
 import { useForm } from '@tanstack/react-form';
-import { zodValidator } from '@tanstack/zod-form-adapter';
 import { Loader2 } from 'lucide-react';
+import { useEffect } from 'react';
 import { useCmsContext } from '../../../context/cms-context';
 import { useMetricSourcesQuery } from '../../../hooks/use-cms-queries';
 import { type AboutInput, aboutSchema } from '../../../types/about';
@@ -28,15 +28,27 @@ export function AboutForm() {
       content: '',
       metrics: [],
     }) as AboutInput,
-    validatorAdapter: zodValidator(),
     validators: {
-      // @ts-expect-error - TanStack Form depth limits (§XVII)
       onChange: aboutSchema,
     },
     onSubmit: async ({ value }) => {
       await saveSection('about', value);
     },
   });
+
+  // Synchronize form with server state after persistence (§XVII)
+  useEffect(() => {
+    if (about.data) {
+      form.reset(
+        (about.data || {
+          id: '',
+          locale: currentLocale,
+          content: '',
+          metrics: [],
+        }) as AboutInput,
+      );
+    }
+  }, [about.data, form.reset, currentLocale]);
 
   if (about.isLoading || sourcesLoading) {
     return (
@@ -48,9 +60,9 @@ export function AboutForm() {
 
   return (
     <TooltipProvider>
-      <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 w-full mb-8">
+      <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 w-full">
         {/* Editorial Header */}
-        <div className="flex items-end justify-between border-b border-border pb-8">
+        <div className="flex items-end justify-between border-b border-border pb-4">
           <div>
             <h1 className="text-4xl font-extrabold tracking-tighter text-foreground font-display">
               About{' '}
@@ -64,32 +76,38 @@ export function AboutForm() {
           </div>
 
           <form.Subscribe
-            selector={(state) => [state.canSubmit, state.isPristine]}
+            selector={(state) => {
+              console.log({ state });
+              return [state.canSubmit, state.isPristine];
+            }}
           >
-            {([canSubmit, isPristine]) => (
-              <div className="flex items-center gap-3">
-                <CmsDiscardButton
-                  isSaving={isSaving}
-                  isPristine={isPristine}
-                  onClick={() => form.reset()}
-                />
-                <CmsSaveButton
-                  isSaving={isSaving}
-                  canSubmit={canSubmit}
-                  onClick={() => form.handleSubmit()}
-                />
-              </div>
-            )}
+            {([canSubmit, isPristine]) => {
+              console.log({ canSubmit, isPristine });
+              return (
+                <div className="flex items-center gap-3">
+                  <CmsDiscardButton
+                    isSaving={isSaving}
+                    isPristine={isPristine}
+                    onClick={() => form.reset()}
+                  />
+                  <CmsSaveButton
+                    isSaving={isSaving}
+                    canSubmit={canSubmit && !isPristine}
+                    onClick={() => form.handleSubmit()}
+                  />
+                </div>
+              );
+            }}
           </form.Subscribe>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-3">
-          {/* Narrative Bio Area */}
-          <div className="lg:col-span-2 space-y-8">
-            <Card className="p-4 rounded-xl bg-transparent border border-border space-y-6 shadow-none">
+        <div className="grid gap-4 lg:grid-cols-3">
+          {/* Narrative Bio Area - Tight Padding */}
+          <div className="lg:col-span-2 space-y-4">
+            <Card className="rounded-xl bg-transparent border border-border space-y-4 shadow-none">
               <form.Field name="content">
                 {(field) => (
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <Label
                       htmlFor={field.name}
                       className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60"
@@ -102,7 +120,7 @@ export function AboutForm() {
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       placeholder="Tell your professional story..."
-                      className="min-h-[420px] bg-transparent border-border text-base font-medium leading-relaxed text-muted-foreground/80 rounded-lg focus-visible:ring-primary/20 resize-none font-sans"
+                      className="min-h-[420px] bg-transparent border-border text-base font-medium leading-relaxed text-muted-foreground/80 rounded-lg focus-visible:ring-primary/20 resize-none font-sans p-4"
                     />
                   </div>
                 )}
@@ -111,7 +129,7 @@ export function AboutForm() {
           </div>
 
           {/* Impact Metrics Sidebar */}
-          <div className="space-y-8">
+          <div className="space-y-4">
             <AboutMetrics
               form={form}
               sources={sources}
