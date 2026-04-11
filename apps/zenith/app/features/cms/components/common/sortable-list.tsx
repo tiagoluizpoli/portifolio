@@ -9,6 +9,7 @@ import {
 } from '@dnd-kit/core';
 import {
   arrayMove,
+  rectSortingStrategy,
   SortableContext,
   type SortingStrategy,
   sortableKeyboardCoordinates,
@@ -19,6 +20,8 @@ import { CSS } from '@dnd-kit/utilities';
 import { GripVertical } from 'lucide-react';
 import type React from 'react';
 import { cn } from '@/lib/utils';
+
+export { rectSortingStrategy, verticalListSortingStrategy };
 
 interface SortableItemProps {
   id: string;
@@ -99,7 +102,11 @@ export function SortableList<T extends { id: string }>({
   hideGrips = false,
 }: SortableListProps<T>) {
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),

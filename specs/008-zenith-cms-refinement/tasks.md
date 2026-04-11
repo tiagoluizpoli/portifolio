@@ -38,19 +38,21 @@ This project is executed in isolated **Verification Rounds**. Each round must be
 ---
 
 ## Phase 3: [US1] Global Skills & [US5] Solutions Grid (Round 3)
-**Goal**: High-density list refactor and link/level removal.
+**Goal**: High-density list refactor with Dialog-driven editing logic.
 
 | Round | Title | Core Objective | Status |
 | :--- | :--- | :--- | :--- |
-| **Round 1** | **Infrastructure (Infra)** | 'en-source' Skill globalization, Localized Solutions, Schema hardening, and Platforms. | DONE ✅ |
-| **Round 2** | **Global Shell (Global)** | "/portfolio-cms/" routing prefix and `CmsSaveButton` unification. | DONE ✅ |
-| **Round 3** | **Feature: Skills/Solutions** | Globalized Skill Grid and Localized Solution Grid refactor. | PENDING |
+| **Round 3** | **Feature: Skills/Solutions** | Read-Only Grid + Dialog Form Refactor. | DONE |
 
-- [ ] T016 [P] [US1] [US5] [TEST] [FE] Define interaction tests for Skills and Solutions grids (TC-FE-002, TC-FE-006, TC-FE-008).
-- [ ] T017 [US1] Refactor Skill List to high-density grid (compact cards, no mastery) in `apps/zenith/app/routes/portfolio-cms/skills.tsx`
-- [ ] T018 [P] Refactor Solution List to card-based grid (Localized preservation) in `apps/zenith/app/routes/portfolio-cms/solutions.tsx`
-- [ ] T019 [P] [US1] [US5] Integrate `IconPicker` for Skill and Solution thumbnails.
-- [ ] T020 [P] [US1] [US5] Integrate `CmsSaveButton` and implement manual `TanStack Form v12+` refactor if code > 300 lines.
+- [x] T016 [P] [US1] [US5] [TEST] [FE] Define interaction tests for Skills and Solutions grids.
+- [x] T016a [P] [INFRA] Purge `hard`, `soft`, and `tool` types from `Skill` domain model in `appwrite-core`.
+- [x] T017 [US1] Refactor Skill List to Read-Only high-density grid (compact cards, top badges).
+- [x] T018 [US1] Implement `SkillDialog` for Add/Edit lifecycle.
+- [x] T019 [US5] Refactor Solution List to Read-Only card grid with Edit/Delete actions.
+- [x] T020 [US5] Implement `SolutionDialog` for professional offerings.
+- [x] T021 [P] [US1] [US5] Integrate `IconPicker` inside Dialogs.
+- [x] T022 [P] [US1] [US5] Final cleanup (Remove Workspace filter, purge Optimization Tip).
+- [x] T023 Run `pnpm guard` to confirm zero regressions and architectural integrity.
 
 **Checkpoint**: Competencies and Solutions fully globalized/refactored.
 

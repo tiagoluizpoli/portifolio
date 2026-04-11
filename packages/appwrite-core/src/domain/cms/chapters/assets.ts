@@ -6,7 +6,7 @@
 export interface Skill {
   id: string;
   title: string;
-  type: 'frontend' | 'backend' | 'fullstack' | 'hard' | 'soft' | 'tool';
+  type: 'frontend' | 'backend' | 'fullstack';
   iconCode: string;
   iconId?: string;
   status: 'active' | 'archived';

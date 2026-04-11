@@ -7,7 +7,7 @@ import { z } from 'zod';
 export const skillSchema = z.object({
   id: z.string().min(1, 'ID is required'),
   title: z.string().min(1, 'Skill name is required'),
-  type: z.enum(['frontend', 'backend', 'fullstack', 'hard', 'soft', 'tool']),
+  type: z.enum(['frontend', 'backend', 'fullstack']),
   iconCode: z.string().min(1, 'Icon code is required'),
   iconId: z.string().optional(),
   status: z.enum(['active', 'archived']).default('active'),
