@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { AboutForm } from '@/features/cms/components/sections/about/about-form';
 
-export const Route = createFileRoute('/features/cms/about')({
+export const Route = createFileRoute('/portfolio-cms/about')({
   component: AboutSection,
 });
 

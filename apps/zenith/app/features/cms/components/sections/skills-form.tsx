@@ -9,7 +9,6 @@ import {
   Layers,
   Layout,
   Plus,
-  Save,
   Search,
   Server,
   Trash2,
@@ -17,6 +16,8 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import { useCmsContext } from '../../context/cms-context';
 import { type SkillsInput, skillsSchema } from '../../types/assets';
+import { CmsDiscardButton } from '../common/cms-discard-button';
+import { CmsSaveButton } from '../common/cms-save-button';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -154,32 +155,16 @@ export function SkillsForm() {
           >
             {([canSubmit, isPristine]) => (
               <>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  disabled={isPristine || isSaving}
+                <CmsDiscardButton
+                  isSaving={isSaving}
+                  isPristine={isPristine}
                   onClick={() => form.reset()}
-                  className="text-[10px] font-bold uppercase tracking-widest h-9"
-                >
-                  Discard Changes
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  disabled={!canSubmit || isSaving}
+                />
+                <CmsSaveButton
+                  isSaving={isSaving}
+                  canSubmit={canSubmit}
                   onClick={() => form.handleSubmit()}
-                  className="bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-widest h-9 shadow-lg shadow-primary/20"
-                >
-                  {isSaving ? (
-                    'Synchronizing...'
-                  ) : (
-                    <>
-                      <Save size={12} className="mr-2" />
-                      Save Stack
-                    </>
-                  )}
-                </Button>
+                />
               </>
             )}
           </form.Subscribe>

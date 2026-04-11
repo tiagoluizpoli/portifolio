@@ -25,12 +25,13 @@ This project is executed in isolated **Verification Rounds**. Each round must be
 ## Phase 2: Global Shell & Round 2 UI Identity
 **Goal**: Transition to "Portfolio CMS" branding and routing partition.
 
-- [ ] T010 [P] Global search/replace "Portfolio Manager" -> "Portfolio CMS" in `apps/zenith/app/locales/`
-- [ ] T011 Update Sidebar and Nav labels in `apps/zenith/app/components/layout/sidebar.tsx`
-- [ ] T012 [P] Create unified `CmsSaveButton` atomic component in `apps/zenith/app/features/cms/components/common/CmsSaveButton.tsx`
-- [ ] T013 Update `use-maturity-audit.ts` to reflect the new Portfolio CMS naming and structure in `apps/zenith/app/features/cms/hooks/use-maturity-audit.ts`
-- [ ] T014 [P] Refactor route structure to use `/portfolio-cms/` prefix in `apps/zenith/app/routes/` (directory restructure)
-- [ ] T015 [TEST] [FE] Verify CMS routing partition and Navigation (TC-E2E-003) in `apps/zenith/tests/e2e/routing.spec.ts`
+- [x] T010 [P] Global search/replace "Portfolio Manager" -> "Portfolio CMS" in `apps/zenith/app/locales/`
+- [x] T011 Update Sidebar and Nav labels in `apps/zenith/app/components/layout/sidebar.tsx`
+- [x] T012 [P] Create unified `CmsSaveButton` atomic component in `apps/zenith/app/features/cms/components/common/cms-save-button.tsx`
+- [x] T013 Update `use-maturity-audit.ts` to reflect the new Portfolio CMS naming and structure in `apps/zenith/app/features/cms/hooks/use-maturity-audit.ts`
+- [x] T014 [P] Refactor route structure to use `/portfolio-cms/` prefix in `apps/zenith/app/routes/` (directory restructure)
+- [x] T015 [TEST] [FE] Verify CMS routing partition and Navigation (TC-E2E-003) via `pnpm guard`
+- [x] T015a [P] Implement and integrate `CmsDiscardButton` for persistence symmetry
 
 **Checkpoint**: Portfolio CMS Shell active.
 
@@ -42,7 +43,7 @@ This project is executed in isolated **Verification Rounds**. Each round must be
 | Round | Title | Core Objective | Status |
 | :--- | :--- | :--- | :--- |
 | **Round 1** | **Infrastructure (Infra)** | 'en-source' Skill globalization, Localized Solutions, Schema hardening, and Platforms. | DONE ✅ |
-| **Round 2** | **Global Shell (Global)** | "/portfolio-cms/" routing prefix and `CmsSaveButton` unification. | PENDING |
+| **Round 2** | **Global Shell (Global)** | "/portfolio-cms/" routing prefix and `CmsSaveButton` unification. | DONE ✅ |
 | **Round 3** | **Feature: Skills/Solutions** | Globalized Skill Grid and Localized Solution Grid refactor. | PENDING |
 
 - [ ] T016 [P] [US1] [US5] [TEST] [FE] Define interaction tests for Skills and Solutions grids (TC-FE-002, TC-FE-006, TC-FE-008).

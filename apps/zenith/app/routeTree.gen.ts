@@ -10,22 +10,27 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as PortfolioCmsRouteImport } from './routes/portfolio-cms'
 import { Route as ConnectionLostRouteImport } from './routes/connection-lost'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as FeaturesCmsRouteImport } from './routes/features/cms'
+import { Route as PortfolioCmsIndexRouteImport } from './routes/portfolio-cms/index'
+import { Route as PortfolioCmsSolutionsRouteImport } from './routes/portfolio-cms/solutions'
+import { Route as PortfolioCmsSkillsRouteImport } from './routes/portfolio-cms/skills'
+import { Route as PortfolioCmsHomeRouteImport } from './routes/portfolio-cms/home'
+import { Route as PortfolioCmsExperienceRouteImport } from './routes/portfolio-cms/experience'
+import { Route as PortfolioCmsEducationRouteImport } from './routes/portfolio-cms/education'
+import { Route as PortfolioCmsContactRouteImport } from './routes/portfolio-cms/contact'
+import { Route as PortfolioCmsAboutRouteImport } from './routes/portfolio-cms/about'
 import { Route as ErrorStartupRouteImport } from './routes/error/startup'
-import { Route as FeaturesCmsIndexRouteImport } from './routes/features/cms/index'
-import { Route as FeaturesCmsSolutionsRouteImport } from './routes/features/cms/solutions'
-import { Route as FeaturesCmsSkillsRouteImport } from './routes/features/cms/skills'
-import { Route as FeaturesCmsHomeRouteImport } from './routes/features/cms/home'
-import { Route as FeaturesCmsExperienceRouteImport } from './routes/features/cms/experience'
-import { Route as FeaturesCmsEducationRouteImport } from './routes/features/cms/education'
-import { Route as FeaturesCmsContactRouteImport } from './routes/features/cms/contact'
-import { Route as FeaturesCmsAboutRouteImport } from './routes/features/cms/about'
 
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortfolioCmsRoute = PortfolioCmsRouteImport.update({
+  id: '/portfolio-cms',
+  path: '/portfolio-cms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConnectionLostRoute = ConnectionLostRouteImport.update({
@@ -38,155 +43,150 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FeaturesCmsRoute = FeaturesCmsRouteImport.update({
-  id: '/features/cms',
-  path: '/features/cms',
-  getParentRoute: () => rootRouteImport,
+const PortfolioCmsIndexRoute = PortfolioCmsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PortfolioCmsRoute,
+} as any)
+const PortfolioCmsSolutionsRoute = PortfolioCmsSolutionsRouteImport.update({
+  id: '/solutions',
+  path: '/solutions',
+  getParentRoute: () => PortfolioCmsRoute,
+} as any)
+const PortfolioCmsSkillsRoute = PortfolioCmsSkillsRouteImport.update({
+  id: '/skills',
+  path: '/skills',
+  getParentRoute: () => PortfolioCmsRoute,
+} as any)
+const PortfolioCmsHomeRoute = PortfolioCmsHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => PortfolioCmsRoute,
+} as any)
+const PortfolioCmsExperienceRoute = PortfolioCmsExperienceRouteImport.update({
+  id: '/experience',
+  path: '/experience',
+  getParentRoute: () => PortfolioCmsRoute,
+} as any)
+const PortfolioCmsEducationRoute = PortfolioCmsEducationRouteImport.update({
+  id: '/education',
+  path: '/education',
+  getParentRoute: () => PortfolioCmsRoute,
+} as any)
+const PortfolioCmsContactRoute = PortfolioCmsContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => PortfolioCmsRoute,
+} as any)
+const PortfolioCmsAboutRoute = PortfolioCmsAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => PortfolioCmsRoute,
 } as any)
 const ErrorStartupRoute = ErrorStartupRouteImport.update({
   id: '/error/startup',
   path: '/error/startup',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FeaturesCmsIndexRoute = FeaturesCmsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => FeaturesCmsRoute,
-} as any)
-const FeaturesCmsSolutionsRoute = FeaturesCmsSolutionsRouteImport.update({
-  id: '/solutions',
-  path: '/solutions',
-  getParentRoute: () => FeaturesCmsRoute,
-} as any)
-const FeaturesCmsSkillsRoute = FeaturesCmsSkillsRouteImport.update({
-  id: '/skills',
-  path: '/skills',
-  getParentRoute: () => FeaturesCmsRoute,
-} as any)
-const FeaturesCmsHomeRoute = FeaturesCmsHomeRouteImport.update({
-  id: '/home',
-  path: '/home',
-  getParentRoute: () => FeaturesCmsRoute,
-} as any)
-const FeaturesCmsExperienceRoute = FeaturesCmsExperienceRouteImport.update({
-  id: '/experience',
-  path: '/experience',
-  getParentRoute: () => FeaturesCmsRoute,
-} as any)
-const FeaturesCmsEducationRoute = FeaturesCmsEducationRouteImport.update({
-  id: '/education',
-  path: '/education',
-  getParentRoute: () => FeaturesCmsRoute,
-} as any)
-const FeaturesCmsContactRoute = FeaturesCmsContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => FeaturesCmsRoute,
-} as any)
-const FeaturesCmsAboutRoute = FeaturesCmsAboutRouteImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => FeaturesCmsRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/connection-lost': typeof ConnectionLostRoute
+  '/portfolio-cms': typeof PortfolioCmsRouteWithChildren
   '/settings': typeof SettingsRoute
   '/error/startup': typeof ErrorStartupRoute
-  '/features/cms': typeof FeaturesCmsRouteWithChildren
-  '/features/cms/about': typeof FeaturesCmsAboutRoute
-  '/features/cms/contact': typeof FeaturesCmsContactRoute
-  '/features/cms/education': typeof FeaturesCmsEducationRoute
-  '/features/cms/experience': typeof FeaturesCmsExperienceRoute
-  '/features/cms/home': typeof FeaturesCmsHomeRoute
-  '/features/cms/skills': typeof FeaturesCmsSkillsRoute
-  '/features/cms/solutions': typeof FeaturesCmsSolutionsRoute
-  '/features/cms/': typeof FeaturesCmsIndexRoute
+  '/portfolio-cms/about': typeof PortfolioCmsAboutRoute
+  '/portfolio-cms/contact': typeof PortfolioCmsContactRoute
+  '/portfolio-cms/education': typeof PortfolioCmsEducationRoute
+  '/portfolio-cms/experience': typeof PortfolioCmsExperienceRoute
+  '/portfolio-cms/home': typeof PortfolioCmsHomeRoute
+  '/portfolio-cms/skills': typeof PortfolioCmsSkillsRoute
+  '/portfolio-cms/solutions': typeof PortfolioCmsSolutionsRoute
+  '/portfolio-cms/': typeof PortfolioCmsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/connection-lost': typeof ConnectionLostRoute
   '/settings': typeof SettingsRoute
   '/error/startup': typeof ErrorStartupRoute
-  '/features/cms/about': typeof FeaturesCmsAboutRoute
-  '/features/cms/contact': typeof FeaturesCmsContactRoute
-  '/features/cms/education': typeof FeaturesCmsEducationRoute
-  '/features/cms/experience': typeof FeaturesCmsExperienceRoute
-  '/features/cms/home': typeof FeaturesCmsHomeRoute
-  '/features/cms/skills': typeof FeaturesCmsSkillsRoute
-  '/features/cms/solutions': typeof FeaturesCmsSolutionsRoute
-  '/features/cms': typeof FeaturesCmsIndexRoute
+  '/portfolio-cms/about': typeof PortfolioCmsAboutRoute
+  '/portfolio-cms/contact': typeof PortfolioCmsContactRoute
+  '/portfolio-cms/education': typeof PortfolioCmsEducationRoute
+  '/portfolio-cms/experience': typeof PortfolioCmsExperienceRoute
+  '/portfolio-cms/home': typeof PortfolioCmsHomeRoute
+  '/portfolio-cms/skills': typeof PortfolioCmsSkillsRoute
+  '/portfolio-cms/solutions': typeof PortfolioCmsSolutionsRoute
+  '/portfolio-cms': typeof PortfolioCmsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/connection-lost': typeof ConnectionLostRoute
+  '/portfolio-cms': typeof PortfolioCmsRouteWithChildren
   '/settings': typeof SettingsRoute
   '/error/startup': typeof ErrorStartupRoute
-  '/features/cms': typeof FeaturesCmsRouteWithChildren
-  '/features/cms/about': typeof FeaturesCmsAboutRoute
-  '/features/cms/contact': typeof FeaturesCmsContactRoute
-  '/features/cms/education': typeof FeaturesCmsEducationRoute
-  '/features/cms/experience': typeof FeaturesCmsExperienceRoute
-  '/features/cms/home': typeof FeaturesCmsHomeRoute
-  '/features/cms/skills': typeof FeaturesCmsSkillsRoute
-  '/features/cms/solutions': typeof FeaturesCmsSolutionsRoute
-  '/features/cms/': typeof FeaturesCmsIndexRoute
+  '/portfolio-cms/about': typeof PortfolioCmsAboutRoute
+  '/portfolio-cms/contact': typeof PortfolioCmsContactRoute
+  '/portfolio-cms/education': typeof PortfolioCmsEducationRoute
+  '/portfolio-cms/experience': typeof PortfolioCmsExperienceRoute
+  '/portfolio-cms/home': typeof PortfolioCmsHomeRoute
+  '/portfolio-cms/skills': typeof PortfolioCmsSkillsRoute
+  '/portfolio-cms/solutions': typeof PortfolioCmsSolutionsRoute
+  '/portfolio-cms/': typeof PortfolioCmsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/connection-lost'
+    | '/portfolio-cms'
     | '/settings'
     | '/error/startup'
-    | '/features/cms'
-    | '/features/cms/about'
-    | '/features/cms/contact'
-    | '/features/cms/education'
-    | '/features/cms/experience'
-    | '/features/cms/home'
-    | '/features/cms/skills'
-    | '/features/cms/solutions'
-    | '/features/cms/'
+    | '/portfolio-cms/about'
+    | '/portfolio-cms/contact'
+    | '/portfolio-cms/education'
+    | '/portfolio-cms/experience'
+    | '/portfolio-cms/home'
+    | '/portfolio-cms/skills'
+    | '/portfolio-cms/solutions'
+    | '/portfolio-cms/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/connection-lost'
     | '/settings'
     | '/error/startup'
-    | '/features/cms/about'
-    | '/features/cms/contact'
-    | '/features/cms/education'
-    | '/features/cms/experience'
-    | '/features/cms/home'
-    | '/features/cms/skills'
-    | '/features/cms/solutions'
-    | '/features/cms'
+    | '/portfolio-cms/about'
+    | '/portfolio-cms/contact'
+    | '/portfolio-cms/education'
+    | '/portfolio-cms/experience'
+    | '/portfolio-cms/home'
+    | '/portfolio-cms/skills'
+    | '/portfolio-cms/solutions'
+    | '/portfolio-cms'
   id:
     | '__root__'
     | '/'
     | '/connection-lost'
+    | '/portfolio-cms'
     | '/settings'
     | '/error/startup'
-    | '/features/cms'
-    | '/features/cms/about'
-    | '/features/cms/contact'
-    | '/features/cms/education'
-    | '/features/cms/experience'
-    | '/features/cms/home'
-    | '/features/cms/skills'
-    | '/features/cms/solutions'
-    | '/features/cms/'
+    | '/portfolio-cms/about'
+    | '/portfolio-cms/contact'
+    | '/portfolio-cms/education'
+    | '/portfolio-cms/experience'
+    | '/portfolio-cms/home'
+    | '/portfolio-cms/skills'
+    | '/portfolio-cms/solutions'
+    | '/portfolio-cms/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ConnectionLostRoute: typeof ConnectionLostRoute
+  PortfolioCmsRoute: typeof PortfolioCmsRouteWithChildren
   SettingsRoute: typeof SettingsRoute
   ErrorStartupRoute: typeof ErrorStartupRoute
-  FeaturesCmsRoute: typeof FeaturesCmsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -196,6 +196,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portfolio-cms': {
+      id: '/portfolio-cms'
+      path: '/portfolio-cms'
+      fullPath: '/portfolio-cms'
+      preLoaderRoute: typeof PortfolioCmsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/connection-lost': {
@@ -212,12 +219,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/features/cms': {
-      id: '/features/cms'
-      path: '/features/cms'
-      fullPath: '/features/cms'
-      preLoaderRoute: typeof FeaturesCmsRouteImport
-      parentRoute: typeof rootRouteImport
+    '/portfolio-cms/': {
+      id: '/portfolio-cms/'
+      path: '/'
+      fullPath: '/portfolio-cms/'
+      preLoaderRoute: typeof PortfolioCmsIndexRouteImport
+      parentRoute: typeof PortfolioCmsRoute
+    }
+    '/portfolio-cms/solutions': {
+      id: '/portfolio-cms/solutions'
+      path: '/solutions'
+      fullPath: '/portfolio-cms/solutions'
+      preLoaderRoute: typeof PortfolioCmsSolutionsRouteImport
+      parentRoute: typeof PortfolioCmsRoute
+    }
+    '/portfolio-cms/skills': {
+      id: '/portfolio-cms/skills'
+      path: '/skills'
+      fullPath: '/portfolio-cms/skills'
+      preLoaderRoute: typeof PortfolioCmsSkillsRouteImport
+      parentRoute: typeof PortfolioCmsRoute
+    }
+    '/portfolio-cms/home': {
+      id: '/portfolio-cms/home'
+      path: '/home'
+      fullPath: '/portfolio-cms/home'
+      preLoaderRoute: typeof PortfolioCmsHomeRouteImport
+      parentRoute: typeof PortfolioCmsRoute
+    }
+    '/portfolio-cms/experience': {
+      id: '/portfolio-cms/experience'
+      path: '/experience'
+      fullPath: '/portfolio-cms/experience'
+      preLoaderRoute: typeof PortfolioCmsExperienceRouteImport
+      parentRoute: typeof PortfolioCmsRoute
+    }
+    '/portfolio-cms/education': {
+      id: '/portfolio-cms/education'
+      path: '/education'
+      fullPath: '/portfolio-cms/education'
+      preLoaderRoute: typeof PortfolioCmsEducationRouteImport
+      parentRoute: typeof PortfolioCmsRoute
+    }
+    '/portfolio-cms/contact': {
+      id: '/portfolio-cms/contact'
+      path: '/contact'
+      fullPath: '/portfolio-cms/contact'
+      preLoaderRoute: typeof PortfolioCmsContactRouteImport
+      parentRoute: typeof PortfolioCmsRoute
+    }
+    '/portfolio-cms/about': {
+      id: '/portfolio-cms/about'
+      path: '/about'
+      fullPath: '/portfolio-cms/about'
+      preLoaderRoute: typeof PortfolioCmsAboutRouteImport
+      parentRoute: typeof PortfolioCmsRoute
     }
     '/error/startup': {
       id: '/error/startup'
@@ -226,97 +282,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ErrorStartupRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/features/cms/': {
-      id: '/features/cms/'
-      path: '/'
-      fullPath: '/features/cms/'
-      preLoaderRoute: typeof FeaturesCmsIndexRouteImport
-      parentRoute: typeof FeaturesCmsRoute
-    }
-    '/features/cms/solutions': {
-      id: '/features/cms/solutions'
-      path: '/solutions'
-      fullPath: '/features/cms/solutions'
-      preLoaderRoute: typeof FeaturesCmsSolutionsRouteImport
-      parentRoute: typeof FeaturesCmsRoute
-    }
-    '/features/cms/skills': {
-      id: '/features/cms/skills'
-      path: '/skills'
-      fullPath: '/features/cms/skills'
-      preLoaderRoute: typeof FeaturesCmsSkillsRouteImport
-      parentRoute: typeof FeaturesCmsRoute
-    }
-    '/features/cms/home': {
-      id: '/features/cms/home'
-      path: '/home'
-      fullPath: '/features/cms/home'
-      preLoaderRoute: typeof FeaturesCmsHomeRouteImport
-      parentRoute: typeof FeaturesCmsRoute
-    }
-    '/features/cms/experience': {
-      id: '/features/cms/experience'
-      path: '/experience'
-      fullPath: '/features/cms/experience'
-      preLoaderRoute: typeof FeaturesCmsExperienceRouteImport
-      parentRoute: typeof FeaturesCmsRoute
-    }
-    '/features/cms/education': {
-      id: '/features/cms/education'
-      path: '/education'
-      fullPath: '/features/cms/education'
-      preLoaderRoute: typeof FeaturesCmsEducationRouteImport
-      parentRoute: typeof FeaturesCmsRoute
-    }
-    '/features/cms/contact': {
-      id: '/features/cms/contact'
-      path: '/contact'
-      fullPath: '/features/cms/contact'
-      preLoaderRoute: typeof FeaturesCmsContactRouteImport
-      parentRoute: typeof FeaturesCmsRoute
-    }
-    '/features/cms/about': {
-      id: '/features/cms/about'
-      path: '/about'
-      fullPath: '/features/cms/about'
-      preLoaderRoute: typeof FeaturesCmsAboutRouteImport
-      parentRoute: typeof FeaturesCmsRoute
-    }
   }
 }
 
-interface FeaturesCmsRouteChildren {
-  FeaturesCmsAboutRoute: typeof FeaturesCmsAboutRoute
-  FeaturesCmsContactRoute: typeof FeaturesCmsContactRoute
-  FeaturesCmsEducationRoute: typeof FeaturesCmsEducationRoute
-  FeaturesCmsExperienceRoute: typeof FeaturesCmsExperienceRoute
-  FeaturesCmsHomeRoute: typeof FeaturesCmsHomeRoute
-  FeaturesCmsSkillsRoute: typeof FeaturesCmsSkillsRoute
-  FeaturesCmsSolutionsRoute: typeof FeaturesCmsSolutionsRoute
-  FeaturesCmsIndexRoute: typeof FeaturesCmsIndexRoute
+interface PortfolioCmsRouteChildren {
+  PortfolioCmsAboutRoute: typeof PortfolioCmsAboutRoute
+  PortfolioCmsContactRoute: typeof PortfolioCmsContactRoute
+  PortfolioCmsEducationRoute: typeof PortfolioCmsEducationRoute
+  PortfolioCmsExperienceRoute: typeof PortfolioCmsExperienceRoute
+  PortfolioCmsHomeRoute: typeof PortfolioCmsHomeRoute
+  PortfolioCmsSkillsRoute: typeof PortfolioCmsSkillsRoute
+  PortfolioCmsSolutionsRoute: typeof PortfolioCmsSolutionsRoute
+  PortfolioCmsIndexRoute: typeof PortfolioCmsIndexRoute
 }
 
-const FeaturesCmsRouteChildren: FeaturesCmsRouteChildren = {
-  FeaturesCmsAboutRoute: FeaturesCmsAboutRoute,
-  FeaturesCmsContactRoute: FeaturesCmsContactRoute,
-  FeaturesCmsEducationRoute: FeaturesCmsEducationRoute,
-  FeaturesCmsExperienceRoute: FeaturesCmsExperienceRoute,
-  FeaturesCmsHomeRoute: FeaturesCmsHomeRoute,
-  FeaturesCmsSkillsRoute: FeaturesCmsSkillsRoute,
-  FeaturesCmsSolutionsRoute: FeaturesCmsSolutionsRoute,
-  FeaturesCmsIndexRoute: FeaturesCmsIndexRoute,
+const PortfolioCmsRouteChildren: PortfolioCmsRouteChildren = {
+  PortfolioCmsAboutRoute: PortfolioCmsAboutRoute,
+  PortfolioCmsContactRoute: PortfolioCmsContactRoute,
+  PortfolioCmsEducationRoute: PortfolioCmsEducationRoute,
+  PortfolioCmsExperienceRoute: PortfolioCmsExperienceRoute,
+  PortfolioCmsHomeRoute: PortfolioCmsHomeRoute,
+  PortfolioCmsSkillsRoute: PortfolioCmsSkillsRoute,
+  PortfolioCmsSolutionsRoute: PortfolioCmsSolutionsRoute,
+  PortfolioCmsIndexRoute: PortfolioCmsIndexRoute,
 }
 
-const FeaturesCmsRouteWithChildren = FeaturesCmsRoute._addFileChildren(
-  FeaturesCmsRouteChildren,
+const PortfolioCmsRouteWithChildren = PortfolioCmsRoute._addFileChildren(
+  PortfolioCmsRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ConnectionLostRoute: ConnectionLostRoute,
+  PortfolioCmsRoute: PortfolioCmsRouteWithChildren,
   SettingsRoute: SettingsRoute,
   ErrorStartupRoute: ErrorStartupRoute,
-  FeaturesCmsRoute: FeaturesCmsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

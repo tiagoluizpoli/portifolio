@@ -24,9 +24,9 @@ import { cn } from '@/lib/utils';
 
 const navigations = [
   { label: 'Dashboard', icon: LayoutDashboard, to: '/' },
-  { label: 'Portfolio Manager', icon: Briefcase, to: '/features/cms' },
-  { label: 'Blog', icon: BookOpen, to: '/cms/blog', wip: true },
-  { label: 'Reports', icon: PieChart, to: '/cms/reports', wip: true },
+  { label: 'Portfolio CMS', icon: Briefcase, to: '/portfolio-cms' },
+  { label: 'Blog', icon: BookOpen, to: '/blog', wip: true },
+  { label: 'Reports', icon: PieChart, to: '/reports', wip: true },
 ];
 
 const systemNav = [
@@ -51,7 +51,7 @@ export function AppSidebar() {
               Zenith Hub
             </span>
             <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-primary/60 leading-none">
-              Portfolio Management
+              Portfolio CMS
             </span>
           </div>
         </div>

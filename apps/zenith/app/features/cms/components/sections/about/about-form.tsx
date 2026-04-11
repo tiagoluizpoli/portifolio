@@ -1,11 +1,12 @@
 import { useForm } from '@tanstack/react-form';
 import { zodValidator } from '@tanstack/zod-form-adapter';
-import { Loader2, RefreshCcw, Save } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useCmsContext } from '../../../context/cms-context';
 import { useMetricSourcesQuery } from '../../../hooks/use-cms-queries';
 import { type AboutInput, aboutSchema } from '../../../types/about';
+import { CmsDiscardButton } from '../../common/cms-discard-button';
+import { CmsSaveButton } from '../../common/cms-save-button';
 import { AboutMetrics } from './about-metrics';
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -67,29 +68,16 @@ export function AboutForm() {
           >
             {([canSubmit, isPristine]) => (
               <div className="flex items-center gap-3">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  disabled={isPristine || isSaving}
+                <CmsDiscardButton
+                  isSaving={isSaving}
+                  isPristine={isPristine}
                   onClick={() => form.reset()}
-                  className="text-xs font-bold uppercase tracking-widest hover:bg-muted h-9"
-                >
-                  <RefreshCcw className="size-3 mr-2" />
-                  Reset
-                </Button>
-                <Button
-                  size="sm"
-                  disabled={!canSubmit || isSaving}
+                />
+                <CmsSaveButton
+                  isSaving={isSaving}
+                  canSubmit={canSubmit}
                   onClick={() => form.handleSubmit()}
-                  className="bg-primary text-primary-foreground text-xs font-bold uppercase tracking-widest h-9 shadow-lg shadow-primary/20"
-                >
-                  {isSaving ? (
-                    <Loader2 className="size-3 mr-2 animate-spin" />
-                  ) : (
-                    <Save className="size-3 mr-2" />
-                  )}
-                  Save Changes
-                </Button>
+                />
               </div>
             )}
           </form.Subscribe>

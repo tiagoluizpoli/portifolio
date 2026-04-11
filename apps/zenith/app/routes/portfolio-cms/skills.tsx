@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { SkillsForm } from '@/features/cms/components/sections/skills-form';
 
-export const Route = createFileRoute('/features/cms/skills')({
+export const Route = createFileRoute('/portfolio-cms/skills')({
   component: SkillsSection,
 });
 

@@ -1,6 +1,6 @@
 import type { ContactData } from '@repo/appwrite-core';
 import { useForm } from '@tanstack/react-form';
-import { Mail, MapPin, Phone, Plus, Save, Trash2 } from 'lucide-react';
+import { Mail, MapPin, Phone, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
 import { useCmsContext } from '../../context/cms-context';
 import {
@@ -8,6 +8,8 @@ import {
   contactSchema,
   type SocialLinkInput,
 } from '../../types/contact';
+import { CmsDiscardButton } from '../common/cms-discard-button';
+import { CmsSaveButton } from '../common/cms-save-button';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -129,32 +131,16 @@ export function ContactForm() {
         >
           {([canSubmit, isPristine]) => (
             <div className="flex items-center gap-3">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                disabled={isPristine || isSaving}
+              <CmsDiscardButton
+                isSaving={isSaving}
+                isPristine={isPristine}
                 onClick={() => form.reset()}
-                className="text-[10px] font-bold uppercase tracking-widest h-8"
-              >
-                Reset
-              </Button>
-              <Button
-                type="button"
-                size="sm"
-                disabled={!canSubmit || isSaving}
+              />
+              <CmsSaveButton
+                isSaving={isSaving}
+                canSubmit={canSubmit}
                 onClick={() => form.handleSubmit()}
-                className="bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-widest h-8 shadow-lg shadow-primary/20"
-              >
-                {isSaving ? (
-                  'Saving...'
-                ) : (
-                  <>
-                    <Save size={12} className="mr-2" />
-                    Save Channels
-                  </>
-                )}
-              </Button>
+              />
             </div>
           )}
         </form.Subscribe>

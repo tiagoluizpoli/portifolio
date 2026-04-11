@@ -11,13 +11,13 @@ import {
 import { cn } from '@/lib/utils';
 
 const sections = [
-  { label: 'Home', icon: Home, to: '/features/cms/home' },
-  { label: 'About', icon: User, to: '/features/cms/about' },
-  { label: 'Experience', icon: Briefcase, to: '/features/cms/experience' },
-  { label: 'Education', icon: GraduationCap, to: '/features/cms/education' },
-  { label: 'Skills', icon: Zap, to: '/features/cms/skills' },
-  { label: 'Solutions', icon: Lightbulb, to: '/features/cms/solutions' },
-  { label: 'Contact', icon: Mail, to: '/features/cms/contact' },
+  { label: 'Home', icon: Home, to: '/portfolio-cms/home' },
+  { label: 'About', icon: User, to: '/portfolio-cms/about' },
+  { label: 'Experience', icon: Briefcase, to: '/portfolio-cms/experience' },
+  { label: 'Education', icon: GraduationCap, to: '/portfolio-cms/education' },
+  { label: 'Skills', icon: Zap, to: '/portfolio-cms/skills' },
+  { label: 'Solutions', icon: Lightbulb, to: '/portfolio-cms/solutions' },
+  { label: 'Contact', icon: Mail, to: '/portfolio-cms/contact' },
 ];
 
 /**
