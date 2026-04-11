@@ -20,6 +20,7 @@ function getService(): CmsService {
     cmsServiceInstance = new CmsService(
       AppwriteProvider.client,
       env.APPWRITE_DATABASE_ID,
+      ['en', 'pt'],
     );
   }
   return cmsServiceInstance;

@@ -170,7 +170,6 @@ export function SkillsForm() {
             <SkillsGrid
               items={field.state.value}
               filteredIndices={filteredIndices}
-              onAdd={handleAdd}
               onEdit={handleEdit}
               onRemove={handleRemove}
               onReorder={handleReorder}

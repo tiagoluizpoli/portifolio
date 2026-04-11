@@ -37,11 +37,16 @@ export function ContactForm() {
     return {
       ...defaults,
       ...data,
-      socials:
+      socials: (
         (data.socials as SocialLinkInput[]) ||
         (data.socialLinks as SocialLinkInput[]) ||
         (data.social_links as SocialLinkInput[]) ||
-        [],
+        []
+      ).map((s) => ({
+        ...s,
+        active: s.active ?? true,
+        sort: s.sort ?? 0,
+      })),
     } as ContactInput;
   }, [contact.data, currentLocale]);
 
@@ -138,7 +143,7 @@ export function ContactForm() {
               />
               <CmsSaveButton
                 isSaving={isSaving}
-                canSubmit={canSubmit}
+                canSubmit={canSubmit && !isPristine}
                 onClick={() => form.handleSubmit()}
               />
             </div>

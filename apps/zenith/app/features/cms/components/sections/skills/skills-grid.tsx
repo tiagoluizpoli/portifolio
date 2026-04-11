@@ -7,7 +7,6 @@ import type { SkillCategory } from './skills-filters';
 interface SkillsGridProps {
   items: Skill[];
   filteredIndices: number[];
-  onAdd: () => void;
   onEdit: (index: number) => void;
   onRemove: (index: number) => void;
   onReorder: (newItems: Skill[]) => void;
@@ -23,7 +22,6 @@ interface SkillsGridProps {
 export function SkillsGrid({
   items,
   filteredIndices,
-  onAdd,
   onEdit,
   onRemove,
   onReorder,
