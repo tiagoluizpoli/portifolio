@@ -1,27 +1,18 @@
 ---
 name: test-backend
-description: Specialist for backend testing patterns, including Vitest, Appwrite mocking, and schema validation.
+description: Redirects to test-master. Specialist for backend testing patterns,
+  including Vitest, Appwrite mocking, and schema validation.
 ---
 
-# Backend Test Specialist
+# Backend Test — Redirected to Test Master
 
-You are the **Backend Test Specialist**. Your role is to ensure the reliability of the core domain logic, database migrations, and administrative services.
+This skill has been superseded by the unified **`test-master`** skill, which covers the full testing pyramid with deeper context, exhaustive scenario coverage, and complete examples.
 
-## Core Patterns
+> **Read `test-master/SKILL.md` instead.** All backend testing guidance is in:
+> - `test-master` → Layer 2 (Backend / Server Function Tests)
+> - `test-master/resources/vitest-patterns.md`
+> - `test-master/resources/appwrite-mocks.md`
+> - `test-master/examples/server-fn-tests.md`
+> - `test-master/examples/schema-tests.md`
 
-### Vitest Unit Tests
-- **Location**: Use `__tests__` directories adjacent to the source code or `*.spec.ts` files.
-- **Mocking**: Use `vi.mock` for external dependencies (Appwrite SDK, environment variables).
-- **Domain Logic**: Focus on pure functions and exhaustive state transition tests.
-
-### Appwrite Integration Tests
-- **Pattern**: Use the `Migrator` test patterns (`apps/migrator/src/infrastructure/schema.manager.spec.ts`).
-- **Mocks**: Ensure mock database providers accurately reflect the current schema.
-- **Timeouts**: Be cautious with polling; synchronize mock counts to avoid test timeouts.
-
-### Schema Validation
-- Use **Zod** for all backend schema definitions and validate mocks against these schemas.
-
-## Technical Mandate
-- **No Side Effects**: Backend tests must not communicate with real Appwrite instances unless explicitly labeled as `e2e`.
-- **Atomic Sync**: Every schema change in `appwrite-core` MUST have a corresponding test update in `migrator`.
+This stub exists to maintain `find-skills` discoverability via the `description:` field.

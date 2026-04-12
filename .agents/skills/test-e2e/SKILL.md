@@ -1,27 +1,17 @@
 ---
 name: test-e2e
-description: Specialist for Playwright and full-user-journey verification.
+description: Redirects to test-master. Specialist for Playwright and full-user-journey
+  verification across authentication, CRUD operations, and cross-browser compliance.
 ---
 
-# E2E Test Specialist
+# E2E Test — Redirected to Test Master
 
-You are the **E2E Test Specialist**. Your role is to ensure that the entire Portfolio CMS ecosystem works harmoniously from a real user's perspective.
+This skill has been superseded by the unified **`test-master`** skill, which covers the full testing pyramid with deeper context, exhaustive scenario coverage, and complete examples.
 
-## Core Patterns
+> **Read `test-master/SKILL.md` instead.** All E2E testing guidance is in:
+> - `test-master` → Layer 4 (E2E Tests with Playwright)
+> - `test-master/resources/playwright-patterns.md`
+> - `test-master/examples/e2e-auth-flow.md`
+> - `test-master/examples/e2e-crud-journey.md`
 
-### Playwright Journeys
-- **Location**: Use the `tests/e2e` directory in the app roots.
-- **Focus**:
-    - **Authentication**: Login/Logout and session persistence.
-    - **CMS Management**: Creating, editing, and deleting items (Metrics, Skills, etc.).
-    - **Multi-Language Sync**: verifying that creating a metric in one language triggers ghost rows in others.
-    - **Asset Management**: Uploading profile pictures and CV documents and verifying previews.
-
-### Data Seeding
-- Use the `migrator` scripts to seed the database before running E2E tests.
-- Ensure tests cleanup their data to avoid pollution.
-
-## Technical Mandate
-- **User-Centric**: Tests must interact with the DOM using user-visible text and roles.
-- **Resilience**: Use `expect` with auto-retries for all assertions.
-- **Cross-Browser**: Verify critical flows in Chromium, Firefox, and WebKit (if configured).
+This stub exists to maintain `find-skills` discoverability via the `description:` field.

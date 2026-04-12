@@ -1,0 +1,65 @@
+/* ────────────────────────────────────────────────────────────────
+   Dark Mode Setup — Tailwind v4
+   
+   Strategy: selector (class-based toggle on <html>)
+   ──────────────────────────────────────────────────────────────── */
+
+/* 1. Ensure Tailwind uses selector strategy */
+@import "tailwindcss";
+
+/* 2. Custom variant (automatic in v4, shown for reference) */
+/* @variant dark (&:where(.dark, .dark *)); */
+
+/* 3. Theme tokens with dark mode overrides */
+@theme {
+  --color-background: oklch(0.985 0.002 250);
+  --color-foreground: oklch(0.145 0.005 250);
+  --color-card: oklch(1 0 0);
+  --color-border: oklch(0.895 0.008 250);
+}
+
+/* Dark mode CSS variable overrides */
+.dark {
+  --color-background: oklch(0.145 0.005 250);
+  --color-foreground: oklch(0.945 0.005 250);
+  --color-card: oklch(0.185 0.008 250);
+  --color-border: oklch(0.265 0.008 250);
+}
+
+/* 4. System preference detection (optional auto mode) */
+@media (prefers-color-scheme: dark) {
+  html:not(.light) {
+    /* Apply dark mode when no explicit class is set */
+    --color-background: oklch(0.145 0.005 250);
+    --color-foreground: oklch(0.945 0.005 250);
+  }
+}
+
+/* 5. Transition for theme switching (add to base) */
+@layer base {
+  html {
+    color-scheme: light;
+    transition: color 0.2s ease, background-color 0.2s ease;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+}
+
+/*
+  6. JavaScript toggle (add to your theme provider):
+  
+  function setTheme(theme: 'light' | 'dark' | 'system') {
+    const root = document.documentElement
+    root.classList.remove('light', 'dark')
+    
+    if (theme === 'system') {
+      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      root.classList.add(systemDark ? 'dark' : 'light')
+    } else {
+      root.classList.add(theme)
+    }
+    
+    localStorage.setItem('theme', theme)
+  }
+*/

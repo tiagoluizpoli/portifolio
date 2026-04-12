@@ -1,0 +1,79 @@
+/* ────────────────────────────────────────────────────────────────
+   Custom Utilities — @utility directive examples
+   ──────────────────────────────────────────────────────────────── */
+
+/* ──── Scrollbar ──── */
+@utility scrollbar-hidden {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+}
+
+/* ──── Text ──── */
+@utility text-balance {
+  text-wrap: balance;
+}
+
+@utility text-pretty {
+  text-wrap: pretty;
+}
+
+/* ──── Performance ──── */
+@utility content-auto {
+  content-visibility: auto;
+}
+
+@utility gpu-accelerate {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* ──── Interaction ──── */
+@utility no-select {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+@utility drag-none {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+/* ──── Layout ──── */
+@utility safe-area-inset {
+  padding-top: env(safe-area-inset-top);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+}
+
+/* ──── Glass Effect ──── */
+@utility glass {
+  background: hsl(var(--card) / 0.6);
+  backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid hsl(var(--border) / 0.2);
+}
+
+@utility glass-heavy {
+  background: hsl(var(--card) / 0.8);
+  backdrop-filter: blur(24px) saturate(200%);
+  border: 1px solid hsl(var(--border) / 0.3);
+}
+
+/* ──── Noise Texture ──── */
+@utility noise {
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}

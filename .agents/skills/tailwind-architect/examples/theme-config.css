@@ -1,0 +1,142 @@
+/* ────────────────────────────────────────────────────────────────
+   Production-Ready @theme Configuration
+   
+   This is a complete, production-grade theme block for a dark-first
+   CMS/Dashboard application using OKLCH color space.
+   ──────────────────────────────────────────────────────────────── */
+
+@import "tailwindcss";
+
+/* ──── Theme Tokens ──── */
+@theme {
+  /* Colors — OKLCH for perceptual uniformity */
+  --color-background: oklch(0.985 0.002 250);
+  --color-foreground: oklch(0.145 0.005 250);
+  --color-card: oklch(1 0 0);
+  --color-card-foreground: oklch(0.145 0.005 250);
+  --color-popover: oklch(1 0 0);
+  --color-popover-foreground: oklch(0.145 0.005 250);
+  --color-primary: oklch(0.546 0.245 262.881);
+  --color-primary-foreground: oklch(0.985 0.002 250);
+  --color-secondary: oklch(0.945 0.01 250);
+  --color-secondary-foreground: oklch(0.345 0.015 250);
+  --color-muted: oklch(0.945 0.01 250);
+  --color-muted-foreground: oklch(0.555 0.015 250);
+  --color-accent: oklch(0.945 0.01 250);
+  --color-accent-foreground: oklch(0.345 0.015 250);
+  --color-destructive: oklch(0.577 0.245 27.325);
+  --color-destructive-foreground: oklch(0.985 0.002 27);
+  --color-border: oklch(0.895 0.008 250);
+  --color-input: oklch(0.895 0.008 250);
+  --color-ring: oklch(0.546 0.245 262.881);
+
+  /* Sidebar-specific tokens */
+  --color-sidebar: oklch(0.955 0.005 250);
+  --color-sidebar-foreground: oklch(0.345 0.005 250);
+  --color-sidebar-primary: oklch(0.546 0.245 262.881);
+  --color-sidebar-accent: oklch(0.935 0.01 250);
+
+  /* Typography */
+  --font-sans: 'Geist', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', 'JetBrains Mono', monospace;
+  --font-display: 'Outfit', var(--font-sans);
+
+  /* Spacing extensions */
+  --spacing-18: 4.5rem;
+  --spacing-88: 22rem;
+  --spacing-128: 32rem;
+
+  /* Radius */
+  --radius-4xl: 2rem;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  /* Animations */
+  --animate-shimmer: shimmer 1.5s ease-in-out infinite;
+  --animate-fade-in: fadeIn 0.2s ease-out;
+  --animate-slide-up: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Breakpoints */
+  --breakpoint-xs: 475px;
+}
+
+/* ──── Dark Mode Override ──── */
+.dark {
+  --color-background: oklch(0.145 0.005 250);
+  --color-foreground: oklch(0.945 0.005 250);
+  --color-card: oklch(0.185 0.008 250);
+  --color-card-foreground: oklch(0.945 0.005 250);
+  --color-popover: oklch(0.185 0.008 250);
+  --color-popover-foreground: oklch(0.945 0.005 250);
+  --color-primary: oklch(0.609 0.228 262.881);
+  --color-primary-foreground: oklch(0.985 0.002 250);
+  --color-secondary: oklch(0.225 0.008 250);
+  --color-secondary-foreground: oklch(0.845 0.005 250);
+  --color-muted: oklch(0.225 0.008 250);
+  --color-muted-foreground: oklch(0.605 0.015 250);
+  --color-accent: oklch(0.225 0.008 250);
+  --color-accent-foreground: oklch(0.845 0.005 250);
+  --color-destructive: oklch(0.577 0.245 27.325);
+  --color-border: oklch(0.265 0.008 250);
+  --color-input: oklch(0.265 0.008 250);
+  --color-ring: oklch(0.609 0.228 262.881);
+
+  --color-sidebar: oklch(0.165 0.005 250);
+  --color-sidebar-foreground: oklch(0.845 0.005 250);
+}
+
+/* ──── Keyframes ──── */
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ──── Custom Utilities ──── */
+@utility scrollbar-hidden {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+@utility content-auto {
+  content-visibility: auto;
+}
+
+/* ──── Base Styles ──── */
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-foreground);
+    background: var(--color-background);
+  }
+
+  * {
+    border-color: var(--color-border);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

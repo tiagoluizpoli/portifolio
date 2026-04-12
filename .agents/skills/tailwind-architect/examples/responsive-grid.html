@@ -1,0 +1,51 @@
+<!-- Responsive Grid — Container queries + auto-fill -->
+
+<!-- 1. Auto-Fill Grid (wraps based on available space) -->
+<div class="grid grid-cols-(repeat(auto-fill,minmax(280px,1fr))) gap-4 p-6">
+  <div class="rounded-xl border bg-card p-6 shadow-xs hover:shadow-md transition-shadow">
+    <h3 class="text-sm font-semibold">Card 1</h3>
+    <p class="text-xs text-muted-foreground mt-1">Auto-fills row by row</p>
+  </div>
+  <div class="rounded-xl border bg-card p-6 shadow-xs hover:shadow-md transition-shadow">
+    <h3 class="text-sm font-semibold">Card 2</h3>
+    <p class="text-xs text-muted-foreground mt-1">Responsive without breakpoints</p>
+  </div>
+  <div class="rounded-xl border bg-card p-6 shadow-xs hover:shadow-md transition-shadow">
+    <h3 class="text-sm font-semibold">Card 3</h3>
+    <p class="text-xs text-muted-foreground mt-1">Min 280px, max 1fr</p>
+  </div>
+</div>
+
+<!-- 2. Explicit Responsive Grid (breakpoint-based) -->
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+  <!-- Explicit columns for each breakpoint -->
+</div>
+
+<!-- 3. Sidebar + Content Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-(250px_1fr) gap-0">
+  <aside class="border-r bg-sidebar p-4 hidden lg:block">
+    Sidebar (250px fixed)
+  </aside>
+  <main class="p-6">
+    Content (fills remaining space)
+  </main>
+</div>
+
+<!-- 4. Dashboard Metrics Grid (uneven columns) -->
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-(1fr_1fr_2fr)">
+  <div class="rounded-xl border bg-card p-6">Metric 1 (1fr)</div>
+  <div class="rounded-xl border bg-card p-6">Metric 2 (1fr)</div>
+  <div class="rounded-xl border bg-card p-6 md:col-span-2 lg:col-span-1">
+    Chart (2fr — double width)
+  </div>
+</div>
+
+<!-- 5. Masonry-like layout with CSS columns -->
+<div class="columns-1 gap-4 sm:columns-2 lg:columns-3">
+  <div class="mb-4 break-inside-avoid rounded-xl border bg-card p-6">
+    Variable height content...
+  </div>
+  <div class="mb-4 break-inside-avoid rounded-xl border bg-card p-6">
+    Another card with different height...
+  </div>
+</div>

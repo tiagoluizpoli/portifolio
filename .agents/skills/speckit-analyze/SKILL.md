@@ -31,7 +31,7 @@ Identify inconsistencies, duplications, ambiguities, and underspecified items ac
 
 31: ## Execution Steps
 32: 
-**PROMPT ENHANCEMENT**: Before processing any arguments or starting the analysis, you **MUST** invoke the `ultimate-enhancer` protocol to transform the user's specific analysis focus into high-fidelity audit criteria.
+**PROMPT ENHANCEMENT**: Before processing any arguments or starting the analysis, you **MUST** invoke the `prompt-enhancer` protocol to transform the user's specific analysis focus into high-fidelity audit criteria.
 
 ### 1. Initialize Analysis Context
 
