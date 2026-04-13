@@ -74,7 +74,7 @@ If you detect any UI change required that is outside the explicit scope of the i
 
 2. **Load design documents**: Read from FEATURE_DIR:
    - **Required**: plan.md (tech stack, libraries, structure), spec.md (user stories with priorities), test-plan.md (Testing strategy)
-   - **Optional**: data-model.md (entities), contracts/ (interface contracts), research.md (decisions)
+   - **Optional**: data-model.md (entities), contracts/ (interface contracts), research.md (decisions), tests/ (exhaustive scenarios)
    - Note: Not all projects have all documents. Generate tasks based on what's available.
 
 3. **Execute task generation workflow**:
@@ -146,7 +146,7 @@ The tasks.md should be immediately executable - each task must be specific enoug
 
 **CRITICAL**: Tasks MUST be organized by user story to enable independent implementation and testing.
 
-**Tests are MANDATORY**: You MUST generate test tasks for every user story and functional requirement. Follow the strategy defined in `test-plan.md`.
+**Tests are MANDATORY**: You MUST generate test tasks for every user story and functional requirement. Follow the strategy defined in `test-plan.md`. If exhaustive scenarios exist in `tests/*.md`, you MUST generate specific tasks for each scenario ID (e.g., TS-BE-001, TS-FE-002) to ensure verification of all edge and system failure cases.
 
 ### Checklist Format (REQUIRED)
 

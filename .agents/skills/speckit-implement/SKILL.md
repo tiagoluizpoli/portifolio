@@ -109,6 +109,7 @@ If you detect any UI change required that is outside the explicit scope of the i
    - **REQUIRED**: Read tasks.md for the complete task list and execution plan
    - **REQUIRED**: Read plan.md for tech stack, architecture, and file structure
    - **REQUIRED**: Read test-plan.md for the mandatory testing strategy
+   - **IF EXISTS**: Read any .md files in `tests/` directory for exhaustive scenario coverage
    - **IF EXISTS**: Read data-model.md for entities and relationships
    - **IF EXISTS**: Read contracts/ for API specifications and test requirements
    - **IF EXISTS**: Read research.md for technical decisions and constraints
@@ -176,6 +177,7 @@ If you detect any UI change required that is outside the explicit scope of the i
    - **Tests before code**: If you need to write tests for contracts, entities, and integration scenarios
    - **Core development**: Implement models, services, CLI commands, endpoints
    - **Integration work**: Database connections, middleware, logging, external services
+   - **MANDATORY TDD**: Execute test tasks (BE/FE/E2E) before or alongside their corresponding implementation tasks. If local scenarios exist in `tests/*.md`, they MUST be treated as high-fidelity requirements that define task success.
    - **Polish and validation**: Unit tests, performance optimization, documentation
 
 8. Progress tracking and error handling:

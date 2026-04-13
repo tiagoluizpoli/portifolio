@@ -11,11 +11,11 @@ describe('ImpactMetric Domain Entity', () => {
       label: 'Active Users',
       value: '100+',
       sourceId: 'src-1',
-      sourceKey: 'repo-stars',
+      isPlaceholder: false,
     };
 
     expect(metric.internalCode).toBe('active-users');
     expect(metric.locale).toBe('en');
-    expect(metric.sourceKey).toBe('repo-stars');
+    expect(metric.sourceId).toBe('src-1');
   });
 });

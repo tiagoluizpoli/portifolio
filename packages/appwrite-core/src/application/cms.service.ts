@@ -110,7 +110,7 @@ export class CmsService {
     return this.metricSourceRepo.findAll();
   }
 
-  async saveMetricSources(sources: MetricSource[]): Promise<void> {
+  async saveMetricSources(sources: MetricSource[]): Promise<MetricSource[]> {
     return this.metricSourceRepo.save(sources);
   }
 

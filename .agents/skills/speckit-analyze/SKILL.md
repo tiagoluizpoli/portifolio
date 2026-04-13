@@ -41,6 +41,7 @@ Run `.specify/scripts/bash/check-prerequisites.sh --json --require-tasks --inclu
 - PLAN = FEATURE_DIR/plan.md
 - TESTS = FEATURE_DIR/test-plan.md
 - TASKS = FEATURE_DIR/tasks.md
+- TESTS_DIR = FEATURE_DIR/tests/ (exhaustive scenarios directory)
 
 Abort with an error message if any required file is missing (instruct the user to run missing prerequisite command).
 For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
@@ -131,7 +132,8 @@ Focus on high-signal findings. Limit to 50 findings total; aggregate remainder i
 #### G. Testing Strategy Audit
 
 - **Requirements with no Test Case**: FR/US that lack a corresponding test scenario in `test-plan.md`.
-- **Test Gap**: Test cases in `test-plan.md` that have no implementation tasks in `tasks.md`.
+- **Exhaustive Scenario Gap**: Functional Requirements or critical flows that lack exhaustive scenarios (Happy, Edge, System, etc.) in the `tests/` directory.
+- **Test Gap**: Test cases in `test-plan.md` or `tests/*.md` that have no implementation tasks in `tasks.md`.
 - **Infrastructure Missing**: Requirements for E2E that lack necessary setup tasks (e.g., seeding, environment).
 - **Inconsistent Mappings**: Test case expected outcomes that conflict with functional requirements.
 
