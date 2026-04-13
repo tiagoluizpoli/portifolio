@@ -88,7 +88,6 @@ export function AboutMetrics({ form, sources, aboutId }: AboutMetricsProps) {
             metric={metric}
             sourceTitle={metric.sourceName}
             resolvedIcon={metric.resolvedIcon}
-            isAutomated={metric.isAutomated}
             onEdit={() => handleOpenEdit(i)}
             onDelete={() => handleDelete(i)}
           />

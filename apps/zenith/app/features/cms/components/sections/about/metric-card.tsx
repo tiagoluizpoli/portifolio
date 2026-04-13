@@ -8,7 +8,6 @@ interface MetricCardProps {
   metric: ImpactMetricInput;
   sourceTitle: string;
   resolvedIcon: string;
-  isAutomated?: boolean;
   onEdit: () => void;
   onDelete: () => void;
 }
@@ -22,7 +21,6 @@ export function MetricCard({
   metric,
   sourceTitle,
   resolvedIcon,
-  isAutomated,
   onEdit,
   onDelete,
 }: MetricCardProps) {
