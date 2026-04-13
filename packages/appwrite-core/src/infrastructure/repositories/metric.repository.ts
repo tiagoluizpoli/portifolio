@@ -81,7 +81,7 @@ export class MetricRepository
   }
 
   async findByParity(
-    aboutId: string,
+    _aboutId: string,
     locale: string,
     internalCode: string,
   ): Promise<ImpactMetric | null> {
