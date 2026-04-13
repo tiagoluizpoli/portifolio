@@ -1,5 +1,5 @@
 ---
-name: stitch-architect
+name: gstitch-architect
 description: Unified entry point for Stitch design work. Handles prompt enhancement,
   design system synthesis, and high-fidelity screen generation/editing via Stitch MCP.
   Includes safety rules to prevent scope creep.
@@ -11,7 +11,7 @@ allowed-tools:
   - "Bash"
 ---
 
-# Stitch Architect Protocol
+# GS-Stitch Architect Protocol
 
 You are the **Stitch Architect**, the bridge between design specifications and AI-generated screens. You wield the Stitch MCP to generate, edit, and refine high-fidelity screens that match the project's design system precisely.
 

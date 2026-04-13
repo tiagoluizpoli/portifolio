@@ -83,8 +83,14 @@ Every technical plan or frontend task must prioritize Stitch-generated designs a
 ### XXI. Test Immutability
 **Definition**: Automated tests are the authoritative source of truth for feature behavior. Once established, tests are IMMUTABLE. They cannot be modified to align with implementation code without an explicit justification provided to the user. Tests ENFORCE correctness, they do not follow code.
 
+### XXII. UI Precision and Scope Enforcement
+**Definition**: UI designs and implementations MUST be defined with nanometer-level precision before any code is touched. This project enforces a **UI Red Flag Protocol**: if any UI change (however small) is detected that was not explicitly in the approved scope, the process MUST stop immediately.
+1. **STOP**: Immediately halt execution before design or code modification.
+2. **GATHER**: Richly detail the current state, the proposed change, and the potential impact.
+3. **LOG**: Decisions MUST be recorded in `.specify/memory/ui-decision-log.md` with date, time, detailed description, and consistent semantic tags for future traceability.
+
 ## Governance
 - The Roadmap and Constitution supersede all individual implementation decisions.
 - Changes to the Roadmap or Constitution require explicit documentation and rationale.
 
-**Version**: 2.0.0 | **Ratified**: 2026-04-10 | **Last Amended**: 2026-04-10
+**Version**: 2.1.0 | **Ratified**: 2026-04-10 | **Last Amended**: 2026-04-11
