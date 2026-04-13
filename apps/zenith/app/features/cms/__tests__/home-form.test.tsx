@@ -43,6 +43,7 @@ vi.mock('lucide-react', () => {
     RefreshCcw: () => <MockIcon name="refresh-ccw" />,
     Info: () => <MockIcon name="info" />,
     Loader2: () => <MockIcon name="loader-2" />,
+    RotateCcw: () => <MockIcon name="rotate-ccw" />,
   };
 });
 
@@ -128,7 +129,7 @@ describe('HomeForm (US1)', () => {
     const nameInput = await screen.findByLabelText(/First Name/i);
     fireEvent.change(nameInput, { target: { value: 'Tiago' } });
 
-    const saveButton = await screen.findByText(/Save Changes/i);
+    const saveButton = await screen.findByText(/Deploy Changes/i);
     fireEvent.click(saveButton);
 
     // Verify it triggers logic that leads to a save request (§V)
