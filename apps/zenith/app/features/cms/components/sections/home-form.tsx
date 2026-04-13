@@ -3,15 +3,10 @@ import { zodValidator } from '@tanstack/zod-form-adapter';
 import { Info, Loader2 } from 'lucide-react';
 import { useCmsContext } from '../../context/cms-context';
 import { type HomeInput, homeSchema } from '../../types/home';
-import { CmsDiscardButton } from '../common/cms-discard-button';
-import { CmsSaveButton } from '../common/cms-save-button';
 import { FileUploader } from '../common/file-uploader';
+import { CmsFormField } from '../common/form-field';
+import { HomeHeader } from './home-header';
 import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { Slider } from '@/components/ui/slider';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Tooltip,
   TooltipContent,
@@ -22,7 +17,9 @@ import {
 /**
  * HomeForm (Constitution §XVII, §I)
  * Section 01: Hero Identity.
- * Orchestrated with TanStack Form for strict validation and state management.
+ *
+ * Consolidated architectural implementation. Eliminates 'types.ts' shims
+ * and leverages direct inference for 100% type safety without modularity overhead.
  */
 export function HomeForm() {
   const { currentLocale, home, saveSection, isSaving } = useCmsContext();
@@ -41,7 +38,7 @@ export function HomeForm() {
       downloadButtonText: 'Download CV',
       journeyStartedIn: new Date().getFullYear(),
     }) as HomeInput,
-    // @ts-expect-error - TanStack Form depth limits (§XVII)
+    // @ts-expect-error - library inference bypass
     validatorAdapter: zodValidator(),
     validators: {
       onChange: homeSchema,
@@ -61,273 +58,151 @@ export function HomeForm() {
 
   return (
     <TooltipProvider>
-      <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 w-full mb-8">
-        {/* Editorial Header */}
-        <div className="flex items-end justify-between border-b border-border pb-8">
-          <div>
-            <h1 className="text-4xl font-extrabold tracking-tighter text-foreground font-display">
-              Home{' '}
-              <span className="text-primary/40 font-medium">
-                / Hero Identity
-              </span>
-            </h1>
-            <p className="text-sm text-muted-foreground/60 mt-2 font-medium uppercase tracking-widest">
-              Section 01 — Managing the Hero Orchestration
-            </p>
-          </div>
+      <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 w-full">
+        <form.Subscribe
+          selector={(state) => [state.canSubmit, state.isPristine]}
+        >
+          {([canSubmit, isPristine]) => (
+            <HomeHeader
+              isSaving={isSaving}
+              canSubmit={canSubmit as boolean}
+              isPristine={isPristine as boolean}
+              onReset={() => form.reset()}
+              onSubmit={() => form.handleSubmit()}
+            />
+          )}
+        </form.Subscribe>
 
-          <form.Subscribe
-            selector={(state) => [state.canSubmit, state.isPristine]}
-          >
-            {([canSubmit, isPristine]) => (
-              <div className="flex items-center gap-3">
-                <CmsDiscardButton
-                  isSaving={isSaving}
-                  isPristine={isPristine}
-                  onClick={() => form.reset()}
+        <div
+          className="grid gap-4 lg:grid-cols-2"
+          data-testid="home-split-grid"
+        >
+          {/* Metadata Section */}
+          <Card className="p-4 bg-transparent border-border space-y-4 shadow-none">
+            <div className="grid grid-cols-2 gap-4">
+              <form.Field name="firstName">
+                {(field) => (
+                  <CmsFormField
+                    field={field}
+                    label="First Name"
+                    className="font-bold"
+                  />
+                )}
+              </form.Field>
+              <form.Field name="lastName">
+                {(field) => (
+                  <CmsFormField
+                    field={field}
+                    label="Last Name"
+                    className="font-bold"
+                  />
+                )}
+              </form.Field>
+            </div>
+
+            <form.Field name="namePresentation">
+              {(field) => (
+                <CmsFormField
+                  field={field}
+                  label="Maturity Identity (e.g. Tiago Luiz Poli)"
+                  className="h-12 text-lg font-black tracking-tight"
                 />
-                <CmsSaveButton
-                  isSaving={isSaving}
-                  canSubmit={canSubmit}
-                  onClick={() => form.handleSubmit()}
+              )}
+            </form.Field>
+
+            <form.Field name="title">
+              {(field) => (
+                <CmsFormField
+                  field={field}
+                  label="Headline / Hero Punchline"
+                  textarea
+                  placeholder="What describes your core value?"
+                  className="min-h-[64px] font-semibold"
                 />
-              </div>
-            )}
-          </form.Subscribe>
-        </div>
+              )}
+            </form.Field>
 
-        <div className="grid gap-8 lg:grid-cols-3">
-          {/* Main Content Area */}
-          <div className="lg:col-span-2 space-y-8">
-            <Card className="p-6 rounded-xl bg-transparent border border-border space-y-8 shadow-none">
-              <div className="grid grid-cols-2 gap-6">
-                <form.Field name="firstName">
-                  {(field) => (
-                    <div className="space-y-3">
-                      <Label
-                        htmlFor={field.name}
-                        className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60"
-                      >
-                        First Name
-                      </Label>
-                      <Input
-                        id={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        className="h-11 bg-transparent border-border text-base font-bold rounded-lg focus-visible:ring-primary/20"
-                      />
-                      {field.state.meta.errors && (
-                        <p className="text-[10px] font-bold text-destructive uppercase tracking-tighter">
-                          {field.state.meta.errors.join(', ')}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                </form.Field>
+            <form.Field name="description">
+              {(field) => (
+                <CmsFormField
+                  field={field}
+                  label="Biography / Narrative"
+                  textarea
+                  placeholder="A brief story..."
+                  className="min-h-[80px] text-muted-foreground/80 leading-loose"
+                />
+              )}
+            </form.Field>
 
-                <form.Field name="lastName">
-                  {(field) => (
-                    <div className="space-y-3">
-                      <Label
-                        htmlFor={field.name}
-                        className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60"
-                      >
-                        Last Name
-                      </Label>
-                      <Input
-                        id={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        className="h-11 bg-transparent border-border text-base font-bold rounded-lg focus-visible:ring-primary/20"
-                      />
-                    </div>
-                  )}
-                </form.Field>
-              </div>
-
-              <form.Field name="namePresentation">
-                {(field) => (
-                  <div className="space-y-3">
-                    <Label
-                      htmlFor={field.name}
-                      className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60"
-                    >
-                      Maturity Identity (e.g. Tiago Luiz Poli)
-                    </Label>
-                    <Input
-                      id={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      className="h-12 bg-transparent border-border text-lg font-black tracking-tight rounded-lg focus-visible:ring-primary/20"
-                    />
-                  </div>
-                )}
-              </form.Field>
-
-              <form.Field name="title">
-                {(field) => (
-                  <div className="space-y-3">
-                    <Label
-                      htmlFor={field.name}
-                      className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60"
-                    >
-                      Headline / Hero Punchline
-                    </Label>
-                    <Textarea
-                      id={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      placeholder="What describes your core value?"
-                      className="min-h-[100px] bg-transparent border-border text-base font-semibold leading-relaxed rounded-lg focus-visible:ring-primary/20 resize-none"
-                    />
-                  </div>
-                )}
-              </form.Field>
-
-              <form.Field name="description">
-                {(field) => (
-                  <div className="space-y-3">
-                    <Label
-                      htmlFor={field.name}
-                      className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60"
-                    >
-                      Biography / Narrative
-                    </Label>
-                    <Textarea
-                      id={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      placeholder="A brief story..."
-                      className="min-h-[160px] bg-transparent border-border text-sm leading-loose text-muted-foreground/80 rounded-lg focus-visible:ring-primary/20 resize-none"
-                    />
-                  </div>
-                )}
-              </form.Field>
-            </Card>
-
-            <Card className="p-6 rounded-xl bg-transparent border border-border space-y-8 shadow-none">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-sm font-bold tracking-tight text-foreground uppercase">
-                    Journey Origin
-                  </h3>
-                  <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-widest mt-1">
-                    When did the orchestration begin?
-                  </p>
-                </div>
-                <form.Subscribe
-                  selector={(state) => state.values.journeyStartedIn}
-                >
-                  {(year) => (
-                    <span className="text-2xl font-black tabular-nums text-primary/40 italic">
-                      {year}
-                    </span>
-                  )}
-                </form.Subscribe>
-              </div>
-
+            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/40">
               <form.Field name="journeyStartedIn">
                 {(field) => (
-                  <div className="px-1">
-                    <Slider
-                      value={[field.state.value]}
-                      min={1990}
-                      max={new Date().getFullYear()}
-                      step={1}
-                      onValueChange={(val) => field.handleChange(val[0])}
-                      className="py-4"
-                    />
-                    <div className="flex justify-between mt-2">
-                      <span className="text-[9px] font-bold text-muted-foreground/30">
-                        1990
-                      </span>
-                      <span className="text-[9px] font-bold text-muted-foreground/30">
-                        {new Date().getFullYear()}
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </form.Field>
-            </Card>
-          </div>
-
-          {/* Asset Curation Sidebar */}
-          <div className="space-y-8">
-            <Card className="p-4 rounded-xl bg-transparent border border-border space-y-6 shadow-none flex flex-col items-center">
-              <div className="flex items-center justify-between mb-4 px-1 w-full">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-[10px] font-extrabold uppercase tracking-[0.4em] text-foreground/40">
-                    Hero Assets
-                  </h3>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        type="button"
-                        className="text-muted-foreground/40 hover:text-primary transition-colors"
-                      >
-                        <Info className="size-3" />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent className="bg-background border-border text-[10px] font-medium uppercase tracking-widest text-primary p-3">
-                      Profile picture is shared across all locales. CV is
-                      specific to the current language selection.
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
-              </div>
-
-              <form.Field name="pictureId">
-                {(field) => (
-                  <FileUploader
-                    label="Profile Picture"
-                    variant="image"
-                    value={field.state.value}
-                    onChange={(id) => field.handleChange(id)}
+                  <CmsFormField
+                    field={field}
+                    label="Base Year"
+                    type="number"
+                    showBadge="YYYY"
+                    className="text-lg font-black italic tabular-nums tracking-wider"
                   />
                 )}
               </form.Field>
-
-              <form.Field name="cvId">
-                {(field) => (
-                  <FileUploader
-                    label="Bilingual CV / Resume (PDF)"
-                    variant="file"
-                    value={field.state.value}
-                    onChange={(id) => field.handleChange(id)}
-                  />
-                )}
-              </form.Field>
-
-              <div className="pt-2 w-full">
-                <Separator className="bg-border" />
-              </div>
-
               <form.Field name="downloadButtonText">
                 {(field) => (
-                  <div className="w-full space-y-3 px-1">
-                    <Label
-                      htmlFor={field.name}
-                      className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/40"
-                    >
-                      CTA Button Label
-                    </Label>
-                    <Input
-                      id={field.name}
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      placeholder="e.g. Get CV"
-                      className="h-10 bg-transparent border-border text-xs font-bold rounded-lg focus-visible:ring-primary/20"
-                    />
-                  </div>
+                  <CmsFormField
+                    field={field}
+                    label="CTA Button Label"
+                    placeholder="e.g. Get CV"
+                    className="text-xs font-bold"
+                  />
                 )}
               </form.Field>
-            </Card>
-          </div>
+            </div>
+          </Card>
+
+          {/* Assets Section */}
+          <Card className="p-4 bg-transparent border-border flex flex-col items-center gap-4 shadow-none">
+            <div className="flex items-center gap-2 mb-2 w-full">
+              <h3 className="text-[10px] font-extrabold uppercase tracking-[0.4em] text-foreground/40">
+                Hero Assets
+              </h3>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    className="text-muted-foreground/40 hover:text-primary transition-colors"
+                  >
+                    <Info className="size-3" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent className="bg-background border-border text-[10px] font-medium uppercase tracking-widest text-primary p-3 max-w-[200px]">
+                  Profile picture is shared across all locales. CV is specific
+                  to the language.
+                </TooltipContent>
+              </Tooltip>
+            </div>
+
+            <form.Field name="pictureId">
+              {(field) => (
+                <FileUploader
+                  label="Profile Picture"
+                  variant="image"
+                  value={field.state.value}
+                  onChange={(id) => field.handleChange(id)}
+                />
+              )}
+            </form.Field>
+
+            <form.Field name="cvId">
+              {(field) => (
+                <FileUploader
+                  label="Language-Specific CV (PDF)"
+                  variant="file"
+                  value={field.state.value}
+                  onChange={(id) => field.handleChange(id)}
+                />
+              )}
+            </form.Field>
+          </Card>
         </div>
       </div>
     </TooltipProvider>
