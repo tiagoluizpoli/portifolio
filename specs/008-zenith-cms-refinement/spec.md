@@ -31,6 +31,7 @@ As a Portfolio Curator, I want to create impact metrics using a dedicated dialog
 ### User Story 3 - Split-Layout Home Admin (Priority: P1)
 As a Portfolio Curator, I want the Home section to be divided into a 1:1 split-screen layout.
 - **Layout**: Left (Metadata Form), Right (High-fidelity uploader/viewer for Picture and CV).
+- **High-Fidelity Criteria**: Support for drag-and-drop, upload progress bars, and borderless previews within a scrollable viewport.
 - **Inputs**: Replace "Journey Origin" slider with a `number` input (disable spinners).
 
 ### User Story 4 - Managed Social Platforms (Priority: P2)
@@ -49,7 +50,7 @@ As a Portfolio Curator, I want the Solutions list to be a card-based grid view w
 
 ## 4. Key Entities
 - **Skill**: Global scope; `id`, `title`, `iconCode`, `type`, `status`, `sort`.
-- **ImpactMetric**: Localized and linked by `internalCode`; `id`, `internalCode`, `label`, `value`, `locale`, `sourceId`, `sourceKey`, `aboutId`. Unique constraint on `(locale, internalCode)`.
+- **ImpactMetric**: Localized and linked by `internalCode`; `id`, `internalCode`, `label`, `value`, `locale`, `sourceId`, `aboutId`. Unique constraint on `(locale, internalCode)`.
 - **Platform**: Managed entity; `id`, `name`, `iconCode`, `status`.
 
 ## 5. Success Criteria
