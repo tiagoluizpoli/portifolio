@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { Settings2, Trash2, Zap } from 'lucide-react';
+import { Settings2, Trash2 } from 'lucide-react';
 import type { ImpactMetricInput } from '../../../types/about';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -7,6 +7,8 @@ import { Card, CardContent } from '@/components/ui/card';
 interface MetricCardProps {
   metric: ImpactMetricInput;
   sourceTitle: string;
+  resolvedIcon: string;
+  isAutomated?: boolean;
   onEdit: () => void;
   onDelete: () => void;
 }
@@ -19,6 +21,8 @@ interface MetricCardProps {
 export function MetricCard({
   metric,
   sourceTitle,
+  resolvedIcon,
+  isAutomated,
   onEdit,
   onDelete,
 }: MetricCardProps) {
@@ -49,14 +53,14 @@ export function MetricCard({
       <CardContent className="h-full flex items-center">
         {/* Squared Icon Container - Compact Width */}
         <div className="h-full w-16 shrink-0 bg-muted/10 border-r border-border/20 flex items-center justify-center group-hover:bg-primary/5 transition-all rounded-lg">
-          {metric.iconCode ? (
-            <Icon
-              icon={metric.iconCode}
-              className="size-6 text-foreground/30 group-hover:text-primary transition-all duration-300"
-            />
-          ) : (
-            <Zap className="size-6 text-foreground/10 group-hover:text-primary transition-all duration-300" />
-          )}
+          <Icon
+            icon={resolvedIcon}
+            className={`size-6 transition-all duration-300 ${
+              metric.isPlaceholder
+                ? 'text-muted-foreground/20'
+                : 'text-foreground/30 group-hover:text-primary'
+            }`}
+          />
         </div>
 
         {/* Textual Content - Tight alignment to left */}
@@ -83,6 +87,11 @@ export function MetricCard({
             <span className="text-[7px] font-bold py-0.5 px-1.5 bg-primary/5 border border-primary/10 text-primary/50 rounded uppercase tracking-widest">
               {sourceTitle}
             </span>
+            {metric.isPlaceholder && (
+              <span className="text-[7px] font-black py-0.5 px-1.5 bg-amber-500/10 border border-amber-500/20 text-amber-500/60 rounded uppercase tracking-widest animate-pulse">
+                Draft
+              </span>
+            )}
             <span className="text-[7px] font-medium font-mono text-muted-foreground/20 uppercase tracking-widest hidden sm:inline">
               {metric.internalCode}
             </span>

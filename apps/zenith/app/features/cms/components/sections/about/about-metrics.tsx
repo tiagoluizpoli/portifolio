@@ -1,6 +1,7 @@
 import type { MetricSource } from '@repo/appwrite-core/domain';
 import { Plus, Target } from 'lucide-react';
 import { useState } from 'react';
+import { useMetricNormalizer } from '../../../hooks/use-metric-normalizer';
 import type { ImpactMetricInput } from '../../../types/about';
 import { MetricCard } from './metric-card';
 import { MetricDialog } from './metric-dialog';
@@ -30,8 +31,10 @@ export function AboutMetrics({ form, sources, aboutId }: AboutMetricsProps) {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
   const f = form as MinimalForm;
-  const metrics = (f.getFieldValue('metrics') as ImpactMetricInput[]) || [];
+  const rawMetrics = (f.getFieldValue('metrics') as ImpactMetricInput[]) || [];
   const currentLocale = (f.getFieldValue('locale') as string) || 'en';
+
+  const normalizedMetrics = useMetricNormalizer(rawMetrics, sources);
 
   const handleOpenAdd = () => {
     setEditingIndex(null);
@@ -45,19 +48,13 @@ export function AboutMetrics({ form, sources, aboutId }: AboutMetricsProps) {
 
   const handleDelete = (index: number) => {
     // Explicitly update form state to trigger re-renders
-    const currentMetrics = [...metrics];
+    const currentMetrics = [...rawMetrics];
     currentMetrics.splice(index, 1);
     f.setFieldValue('metrics', currentMetrics);
   };
 
-  const getSourceTitle = (sourceId: string) => {
-    if (sourceId === 'manual') return 'Manual Entry';
-    console.log({ sources, sourceId });
-    return sources?.find((s) => s.id === sourceId)?.title || 'Telemetry';
-  };
-
   const handleSubmitMetric = (metric: ImpactMetricInput) => {
-    const currentMetrics = [...metrics];
+    const currentMetrics = [...rawMetrics];
     if (editingIndex !== null) {
       currentMetrics[editingIndex] = metric;
     } else {
@@ -85,17 +82,19 @@ export function AboutMetrics({ form, sources, aboutId }: AboutMetricsProps) {
 
       {/* Metrics Grid/List - Compact Gaps */}
       <div className="grid gap-3">
-        {metrics.map((metric: ImpactMetricInput, i: number) => (
+        {normalizedMetrics.map((metric, i) => (
           <MetricCard
             key={metric.id || `metric-${i}`}
             metric={metric}
-            sourceTitle={getSourceTitle(metric.sourceId)}
+            sourceTitle={metric.sourceName}
+            resolvedIcon={metric.resolvedIcon}
+            isAutomated={metric.isAutomated}
             onEdit={() => handleOpenEdit(i)}
             onDelete={() => handleDelete(i)}
           />
         ))}
 
-        {metrics.length === 0 && (
+        {normalizedMetrics.length === 0 && (
           <Card className="text-center py-8 border-2 border-dashed border-border/40 rounded-xl bg-transparent shadow-none group hover:border-primary/20 transition-all">
             <div className="space-y-3">
               <div className="size-10 rounded-full bg-muted/20 flex items-center justify-center mx-auto group-hover:bg-primary/5 transition-colors">
@@ -114,7 +113,7 @@ export function AboutMetrics({ form, sources, aboutId }: AboutMetricsProps) {
         onClose={() => setIsDialogOpen(false)}
         onSubmit={handleSubmitMetric}
         sources={sources}
-        initialData={editingIndex !== null ? metrics[editingIndex] : null}
+        initialData={editingIndex !== null ? rawMetrics[editingIndex] : null}
         aboutId={aboutId}
         locale={currentLocale}
       />

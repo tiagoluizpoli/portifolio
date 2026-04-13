@@ -24,8 +24,8 @@ export const metricSchema = z
     prefix: z.string().optional(),
     suffix: z.string().optional(),
     sourceId: z.string().min(1, 'Source selection is required'),
-    sourceKey: z.string().optional(),
     iconCode: z.string().optional(),
+    isPlaceholder: z.boolean(),
   })
   .refine(
     (data) => {

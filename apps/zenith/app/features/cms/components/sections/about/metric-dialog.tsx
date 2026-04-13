@@ -59,8 +59,8 @@ export function MetricDialog({
       prefix: '',
       suffix: '',
       sourceId: 'manual',
-      sourceKey: '',
       iconCode: '',
+      isPlaceholder: false,
     }) as ImpactMetricInput,
     validators: {
       onChange: metricSchema,
@@ -85,8 +85,8 @@ export function MetricDialog({
           prefix: '',
           suffix: '',
           sourceId: 'manual',
-          sourceKey: '',
           iconCode: '',
+          isPlaceholder: false,
         }) as ImpactMetricInput,
       );
     }
@@ -136,7 +136,7 @@ export function MetricDialog({
                             value={source.id}
                             className="text-xs font-bold uppercase py-2"
                           >
-                            {source.title}
+                            {source.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -230,55 +230,43 @@ export function MetricDialog({
 
               <form.Subscribe selector={(state) => state.values.sourceId}>
                 {(sourceId) => (
-                  <>
-                    {sourceId === 'manual' ? (
-                      <form.Field name="value">
-                        {(field) => (
-                          <div className="space-y-2 col-span-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                            <Label
-                              htmlFor={field.name}
-                              className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40"
-                            >
-                              Metric Value
-                            </Label>
-                            <Input
-                              id={field.name}
-                              value={field.state.value}
-                              onBlur={field.handleBlur}
-                              onChange={(e) =>
-                                field.handleChange(e.target.value)
-                              }
-                              placeholder="e.g., 500"
-                              className="!h-10 bg-transparent border-border focus:ring-primary/20 text-xs font-bold uppercase tracking-widest placeholder:text-muted-foreground/20"
-                            />
-                          </div>
+                  <form.Field name="value">
+                    {(field) => (
+                      <div className="space-y-2 col-span-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <Label
+                          htmlFor={field.name}
+                          className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40"
+                        >
+                          {sourceId === 'manual'
+                            ? 'Metric Value'
+                            : 'Automated Value (Read-Only)'}
+                        </Label>
+                        <Input
+                          id={field.name}
+                          value={field.state.value}
+                          disabled={sourceId !== 'manual'}
+                          onBlur={field.handleBlur}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          placeholder={
+                            sourceId === 'manual'
+                              ? 'e.g., 500'
+                              : 'Waiting for Telemetry...'
+                          }
+                          className={`!h-10 bg-transparent border-border focus:ring-primary/20 text-xs font-bold uppercase tracking-widest placeholder:text-muted-foreground/20 ${
+                            sourceId !== 'manual'
+                              ? 'opacity-50 cursor-not-allowed'
+                              : ''
+                          }`}
+                        />
+                        {sourceId !== 'manual' && (
+                          <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest leading-relaxed">
+                            This metric is controlled by an automated source.
+                            Values are updated via edge functions.
+                          </p>
                         )}
-                      </form.Field>
-                    ) : (
-                      <form.Field name="sourceKey">
-                        {(field) => (
-                          <div className="space-y-2 col-span-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                            <Label
-                              htmlFor={field.name}
-                              className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40"
-                            >
-                              External Key Mapping
-                            </Label>
-                            <Input
-                              id={field.name}
-                              value={field.state.value}
-                              onBlur={field.handleBlur}
-                              onChange={(e) =>
-                                field.handleChange(e.target.value)
-                              }
-                              placeholder="e.g., statistics.total_donations"
-                              className="!h-10 bg-transparent border-border focus:ring-primary/20 text-xs font-bold uppercase tracking-widest placeholder:text-muted-foreground/20"
-                            />
-                          </div>
-                        )}
-                      </form.Field>
+                      </div>
                     )}
-                  </>
+                  </form.Field>
                 )}
               </form.Subscribe>
 
