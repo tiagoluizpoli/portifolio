@@ -146,3 +146,14 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 }
+
+@layer utilities {
+  .no-spinner {
+    appearance: textfield;
+  }
+  .no-spinner::-webkit-inner-spin-button,
+  .no-spinner::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
+  }
+}
