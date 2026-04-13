@@ -2,7 +2,6 @@ import {
   AppwriteProvider,
   type Models,
   type Storage,
-  type TablesDB,
 } from '@repo/appwrite-core/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MigratePortfolioUseCase } from '../application/migrate-portfolio.use-case.js';
@@ -49,6 +48,7 @@ describe('MigratePortfolioUseCase', () => {
   let mockTables: {
     createTransaction: ReturnType<typeof vi.fn>;
     upsertRow: ReturnType<typeof vi.fn>;
+    createRow: ReturnType<typeof vi.fn>;
     updateTransaction: ReturnType<typeof vi.fn>;
     get: ReturnType<typeof vi.fn>;
   };
@@ -65,6 +65,7 @@ describe('MigratePortfolioUseCase', () => {
     mockTables = {
       createTransaction: vi.fn().mockResolvedValue({ $id: 'tx-123' }),
       upsertRow: vi.fn().mockResolvedValue({}),
+      createRow: vi.fn().mockResolvedValue({}),
       updateTransaction: vi.fn().mockResolvedValue({}),
       get: vi.fn().mockResolvedValue({}),
     };
@@ -76,9 +77,8 @@ describe('MigratePortfolioUseCase', () => {
       deleteFile: vi.fn().mockResolvedValue({}),
     };
 
-    vi.mocked(AppwriteProvider.getTablesDB).mockReturnValue(
-      mockTables as unknown as TablesDB,
-    );
+    // biome-ignore lint/suspicious/noExplicitAny: infrastructure-level mock
+    vi.mocked(AppwriteProvider.getTablesDB).mockReturnValue(mockTables as any);
     vi.mocked(AppwriteProvider.getStorage).mockReturnValue(
       mockStorage as unknown as Storage,
     );
@@ -109,7 +109,7 @@ describe('MigratePortfolioUseCase', () => {
     await useCase.execute();
 
     expect(mockTables.createTransaction).toHaveBeenCalled();
-    expect(mockTables.upsertRow).toHaveBeenCalled();
+    expect(mockTables.createRow).toHaveBeenCalled();
     expect(mockTables.updateTransaction).toHaveBeenCalledWith(
       expect.objectContaining({ commit: true }),
     );

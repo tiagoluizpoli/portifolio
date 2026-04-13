@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "tsx src/main/index.ts",
     "seed": "tsx src/main/seed.ts",
+    "seed:cms": "tsx src/scripts/seed-cms.ts",
     "lint": "biome check src",
     "test": "vitest run src",
     "typecheck": "tsc --noEmit"

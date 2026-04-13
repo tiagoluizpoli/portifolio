@@ -33,12 +33,14 @@ export class MigratePortfolioUseCase {
 
     // 1. Ensure Infrastructure (Schema & Storage)
     await this.schemaManager.run();
+    await this.schemaManager.truncateAllTables();
 
     // 2. Parse Data
     const data = DataParser.parse();
     // 3. Handle Assets (Upload live files)
     console.log('[STEP] Uploading Portfolio Assets...');
     const usedFileIds = new Set<string>();
+    const idMapping = new Map<string, string>(); // §VIII: Map old deterministic IDs to new Appwrite IDs
     let realProfileId = '';
     let realCvId = '';
 
@@ -90,6 +92,10 @@ export class MigratePortfolioUseCase {
         console.log(
           `[BATCH] Processing ${batch.tableId} (${batch.rows.length} rows)...`,
         );
+        // Skip delay in test environment (§VIII)
+        if (process.env.NODE_ENV !== 'test') {
+          await new Promise((resolve) => setTimeout(resolve, 2000)); // GUIDELINE 1.9: Eventual Consistency Delay
+        }
         for (const row of batch.rows) {
           // Track and map asset IDs
           if (batch.tableId === 'home') {
@@ -127,20 +133,38 @@ export class MigratePortfolioUseCase {
           )
             usedFileIds.add(cvId);
 
-          // 2.15: Deterministic IDs
-          const rowId = this.generateDeterministicId(
+          // 2.15: Pivot to Native IDs (§VIII)
+          const originalId = this.generateDeterministicId(
             batch.tableId,
             row as Record<string, unknown>,
           );
 
-          // Perform transactional upsert
-          await this.tables.upsertRow({
+          // Handle relationships using mapping
+          const processedRow = { ...row } as Record<string, unknown>;
+          if (batch.tableId === 'impact_metrics') {
+            if (processedRow.aboutId) {
+              const newAboutId = idMapping.get(processedRow.aboutId as string);
+              if (newAboutId) processedRow.aboutId = newAboutId;
+            }
+            if (processedRow.sourceId) {
+              const newSourceId = idMapping.get(
+                processedRow.sourceId as string,
+              );
+              if (newSourceId) processedRow.sourceId = newSourceId;
+            }
+          }
+
+          // Perform transactional creation with native ID
+          const rowResponse = await this.tables.createRow({
             databaseId: this.databaseId,
             tableId: batch.tableId,
-            rowId,
-            data: row as Record<string, unknown>,
+            rowId: ID.unique(),
+            data: processedRow,
             transactionId,
           });
+
+          // Store mapping for children
+          idMapping.set(originalId, rowResponse.$id);
         }
       }
 

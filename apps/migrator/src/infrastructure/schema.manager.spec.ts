@@ -27,6 +27,7 @@ describe('SchemaManager', () => {
     createTable: vi.fn(),
     createStringColumn: vi.fn(),
     createIntegerColumn: vi.fn(),
+    createBooleanColumn: vi.fn(),
     createIndex: vi.fn(),
     create: vi.fn(),
   };
@@ -58,10 +59,10 @@ describe('SchemaManager', () => {
         const counts: Record<string, number> = {
           home: 10,
           about: 2,
-          metric_sources: 4,
-          impact_metrics: 7,
-          experience: 6,
-          education: 6,
+          metric_sources: 5,
+          impact_metrics: 8,
+          experience: 8,
+          education: 8,
           skills: 5,
           solutions: 5,
           platforms: 5,
