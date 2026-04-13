@@ -80,20 +80,20 @@ export class HomeRepository
     });
 
     const otherLocales = response.rows.filter(
-      // biome-ignore lint/suspicious/noExplicitAny: infrastructure-level cast
-      (row) => (row as any).locale !== currentLocale,
+      (row) =>
+        (row as unknown as Models.Document & { locale: string }).locale !==
+        currentLocale,
     );
 
     const updates = otherLocales.map((row) => {
-      // biome-ignore lint/suspicious/noExplicitAny: infrastructure-level cast
-      const payload: any = {};
+      const payload: Partial<HomeData> = {};
       for (const field of globalFields) {
         if (data[field] !== undefined) {
-          payload[field] = data[field];
+          // biome-ignore lint/suspicious/noExplicitAny: type-safe key indexing
+          (payload as any)[field] = data[field];
         }
       }
-      // biome-ignore lint/suspicious/noExplicitAny: infrastructure-level cast
-      return this.update((row as any).$id, payload);
+      return this.update(row.$id, payload as HomeData);
     });
 
     await Promise.all(updates);

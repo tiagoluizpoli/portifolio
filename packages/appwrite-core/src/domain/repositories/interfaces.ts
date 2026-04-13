@@ -92,7 +92,7 @@ export interface IMetricRepository extends IRepository<ImpactMetric> {
 
 export interface IMetricSourceRepository {
   findAll(): Promise<MetricSource[]>;
-  save(sources: MetricSource[]): Promise<void>;
+  save(sources: MetricSource[]): Promise<MetricSource[]>;
 }
 
 export interface IPlatformRepository {

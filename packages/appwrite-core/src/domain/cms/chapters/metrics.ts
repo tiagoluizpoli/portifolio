@@ -5,20 +5,23 @@
 
 export interface MetricSource {
   id: string;
-  title: string;
+  name: string;
   type: string;
+  iconCode: string;
+  functionId?: string;
+  status: string;
 }
 
 export interface ImpactMetric {
   id: string;
   aboutId: string;
-  internalCode: string; // [NEW] Round 4 Parity Handle
-  locale: string; // [NEW] Round 4
+  internalCode: string;
+  locale: string;
   label: string;
-  value: string;
+  value?: string;
   prefix?: string;
   suffix?: string;
   sourceId: string;
-  sourceKey?: string; // [NEW] Key for System Source telemetry
-  iconCode?: string; // [NEW] Round 4 Iconography Support
+  iconCode?: string;
+  isPlaceholder: boolean;
 }

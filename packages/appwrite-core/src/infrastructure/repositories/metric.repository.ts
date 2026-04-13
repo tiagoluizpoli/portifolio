@@ -21,28 +21,28 @@ export class MetricSourceRepository
     super(client, databaseId, 'metric_sources');
   }
 
-  async save(sources: MetricSource[]): Promise<void> {
+  async save(sources: MetricSource[]): Promise<MetricSource[]> {
     try {
+      const saved: MetricSource[] = [];
       for (const source of sources) {
         if (source.id) {
-          await this.update(source.id, source);
+          saved.push(await this.update(source.id, source));
         } else {
           const { id: _, ...data } = source;
-          await this.create(data);
+          saved.push(await this.create(data));
         }
       }
+      return saved;
     } catch (error: unknown) {
       this.handleError(error);
+      return [];
     }
   }
 
   protected mapToModel(doc: Models.Document): MetricSource {
-    const { $id, name, ...data } = doc as Models.Document & { name?: string };
-    const sourceData = data as Record<string, unknown>;
+    const { $id, ...data } = doc;
     return {
       id: $id,
-      title:
-        (name as string) || (sourceData.title as string) || 'Unknown Source',
       ...data,
     } as unknown as MetricSource;
   }
@@ -90,7 +90,6 @@ export class MetricRepository
         databaseId: this.databaseId,
         tableId: this.tableId,
         queries: [
-          Query.equal('aboutId', aboutId),
           Query.equal('locale', locale),
           Query.equal('internalCode', internalCode),
         ],
@@ -125,7 +124,17 @@ export class MetricRepository
         if (item.id) {
           await this.update(item.id, data);
         } else {
-          await this.create(data);
+          // Check if placeholder exists for this parity key
+          const existingParity = await this.findByParity(
+            aboutId,
+            locale,
+            item.internalCode,
+          );
+          if (existingParity) {
+            await this.update(existingParity.id, data);
+          } else {
+            await this.create(data);
+          }
         }
       }
     } catch (error: unknown) {

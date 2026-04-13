@@ -123,6 +123,8 @@ export class DataParser {
               : (exp.duration as Record<string, string>)?.[lang] ||
                 (exp.duration as Record<string, string>)?.en,
           sort: exp.sort,
+          location: exp.location || 'Remote',
+          current: exp.current || false,
           locale: lang,
         });
       }
@@ -145,6 +147,8 @@ export class DataParser {
               : (edu.duration as Record<string, string>)?.[lang] ||
                 (edu.duration as Record<string, string>)?.en,
           sort: edu.sort,
+          location: edu.location || 'Remote',
+          current: edu.current || false,
           locale: lang,
         });
       }
@@ -197,23 +201,45 @@ export class DataParser {
       }),
     );
 
-    const metricSourcesRows = data.metricSources || [];
+    const slugify = (text: string) =>
+      text
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/[\s_]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .substring(0, 30);
+
+    const rawMetricSources = data.metricSources || [];
+    const metricSourcesRows = rawMetricSources.map((s) => ({
+      ...s,
+    }));
+
+    // Ensure 'Manual' source exists (§VIII)
+    if (!metricSourcesRows.find((s) => s.name === 'Manual')) {
+      metricSourcesRows.push({
+        name: 'Manual',
+        type: 'Network',
+        iconCode: 'lucide:activity',
+        status: 'active',
+      });
+    }
 
     // 6. Impact Metrics Transformation (Semantic Parity)
     const impactMetricsRows: Record<string, unknown>[] = [];
     for (const metric of data.impactMetrics || []) {
       const sourceKey = (metric.sourceKey as string) || '';
-      const sourceName = sourceKey.split('_')[0] || 'manual';
-      const sourceId = `ms-${sourceName.toLowerCase()}`;
+      // Support both hyphenated and underscored keys (§VIII)
+      const sourceName = sourceKey.split(/[-_]/)[0] || 'manual';
+      const sourceId = `ms-${slugify(sourceName)}`;
 
       for (const lang of locales) {
         impactMetricsRows.push({
-          internalCode: sourceKey, // Use sourceKey as internal semantic link
+          internalCode: sourceKey,
           locale: lang,
           label: metric.label,
           value: metric.value,
           sourceId,
-          sourceKey,
+          isPlaceholder: false,
           aboutId: `about-${lang}`,
         });
       }

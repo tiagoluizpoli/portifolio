@@ -27,7 +27,7 @@ export class HistoryRepository
         queries: [Query.equal('locale', locale)],
       });
       return response.rows.map((row) =>
-        this.mapToModel(row as unknown as Models.Document),
+        this.mapHistoryToModel(row as unknown as Models.Document, type),
       );
     } catch (error: unknown) {
       this.handleError(error);
@@ -58,20 +58,25 @@ export class HistoryRepository
 
       // 3. Upsert
       for (const item of items) {
-        const payload = this.prepareData({ ...item, locale });
+        const payload = this.prepareHistoryData(item);
+        const data = { ...payload, locale } as unknown as Record<
+          string,
+          unknown
+        >;
+
         if (item.id) {
           await this.tables.updateRow({
             databaseId: this.databaseId,
             tableId: type,
             rowId: item.id,
-            data: payload as unknown as Record<string, unknown>,
+            data,
           });
         } else {
           await this.tables.createRow({
             databaseId: this.databaseId,
             tableId: type,
             rowId: ID.unique(),
-            data: payload as unknown as Record<string, unknown>,
+            data,
           });
         }
       }
@@ -80,7 +85,61 @@ export class HistoryRepository
     }
   }
 
+  /**
+   * Maps domain-level HistoryItem fields to table-specific schema (§XVII).
+   */
+  private prepareHistoryData(item: HistoryItem): Record<string, unknown> {
+    const { id, type, organization, title, period, ...rest } = item;
+
+    if (type === 'experience') {
+      return {
+        ...rest,
+        company: organization,
+        position: title,
+        duration: period,
+      };
+    }
+
+    return {
+      ...rest,
+      institution: organization,
+      degree: title,
+      duration: period,
+    };
+  }
+
+  /**
+   * Restores domain-level HistoryItem fields from technical DB records (§XVII).
+   */
+  private mapHistoryToModel(
+    doc: Models.Document,
+    type: 'experience' | 'education',
+  ): HistoryItem {
+    const historicalDoc = doc as unknown as Models.Document & {
+      company?: string;
+      position?: string;
+      institution?: string;
+      degree?: string;
+      duration: string;
+    };
+
+    const { $id, company, position, institution, degree, duration, ...data } =
+      historicalDoc;
+
+    return {
+      id: $id,
+      type,
+      organization: type === 'experience' ? company : institution,
+      title: type === 'experience' ? position : degree,
+      period: duration,
+      ...data,
+    } as unknown as HistoryItem;
+  }
+
   protected mapToModel(doc: Models.Document): HistoryItem {
+    // This method is required by base class but not used directly in HistoryRepository
+    // because we have two tables (Experience/Education) with different schemas.
+    // Use mapHistoryToModel instead.
     const { $id, ...data } = doc;
     return { id: $id, ...data } as unknown as HistoryItem;
   }

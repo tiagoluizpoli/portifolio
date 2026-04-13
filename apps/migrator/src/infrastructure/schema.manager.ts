@@ -24,10 +24,55 @@ export class SchemaManager {
       await this.ensureDatabase();
       await this.setupTables();
       await this.ensureBuckets();
-      console.log('[DEBUG] Schema Initialization Complete');
+      console.log(
+        '[DEBUG] Schema Initialization Complete. Waiting for consistency...',
+      );
+      await this.delay(2000); // GUIDELINE 1.9: Eventual Consistency Delay
     } catch (err) {
       console.error('[DEBUG] Schema Initialization FAILED:', err);
       throw err;
+    }
+  }
+
+  /**
+   * Truncates all tables managed by the SchemaManager.
+   * Useful for clean-slate migrations (§VIII).
+   */
+  async truncateAllTables() {
+    console.log('[WIPE] Truncating all CMS tables...');
+    const tableIds = [
+      'home',
+      'about',
+      'experience',
+      'education',
+      'skills',
+      'solutions',
+      'socials',
+      'contact_info',
+      'metric_sources',
+      'impact_metrics',
+    ];
+
+    for (const tableId of tableIds) {
+      try {
+        const response = await this.tables.listRows({
+          databaseId: this.databaseId,
+          tableId,
+        });
+
+        for (const row of response.rows) {
+          await this.tables.deleteRow({
+            databaseId: this.databaseId,
+            tableId,
+            rowId: row.$id,
+          });
+        }
+        console.log(`  [WIPE] Table ${tableId} cleared.`);
+      } catch (err: unknown) {
+        const error = err as { code?: number };
+        if (error.code === 404) continue; // Skip if table doesn't exist yet
+        console.warn(`  [WARN] Failed to truncate ${tableId}:`, err);
+      }
     }
   }
 
@@ -112,6 +157,7 @@ export class SchemaManager {
         { key: 'name', type: 'string', size: 255, required: true },
         { key: 'type', type: 'string', size: 50, required: true },
         { key: 'iconCode', type: 'string', size: 100, required: true },
+        { key: 'functionId', type: 'string', size: 255, required: false },
         { key: 'status', type: 'string', size: 50, required: true },
       ],
       indexes: [],
@@ -126,9 +172,10 @@ export class SchemaManager {
         { key: 'internalCode', type: 'string', size: 255, required: true },
         { key: 'locale', type: 'string', size: 10, required: true },
         { key: 'label', type: 'string', size: 255, required: true },
-        { key: 'value', type: 'string', size: 100, required: true },
+        { key: 'value', type: 'string', size: 100, required: false },
         { key: 'sourceId', type: 'string', size: 50, required: true },
-        { key: 'sourceKey', type: 'string', size: 255, required: false },
+        { key: 'iconCode', type: 'string', size: 100, required: false },
+        { key: 'isPlaceholder', type: 'boolean', required: true },
         { key: 'aboutId', type: 'string', size: 50, required: true },
       ],
       indexes: [
@@ -151,6 +198,8 @@ export class SchemaManager {
         { key: 'position', type: 'string', size: 255, required: true },
         { key: 'duration', type: 'string', size: 100, required: true },
         { key: 'description', type: 'string', size: 2000, required: false },
+        { key: 'location', type: 'string', size: 255, required: true },
+        { key: 'current', type: 'boolean', required: true },
         { key: 'sort', type: 'integer', required: true },
         { key: 'locale', type: 'string', size: 10, required: true },
       ],
@@ -170,6 +219,8 @@ export class SchemaManager {
         { key: 'degree', type: 'string', size: 255, required: true },
         { key: 'duration', type: 'string', size: 100, required: true },
         { key: 'description', type: 'string', size: 2000, required: false },
+        { key: 'location', type: 'string', size: 255, required: true },
+        { key: 'current', type: 'boolean', required: true },
         { key: 'sort', type: 'integer', required: true },
         { key: 'locale', type: 'string', size: 10, required: true },
       ],
@@ -323,6 +374,14 @@ export class SchemaManager {
             required: col.required,
             array: col.array,
           });
+        } else if (col.type === 'boolean') {
+          await this.tables.createBooleanColumn({
+            databaseId: this.databaseId,
+            tableId: params.tableId,
+            key: col.key,
+            required: col.required,
+            array: col.array,
+          });
         }
         console.log(`  [COLUMN] ${col.key} created.`);
       } catch (error: unknown) {
@@ -368,7 +427,7 @@ export class SchemaManager {
       console.log(
         `  [WAIT] Waiting for columns in ${tableId}... (${attempts + 1}/${maxAttempts})`,
       );
-      await new Promise((resolve) => setTimeout(resolve, delay));
+      await this.delay(delay);
       attempts++;
     }
   }
@@ -401,5 +460,10 @@ export class SchemaManager {
         }
       }
     }
+  }
+
+  private async delay(ms: number) {
+    if (process.env.NODE_ENV === 'test') return;
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
