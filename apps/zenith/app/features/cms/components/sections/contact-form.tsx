@@ -152,9 +152,9 @@ export function ContactForm() {
         </form.Subscribe>
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-2">
         {/* Core Channels */}
-        <div className="space-y-6">
+        <div className="space-y-4">
           {contact.isLoading ? (
             <div className="space-y-6">
               <div className="space-y-2">
@@ -174,12 +174,12 @@ export function ContactForm() {
             <>
               <form.Field name="email">
                 {(field) => (
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <Label
                       htmlFor="contactEmail"
                       className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60"
                     >
-                      Primary Email
+                      Email
                     </Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/40" />
@@ -197,12 +197,12 @@ export function ContactForm() {
 
               <form.Field name="phone">
                 {(field) => (
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <Label
                       htmlFor="contactPhone"
                       className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60"
                     >
-                      Professional Line
+                      Phone / Whatsapp
                     </Label>
                     <div className="relative">
                       <Phone className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/40" />
@@ -220,12 +220,12 @@ export function ContactForm() {
 
               <form.Field name="location">
                 {(field) => (
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <Label
                       htmlFor="contactLocation"
                       className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60"
                     >
-                      Geo Location
+                      Location
                     </Label>
                     <div className="relative">
                       <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/40" />
@@ -245,7 +245,7 @@ export function ContactForm() {
         </div>
 
         {/* Social Meta */}
-        <div className="space-y-6">
+        <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">
               Social Presence
