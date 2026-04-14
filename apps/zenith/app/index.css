@@ -6,6 +6,15 @@
 /* High-Density Editorial Typography: The Digital Curator [FR-012] */
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant data-open (&:is(
+    [data-state="open"],
+    [data-state="delayed-open"],
+    [data-state="active"]
+  ));
+@custom-variant data-closed (&:is(
+    [data-state="closed"],
+    [data-state="inactive"]
+  ));
 
 @theme {
   --font-sans: "Geist Variable", ui-sans-serif, system-ui;
