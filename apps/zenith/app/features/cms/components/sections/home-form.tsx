@@ -78,7 +78,7 @@ export function HomeForm() {
           data-testid="home-split-grid"
         >
           {/* Metadata Section */}
-          <Card className="p-4 bg-transparent border-border space-y-4 shadow-none">
+          <Card className="bg-transparent border-border space-y-4 shadow-none">
             <div className="grid grid-cols-2 gap-4">
               <form.Field name="firstName">
                 {(field) => (
@@ -160,8 +160,8 @@ export function HomeForm() {
           </Card>
 
           {/* Assets Section */}
-          <Card className="p-4 bg-transparent border-border flex flex-col items-center gap-4 shadow-none">
-            <div className="flex items-center gap-2 mb-2 w-full">
+          <Card className="bg-transparent border-border flex flex-col items-center gap-4 shadow-none p-0 pt-4">
+            <div className="flex items-center gap-2 w-full">
               <h3 className="text-[10px] font-extrabold uppercase tracking-[0.4em] text-foreground/40">
                 Hero Assets
               </h3>

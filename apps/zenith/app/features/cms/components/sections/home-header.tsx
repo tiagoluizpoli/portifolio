@@ -20,10 +20,10 @@ export function HomeHeader({
     <div className="flex items-center justify-between px-1 mb-6">
       <div className="space-y-1">
         <h2 className="text-2xl font-black tracking-tighter uppercase transition-all duration-500">
-          Hero Identity
+          Home
         </h2>
         <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-[0.3em]">
-          Core Brand & Narrative
+          Core & Narrative
         </p>
       </div>
 
@@ -35,7 +35,7 @@ export function HomeHeader({
           disabled={isPristine || isSaving}
           className="h-9 px-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all duration-300 rounded-lg group"
         >
-          <RotateCcw className="size-3 mr-2 opacity-40 group-hover:rotate-[-90deg] transition-transform duration-500" />
+          <RotateCcw className="size-3 mr-2 opacity-40 group-hover:-rotate-90 transition-transform duration-500" />
           Discard
         </Button>
         <Button

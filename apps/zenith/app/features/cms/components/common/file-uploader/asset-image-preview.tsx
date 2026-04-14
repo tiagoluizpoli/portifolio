@@ -19,7 +19,7 @@ export function AssetImagePreview({
   onImageLoad,
 }: AssetImagePreviewProps) {
   return (
-    <div className="size-full flex items-center px-8 gap-8 animate-in slide-in-from-left-4 duration-500">
+    <div className="size-full flex items-center px-4 gap-4 animate-in slide-in-from-left-4 duration-500">
       {/* Left Column: Portrait */}
       <div className="relative group/pic">
         <div className="size-32 rounded-3xl border-2 border-border/50 overflow-hidden bg-muted/20 shadow-xl transition-all duration-500 group-hover/pic:border-primary/30 group-hover/pic:shadow-primary/5 relative">
@@ -31,13 +31,13 @@ export function AssetImagePreview({
             alt="preview"
             onLoad={onImageLoad}
             className={cn(
-              'size-full object-contain p-2 transition-all duration-700 group-hover/pic:scale-110',
+              'rounded-3xl size-full object-contain p-2 transition-all duration-700 group-hover/pic:scale-110',
               isImageLoading ? 'opacity-0' : 'opacity-100',
             )}
           />
         </div>
         {/* Status Indicator */}
-        <div className="absolute -bottom-1 -right-1 size-5 rounded-full bg-emerald-500 border-2 border-background flex items-center justify-center shadow-lg transform scale-0 group-hover/pic:scale-100 transition-transform duration-300">
+        <div className="absolute  -bottom-1 -right-1 size-5 rounded-full bg-emerald-500 border-2 border-background flex items-center justify-center shadow-lg transform scale-0 group-hover/pic:scale-100 transition-transform duration-300">
           <div className="size-1.5 rounded-full bg-white animate-pulse" />
         </div>
       </div>

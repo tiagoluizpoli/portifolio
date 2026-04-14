@@ -219,7 +219,7 @@ export function FileUploader({
         className={cn(
           'relative group transition-all duration-500',
           'w-full rounded-3xl overflow-hidden',
-          variant === 'image' ? 'h-[160px]' : 'h-[285px]',
+          variant === 'image' ? 'h-[160px]' : 'h-[350px]',
           'border border-dashed border-border flex flex-col items-center justify-center',
           isUploading && 'animate-pulse cursor-wait',
         )}
