@@ -6,11 +6,11 @@ import { z } from 'zod';
  */
 export const socialLinkSchema = z.object({
   id: z.string().min(1, 'ID is required'),
-  platform: z.string().min(1, 'Platform name is required'),
-  url: z.string().url('Invalid URL format').or(z.literal('')),
+  platformId: z.string().min(1, 'Platform is required'),
+  username: z.string().min(1, 'Username is required'),
   iconId: z.string().min(1, 'Icon ID is required'),
-  active: z.boolean().default(true),
-  sort: z.number().int().default(0),
+  active: z.boolean(),
+  sort: z.number().int(),
 });
 
 /**

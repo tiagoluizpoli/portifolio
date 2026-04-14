@@ -8,6 +8,7 @@ import type {
   ImpactMetric,
   MetricSource,
 } from '../domain/cms/chapters/metrics.js';
+import type { Platform } from '../domain/cms/chapters/platforms.js';
 import { MetricSyncService } from '../domain/services/metric-sync.service.js';
 import { AboutRepository } from '../infrastructure/repositories/about.repository.js';
 import {
@@ -21,6 +22,7 @@ import {
   MetricRepository,
   MetricSourceRepository,
 } from '../infrastructure/repositories/metric.repository.js';
+import { PlatformRepository } from '../infrastructure/repositories/platform.repository.js';
 import { StorageRepository } from '../infrastructure/repositories/storage.repository.js';
 
 /**
@@ -35,6 +37,7 @@ export class CmsService {
   private solutionRepo: SolutionRepository;
   private metricRepo: MetricRepository;
   private metricSourceRepo: MetricSourceRepository;
+  private platformRepo: PlatformRepository;
   private contactRepo: ContactRepository;
   private storageRepo: StorageRepository;
   private metricSyncService: MetricSyncService;
@@ -51,6 +54,7 @@ export class CmsService {
     this.solutionRepo = new SolutionRepository(client, databaseId);
     this.metricRepo = new MetricRepository(client, databaseId);
     this.metricSourceRepo = new MetricSourceRepository(client, databaseId);
+    this.platformRepo = new PlatformRepository(client, databaseId);
     this.contactRepo = new ContactRepository(client, databaseId);
     this.storageRepo = new StorageRepository();
     this.metricSyncService = new MetricSyncService(this.metricRepo, locales);
@@ -145,6 +149,15 @@ export class CmsService {
 
   async saveSolutions(locale: string, solutions: Solution[]): Promise<void> {
     return this.solutionRepo.save(locale, solutions);
+  }
+
+  // --- Platforms ---
+  async getPlatforms(): Promise<Platform[]> {
+    return this.platformRepo.findAll();
+  }
+
+  async savePlatforms(platforms: Platform[]): Promise<void> {
+    return this.platformRepo.save(platforms);
   }
 
   // --- Contact ---

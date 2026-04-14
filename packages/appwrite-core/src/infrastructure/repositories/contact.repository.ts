@@ -58,8 +58,8 @@ export class ContactRepository
         const data = row as any;
         return {
           id: data.$id,
-          platform: data.type as string, // DB uses 'type' for platform name
-          url: data.url as string,
+          platformId: data.platformId as string,
+          username: data.username as string,
           iconId: data.iconCode as string,
           active: data.status === 'active',
           sort: data.sort || 0,
@@ -141,8 +141,8 @@ export class ContactRepository
           tableId: this.socialsTableId,
           rowId: ID.unique(),
           data: {
-            type: social.platform,
-            url: social.url,
+            platformId: social.platformId,
+            username: social.username,
             iconCode: social.iconId,
             status: social.active ? 'active' : 'inactive',
             sort: social.sort,

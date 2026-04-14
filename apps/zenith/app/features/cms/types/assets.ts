@@ -36,7 +36,17 @@ export const solutionsListSchema = z.object({
   items: z.array(solutionSchema),
 });
 
+export const platformSchema = z.object({
+  id: z.string().optional(),
+  title: z.string().min(1, 'Platform name is required'),
+  urlTemplate: z.string().min(1, 'URL Template is required'),
+  iconCode: z.string().min(1, 'Icon code is required'),
+  status: z.enum(['active', 'archived']).default('active'),
+  sort: z.number().int().optional(),
+});
+
 export type SkillInput = z.infer<typeof skillSchema>;
 export type SkillsInput = z.infer<typeof skillsSchema>;
 export type SolutionInput = z.infer<typeof solutionSchema>;
 export type SolutionsInput = z.infer<typeof solutionsListSchema>;
+export type PlatformInput = z.infer<typeof platformSchema>;

@@ -13,6 +13,7 @@ export const CMS_KEYS = {
   solutions: (locale: string) => CMS_KEYS.section('solutions', locale),
   contact: (locale: string) => CMS_KEYS.section('contact', locale),
   metricSources: () => [...CMS_KEYS.all, 'metric-sources'] as const,
+  platforms: () => [...CMS_KEYS.all, 'platforms'] as const,
 };
 
 export function useHomeQuery(locale: string) {
@@ -76,5 +77,12 @@ export function useMetricSourcesQuery() {
   return useQuery({
     queryKey: CMS_KEYS.metricSources(),
     queryFn: () => CmsServer.getMetricSources(),
+  });
+}
+
+export function usePlatformsQuery() {
+  return useQuery({
+    queryKey: CMS_KEYS.platforms(),
+    queryFn: () => CmsServer.getPlatforms(),
   });
 }

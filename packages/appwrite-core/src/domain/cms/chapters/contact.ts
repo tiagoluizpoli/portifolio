@@ -5,8 +5,8 @@
 
 export interface SocialLink {
   id: string;
-  platform: string;
-  url: string;
+  platformId: string;
+  username: string;
   iconId: string;
   active: boolean;
   sort: number;
