@@ -1,15 +1,14 @@
 import type { ContactData } from '@repo/appwrite-core';
-import { useForm } from '@tanstack/react-form';
-import { Mail, MapPin, Phone, Plus, Trash2 } from 'lucide-react';
-import { useEffect, useMemo } from 'react';
+import { Mail, MapPin, Phone, Plus, Settings2 } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import { useCmsContext } from '../../context/cms-context';
-import {
-  type ContactInput,
-  contactSchema,
-  type SocialLinkInput,
-} from '../../types/contact';
+import { usePlatformsQuery } from '../../hooks/use-cms-queries';
+import type { ContactInput } from '../../types/contact';
 import { CmsDiscardButton } from '../common/cms-discard-button';
 import { CmsSaveButton } from '../common/cms-save-button';
+import { PlatformManagerDrawer } from '../platforms/platform-manager-drawer';
+import { SocialItem } from './contact/social-item';
+import { type ContactFormInstance, useContactFormBase } from './contact/types';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -18,11 +17,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { generateId } from '@/lib/utils';
 
 /**
- * ContactForm (Constitution §XVII, §I)
  * Section 07: Professional Outreach.
  */
 export function ContactForm() {
   const { currentLocale, contact, saveSection, isSaving } = useCmsContext();
+  const { data: platforms } = usePlatformsQuery();
+  const [isPlatformsOpen, setIsPlatformsOpen] = useState(false);
 
   const initialData = useMemo(() => {
     const defaults = {
@@ -38,28 +38,29 @@ export function ContactForm() {
       ...defaults,
       ...data,
       socials: (
-        (data.socials as SocialLinkInput[]) ||
-        (data.socialLinks as SocialLinkInput[]) ||
-        (data.social_links as SocialLinkInput[]) ||
+        (data.socials as unknown[]) ||
+        (data.socialLinks as unknown[]) ||
+        (data.social_links as unknown[]) ||
         []
-      ).map((s) => ({
-        ...s,
-        active: s.active ?? true,
-        sort: s.sort ?? 0,
-      })),
+      ).map((s) => {
+        const item = s as Record<string, unknown>;
+        return {
+          ...item,
+          platformId: (item.platformId as string) || '',
+          username: (item.username as string) || (item.url as string) || '',
+          active: (item.active as boolean) ?? true,
+          sort: (item.sort as number) ?? 0,
+        };
+      }),
     } as ContactInput;
   }, [contact.data, currentLocale]);
 
-  const form = useForm({
-    defaultValues: initialData as ContactInput,
-    validators: {
-      // @ts-expect-error - TanStack Form depth limits (§XVII)
-      onChange: contactSchema,
-    },
-    onSubmit: async ({ value }) => {
+  const form: ContactFormInstance = useContactFormBase(
+    initialData,
+    async (value: ContactInput) => {
       await saveSection('contact', value as unknown as ContactData);
     },
-  });
+  );
 
   // Reactive reset when data arrives (§V)
   useEffect(() => {
@@ -71,9 +72,9 @@ export function ContactForm() {
   const addSocial = () => {
     form.pushFieldValue('socials', {
       id: generateId('soc'),
-      platform: '',
-      url: '',
-      iconId: '',
+      platformId: '',
+      username: '',
+      iconId: 'lucide:link',
       active: true,
       sort: 0,
     });
@@ -249,17 +250,34 @@ export function ContactForm() {
             <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">
               Social Presence
             </Label>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={addSocial}
-              className="h-7 text-[9px] font-bold uppercase tracking-widest text-primary"
-            >
-              <Plus size={12} className="mr-1" />
-              Add Social
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsPlatformsOpen(true)}
+                className="h-7 text-[9px] font-bold uppercase tracking-widest text-muted-foreground/40 hover:text-primary transition-colors"
+              >
+                <Settings2 size={12} className="mr-1" />
+                Manage Platforms
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={addSocial}
+                className="h-7 text-[9px] font-bold uppercase tracking-widest text-primary"
+              >
+                <Plus size={12} className="mr-1" />
+                Add Social
+              </Button>
+            </div>
           </div>
+
+          <PlatformManagerDrawer
+            open={isPlatformsOpen}
+            onOpenChange={setIsPlatformsOpen}
+          />
 
           <form.Field name="socials">
             {(field) => (
@@ -291,96 +309,17 @@ export function ContactForm() {
                   ))
                 ) : (
                   <>
-                    {field.state.value.map((link, index) => (
-                      <Card
-                        key={link.id}
-                        className="bg-card/30 border border-border/50 p-4 relative group"
-                      >
-                        <div className="grid gap-4 sm:grid-cols-2">
-                          <form.Field name={`socials[${index}].platform`}>
-                            {(subField) => (
-                              <div className="space-y-2">
-                                <Label
-                                  htmlFor={`social-platform-${index}`}
-                                  className="text-[9px] font-bold text-muted-foreground/50 uppercase tracking-wider"
-                                >
-                                  Platform
-                                </Label>
-                                <Input
-                                  id={`social-platform-${index}`}
-                                  name={`socials[${index}].platform`}
-                                  value={subField.state.value ?? ''}
-                                  onChange={(e) =>
-                                    subField.handleChange(e.target.value)
-                                  }
-                                  placeholder="e.g. LinkedIn"
-                                  className="bg-transparent h-9 text-xs"
-                                />
-                              </div>
-                            )}
-                          </form.Field>
-
-                          <form.Field name={`socials[${index}].url`}>
-                            {(subField) => (
-                              <div className="space-y-2">
-                                <Label
-                                  htmlFor={`social-url-${index}`}
-                                  className="text-[9px] font-bold text-muted-foreground/50 uppercase tracking-wider"
-                                >
-                                  Profile URL
-                                </Label>
-                                <Input
-                                  id={`social-url-${index}`}
-                                  name={`socials[${index}].url`}
-                                  value={subField.state.value ?? ''}
-                                  onChange={(e) =>
-                                    subField.handleChange(e.target.value)
-                                  }
-                                  placeholder="https://..."
-                                  className="bg-transparent h-9 text-xs"
-                                />
-                              </div>
-                            )}
-                          </form.Field>
-                        </div>
-
-                        <div className="flex items-center justify-between mt-4">
-                          <form.Field name={`socials[${index}].iconId`}>
-                            {(subField) => (
-                              <div className="flex items-center gap-3">
-                                <Label
-                                  htmlFor={`social-icon-${index}`}
-                                  className="text-[9px] font-bold text-muted-foreground/50 uppercase tracking-wider whitespace-nowrap"
-                                >
-                                  Icon ID
-                                </Label>
-                                <Input
-                                  id={`social-icon-${index}`}
-                                  name={`socials[${index}].iconId`}
-                                  value={subField.state.value ?? ''}
-                                  onChange={(e) =>
-                                    subField.handleChange(e.target.value)
-                                  }
-                                  placeholder="lucide:link"
-                                  className="bg-transparent h-8 text-[10px] w-32"
-                                />
-                              </div>
-                            )}
-                          </form.Field>
-
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => removeSocial(index)}
-                            className="h-8 text-[9px] font-bold uppercase tracking-widest text-muted-foreground/30 hover:text-destructive hover:bg-destructive/10"
-                          >
-                            <Trash2 size={12} className="mr-2" />
-                            Remove
-                          </Button>
-                        </div>
-                      </Card>
-                    ))}
+                    {field.state.value.map(
+                      (_: ContactInput['socials'][number], index: number) => (
+                        <SocialItem
+                          key={field.state.value[index].id}
+                          index={index}
+                          form={form}
+                          platforms={platforms || []}
+                          onRemove={removeSocial}
+                        />
+                      ),
+                    )}
 
                     {field.state.value.length === 0 && (
                       <div className="h-32 border border-dashed border-border/60 rounded-lg flex items-center justify-center bg-card/10">
