@@ -75,6 +75,7 @@ function NotFoundComponent() {
 }
 
 import { QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from 'sonner';
 import { LayoutShell } from '../components/layout/layout-shell';
 import { TooltipProvider } from '../components/ui/tooltip';
 import { queryClient } from '../lib/query-client';
@@ -97,6 +98,7 @@ function RootComponent() {
           <LayoutShell>
             <Outlet />
           </LayoutShell>
+          <Toaster position="top-right" richColors closeButton />
         </TooltipProvider>
       </QueryClientProvider>
     </RootDocument>

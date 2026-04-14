@@ -77,12 +77,12 @@ This project is executed in isolated **Verification Rounds**. Each round must be
 ## Phase 6: [US3] Home Split-Layout (Round 6)
 **Goal**: 1:1 metadata and asset administration dashboard.
 
-- [ ] T030 [US3] [TEST] [FE] Verify Split Grid responsiveness and input spinners: TS-FE-001, TS-FE-003, TS-FE-004.
-- [ ] T031 [US3] [TEST] [INT] Verify Asset Preview rendering for Picture and CV: TS-INT-001, TS-INT-002.
-- [ ] T032 [US3] Refactor Home Admin view to perfect 1:1 Split.
-- [ ] T033 [STYLE] Implement global `.no-spinner` utility in `apps/zenith/app/styles/index.css`.
-- [ ] T034 [US3] Implement high-fidelity Asset Uploader with drag-and-drop and progress bars.
-- [ ] T035 [US3] Implement Picture and CV borderless preview windows within scrollable viewport.
+- [x] T030 [US3] [TEST] [FE] Verify Split Grid responsiveness and input spinners: TS-FE-001, TS-FE-003, TS-FE-004.
+- [x] T031 [US3] [TEST] [INT] Verify Asset Preview rendering for Picture and CV: TS-INT-001, TS-INT-002.
+- [x] T032 [US3] Refactor Home Admin view to perfect 1:1 Split.
+- [x] T033 [STYLE] Implement global `.no-spinner` utility in `apps/zenith/app/styles/index.css`.
+- [x] T034 [US3] Implement high-fidelity Asset Uploader with drag-and-drop and progress bars.
+- [x] T035 [US3] Implement Picture and CV borderless preview windows within scrollable viewport.
 
 **Checkpoint**: Home Section verified in split-layout.
 
@@ -91,15 +91,15 @@ This project is executed in isolated **Verification Rounds**. Each round must be
 ## Phase 7: [US4] Managed Platforms (Round 7)
 **Goal**: Atomic side-drawer for platform CRUD.
 
-- [ ] T033 [US4] [TEST] [FE] Verify Platform Drawer CRUD lifecycle: TS-FE-001, TS-FE-002, TS-FE-006.
-- [ ] T034 [US4] [TEST] [INT] Verify Consumer Sync (Contact Form updates): TS-INT-001, TS-INT-002.
-- [ ] T035 [US4] Create `PlatformManagerDrawer` component with `IconPicker` integration.
-- [ ] T036 [US4] Update Contact form to consume the managed Platforms collection.
+- [ ] T036 [US4] [TEST] [FE] Verify Platform Drawer CRUD lifecycle: TS-FE-001, TS-FE-002, TS-FE-006.
+- [ ] T037 [US4] [TEST] [INT] Verify Consumer Sync (Contact Form updates): TS-INT-001, TS-INT-002.
+- [ ] T038 [US4] Create `PlatformManagerDrawer` component with `IconPicker` integration.
+- [ ] T039 [US4] Update Contact form to consume the managed Platforms collection.
 
 **Checkpoint**: Managed platforms active.
 
 ---
 
 ## Final Phase: Polish & Quality Gate
-- [x] T037 Run `pnpm guard` to ensure zero linting or type-safety errors.
-- [ ] T038 Execute Final E2E Journey (TC-E2E-001, TC-E2E-002).
+- [x] T040 Run `pnpm guard` to ensure zero linting or type-safety errors.
+- [ ] T041 Execute Final E2E Journey (TC-E2E-001, TC-E2E-002).

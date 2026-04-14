@@ -4,26 +4,24 @@ import type {
   HistoryItem,
   HomeData,
   MetricSource,
+  Platform,
   Skill,
   Solution,
 } from '@repo/appwrite-core/domain';
 import type { AppwriteEnv } from '@repo/appwrite-core/infrastructure';
-import { AppwriteProvider, CmsService } from '@repo/appwrite-core/server';
 import { createServerFn } from '@tanstack/react-start';
+import {
+  AppwriteProvider,
+  CmsService,
+} from '../../../../../packages/appwrite-core/src/server';
 import { env } from '@/config/env';
 
-let cmsServiceInstance: CmsService | null = null;
-
 function getService(): CmsService {
-  if (!cmsServiceInstance) {
-    AppwriteProvider.initialize(env as unknown as AppwriteEnv);
-    cmsServiceInstance = new CmsService(
-      AppwriteProvider.client,
-      env.APPWRITE_DATABASE_ID,
-      ['en', 'pt'],
-    );
-  }
-  return cmsServiceInstance;
+  AppwriteProvider.initialize(env as unknown as AppwriteEnv);
+  return new CmsService(AppwriteProvider.client, env.APPWRITE_DATABASE_ID, [
+    'en',
+    'pt',
+  ]);
 }
 
 // --- Home ---
@@ -141,6 +139,21 @@ export const saveMetricSources = createServerFn({ method: 'POST' }).handler(
     // biome-ignore lint/suspicious/noExplicitAny: infrastructure-level cast
     const sources = (ctx as any).data as MetricSource[];
     return getService().saveMetricSources(sources);
+  },
+);
+
+// --- Platforms ---
+export const getPlatforms = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    return getService().getPlatforms();
+  },
+);
+
+export const savePlatforms = createServerFn({ method: 'POST' }).handler(
+  async (ctx) => {
+    // biome-ignore lint/suspicious/noExplicitAny: infrastructure-level cast
+    const platforms = (ctx as any).data as Platform[];
+    return getService().savePlatforms(platforms);
   },
 );
 
