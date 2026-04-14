@@ -133,8 +133,8 @@ const fullData: AuditData = {
     socials: [
       {
         id: 'gh',
-        platform: 'github',
-        url: 'https://github.com',
+        platformId: 'github',
+        username: 'tiagoluizpoli',
         iconId: 'lucide:github',
         active: true,
         sort: 0,
