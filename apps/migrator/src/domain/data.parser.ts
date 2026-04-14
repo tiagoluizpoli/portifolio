@@ -11,6 +11,7 @@ export interface LegacyData {
   contactInfo: Record<string, unknown>[];
   metricSources: Record<string, unknown>[];
   impactMetrics: Record<string, unknown>[];
+  platforms: Record<string, unknown>[];
 }
 
 interface HomeData {
@@ -172,15 +173,72 @@ export class DataParser {
       solIdx++;
     }
 
-    // 5. Socials & Skills are mostly flat
-    const socialsRows = (data.home.socials || []).map(
-      (s: Record<string, unknown>, idx: number) => ({
-        type: s.type,
-        url: s.url,
-        iconCode: s.icon, // Map icon to iconCode
-        sort: idx + 1,
+    // 5. Managed Platforms (Baseline)
+    const platformsRows = [
+      {
+        id: 'whatsapp',
+        title: 'WhatsApp',
+        urlTemplate: 'https://wa.me/{value}',
+        iconCode: 'fa-brands:whatsapp',
+        sort: 1,
         status: 'active',
-      }),
+      },
+      {
+        id: 'linkedin',
+        title: 'LinkedIn',
+        urlTemplate: 'https://www.linkedin.com/in/{value}',
+        iconCode: 'fa6-brands:linkedin-in',
+        sort: 2,
+        status: 'active',
+      },
+      {
+        id: 'github',
+        title: 'GitHub',
+        urlTemplate: 'https://github.com/{value}',
+        iconCode: 'fa6-brands:github',
+        sort: 3,
+        status: 'active',
+      },
+      {
+        id: 'x',
+        title: 'X',
+        urlTemplate: 'https://x.com/{value}',
+        iconCode: 'fa6-brands:x-twitter',
+        sort: 4,
+        status: 'active',
+      },
+    ];
+
+    // 6. Socials Transformation (Relational)
+    const socialsRows = (data.home.socials || []).map(
+      (s: Record<string, unknown>, idx: number) => {
+        const type = String(s.type).toLowerCase();
+        let username = '';
+        let platformId = 'github'; // Default fallback
+
+        if (type.includes('whatsapp')) {
+          platformId = 'whatsapp';
+          username = String(s.url).split('/').pop() || '';
+        } else if (type.includes('linkedin')) {
+          platformId = 'linkedin';
+          username =
+            String(s.url).split('/in/').pop()?.replace(/\/$/, '') || '';
+        } else if (type.includes('github')) {
+          platformId = 'github';
+          username = String(s.url).split('/').pop() || '';
+        } else if (type.includes('x') || type.includes('twitter')) {
+          platformId = 'x';
+          username = String(s.url).split('/').pop() || '';
+        }
+
+        return {
+          platformId,
+          username,
+          iconCode: s.icon || 'lucide:link',
+          status: 'active',
+          sort: idx + 1,
+        };
+      },
     );
 
     const skillsRows = (data.skills || []).map((s: SkillItem, idx: number) => ({
@@ -256,6 +314,7 @@ export class DataParser {
       contactInfo: contactRows,
       metricSources: metricSourcesRows,
       impactMetrics: impactMetricsRows,
+      platforms: platformsRows,
     };
   }
 
@@ -271,6 +330,7 @@ export class DataParser {
       { tableId: 'education', rows: data.education },
       { tableId: 'skills', rows: data.skills },
       { tableId: 'solutions', rows: data.solutions },
+      { tableId: 'platforms', rows: data.platforms },
       { tableId: 'socials', rows: data.socials },
       { tableId: 'contact_info', rows: data.contactInfo },
     ];

@@ -155,10 +155,16 @@ export class MigratePortfolioUseCase {
           }
 
           // Perform transactional creation with native ID
+          const rowId =
+            batch.tableId === 'platforms'
+              ? (processedRow.id as string)
+              : ID.unique();
+          if (batch.tableId === 'platforms') delete processedRow.id;
+
           const rowResponse = await this.tables.createRow({
             databaseId: this.databaseId,
             tableId: batch.tableId,
-            rowId: ID.unique(),
+            rowId,
             data: processedRow,
             transactionId,
           });
@@ -236,8 +242,16 @@ export class MigratePortfolioUseCase {
         return `skill-${slugify((row.title as string) || 'unknown')}`;
       case 'solutions':
         return `sol-${slugify((row.title as string) || 'unknown')}-${locale}`;
-      case 'socials':
-        return `social-${slugify((row.type as string) || 'unknown')}`;
+      case 'socials': {
+        const pId = slugify((row.platformId as string) || 'unknown');
+        const uName = slugify((row.username as string) || 'unknown');
+        return `social-${pId}-${uName}`;
+      }
+      case 'platforms':
+        return (
+          (row.id as string) ||
+          `plat-${slugify((row.title as string) || 'unknown')}`
+        );
       case 'contact_info':
         return `contact-${slugify((row.type as string) || 'unknown')}-${locale}`;
       default:

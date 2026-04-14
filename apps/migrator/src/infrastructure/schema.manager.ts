@@ -51,6 +51,7 @@ export class SchemaManager {
       'contact_info',
       'metric_sources',
       'impact_metrics',
+      'platforms',
     ];
 
     for (const tableId of tableIds) {
@@ -284,8 +285,8 @@ export class SchemaManager {
       tableId: 'socials',
       name: 'Socials',
       columns: [
-        { key: 'type', type: 'string', size: 100, required: true },
-        { key: 'url', type: 'string', size: 500, required: true },
+        { key: 'platformId', type: 'string', size: 100, required: true },
+        { key: 'username', type: 'string', size: 255, required: true },
         { key: 'iconCode', type: 'string', size: 100, required: true },
         { key: 'sort', type: 'integer', required: true },
         { key: 'status', type: 'string', size: 50, required: true },
