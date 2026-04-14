@@ -93,7 +93,7 @@ This project is executed in isolated **Verification Rounds**. Each round must be
 
 - [ ] T036 [US4] [TEST] [FE] Verify Platform Drawer CRUD lifecycle: TS-FE-001, TS-FE-002, TS-FE-006.
 - [ ] T037 [US4] [TEST] [INT] Verify Consumer Sync (Contact Form updates): TS-INT-001, TS-INT-002.
-- [ ] T038 [US4] Create `PlatformManagerDrawer` component with `IconPicker` integration.
+- [x] T038 [US4] Create `PlatformManagerDrawer` component with `IconPicker` integration.
 - [ ] T039 [US4] Update Contact form to consume the managed Platforms collection.
 
 **Checkpoint**: Managed platforms active.
