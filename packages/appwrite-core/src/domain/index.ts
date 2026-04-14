@@ -4,6 +4,7 @@ export * from './cms/chapters/contact.js';
 export * from './cms/chapters/history.js';
 export * from './cms/chapters/home.js';
 export * from './cms/chapters/metrics.js';
+export * from './cms/chapters/platforms.js';
 export * from './repositories/interfaces.js';
 export * from './services/exception-mapper.js';
 export * from './services/metric-sync.service.js';
