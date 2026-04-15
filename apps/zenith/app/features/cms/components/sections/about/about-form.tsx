@@ -1,5 +1,4 @@
 import { useForm } from '@tanstack/react-form';
-import { Loader2 } from 'lucide-react';
 import { useEffect } from 'react';
 import { useCmsContext } from '../../../context/cms-context';
 import { useMetricSourcesQuery } from '../../../hooks/use-cms-queries';
@@ -9,6 +8,7 @@ import { CmsSaveButton } from '../../common/cms-save-button';
 import { AboutMetrics } from './about-metrics';
 import { Card } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
@@ -51,11 +51,7 @@ export function AboutForm() {
   }, [about.data, form.reset, currentLocale]);
 
   if (about.isLoading || sourcesLoading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <Loader2 className="size-8 animate-spin text-primary/20" />
-      </div>
-    );
+    return <AboutFormSkeleton />;
   }
 
   return (
@@ -76,28 +72,22 @@ export function AboutForm() {
           </div>
 
           <form.Subscribe
-            selector={(state) => {
-              console.log({ state });
-              return [state.canSubmit, state.isPristine];
-            }}
+            selector={(state) => [state.canSubmit, state.isPristine]}
           >
-            {([canSubmit, isPristine]) => {
-              console.log({ canSubmit, isPristine });
-              return (
-                <div className="flex items-center gap-3">
-                  <CmsDiscardButton
-                    isSaving={isSaving}
-                    isPristine={isPristine}
-                    onClick={() => form.reset()}
-                  />
-                  <CmsSaveButton
-                    isSaving={isSaving}
-                    canSubmit={canSubmit && !isPristine}
-                    onClick={() => form.handleSubmit()}
-                  />
-                </div>
-              );
-            }}
+            {([canSubmit, isPristine]) => (
+              <div className="flex items-center gap-3">
+                <CmsDiscardButton
+                  isSaving={isSaving}
+                  isPristine={isPristine}
+                  onClick={() => form.reset()}
+                />
+                <CmsSaveButton
+                  isSaving={isSaving}
+                  canSubmit={canSubmit && !isPristine}
+                  onClick={() => form.handleSubmit()}
+                />
+              </div>
+            )}
           </form.Subscribe>
         </div>
 
@@ -120,7 +110,7 @@ export function AboutForm() {
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       placeholder="Tell your professional story..."
-                      className="min-h-[420px] bg-transparent border-border text-base font-medium leading-relaxed text-muted-foreground/80 rounded-lg focus-visible:ring-primary/20 resize-none font-sans p-4"
+                      className="min-h-105 bg-transparent border-border text-base font-medium leading-relaxed text-muted-foreground/80 rounded-lg focus-visible:ring-primary/20 resize-none font-sans p-4"
                     />
                   </div>
                 )}
@@ -139,5 +129,52 @@ export function AboutForm() {
         </div>
       </div>
     </TooltipProvider>
+  );
+}
+
+function AboutFormSkeleton() {
+  return (
+    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 w-full">
+      <div className="flex items-end justify-between border-b border-border pb-4">
+        <div className="space-y-2">
+          <Skeleton className="h-10 w-72" />
+          <Skeleton className="h-4 w-96" />
+        </div>
+
+        <div className="flex items-center gap-3">
+          <Skeleton className="h-9 w-24 rounded-md" />
+          <Skeleton className="h-9 w-28 rounded-md" />
+        </div>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <div className="lg:col-span-2 space-y-4">
+          <Card className="rounded-xl bg-transparent border border-border space-y-4 shadow-none">
+            <div className="space-y-2">
+              <Skeleton className="h-3 w-32" />
+              <Skeleton className="h-105 w-full rounded-lg" />
+            </div>
+          </Card>
+        </div>
+
+        <div className="space-y-4">
+          <Card className="rounded-xl bg-transparent border border-border space-y-4 shadow-none p-4">
+            <Skeleton className="h-3 w-28" />
+            <div className="space-y-3">
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          </Card>
+          <Card className="rounded-xl bg-transparent border border-border space-y-4 shadow-none p-4">
+            <Skeleton className="h-3 w-32" />
+            <div className="space-y-3">
+              <Skeleton className="h-14 w-full" />
+              <Skeleton className="h-14 w-full" />
+            </div>
+          </Card>
+        </div>
+      </div>
+    </div>
   );
 }
