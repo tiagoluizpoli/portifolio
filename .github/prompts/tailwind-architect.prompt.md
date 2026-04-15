@@ -1,0 +1,3 @@
+---
+agent: tailwind-architect
+---
