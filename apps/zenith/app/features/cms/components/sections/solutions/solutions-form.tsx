@@ -11,6 +11,7 @@ import {
 import { SolutionDialog } from './solution-dialog';
 import { SolutionsGrid } from './solutions-grid';
 import { SolutionsHeader } from './solutions-header';
+import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { generateId } from '@/lib/utils';
 
@@ -44,7 +45,7 @@ export function SolutionsForm() {
     [solutions.data, currentLocale],
   );
 
-  const form = useForm({
+  const formConfig = {
     defaultValues: initialValues as SolutionsInput,
     validatorAdapter: zodValidator(),
     validators: {
@@ -53,8 +54,9 @@ export function SolutionsForm() {
     onSubmit: async ({ value }: { value: SolutionsInput }) => {
       await saveSection('solutions', value.items as unknown as Solution[]);
     },
-    // biome-ignore lint/suspicious/noExplicitAny: TanStack depth bypass
-  } as any);
+  } as const;
+
+  const form = useForm(formConfig);
 
   useEffect(() => {
     if (solutions.data) {
@@ -105,18 +107,41 @@ export function SolutionsForm() {
 
   if (solutions.isLoading) {
     return (
-      <div className="space-y-8">
+      <div className="space-y-8 animate-in fade-in duration-500">
         <div className="flex items-center justify-between">
-          <Skeleton className="h-8 w-48" />
-          <Skeleton className="h-4 w-64" />
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-56" />
+            <Skeleton className="h-4 w-80" />
+          </div>
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-9 w-24 rounded-md" />
+            <Skeleton className="h-9 w-28 rounded-md" />
+          </div>
         </div>
         <div className="space-y-6">
           {[1, 2, 3].map((id) => (
-            <Skeleton
+            <Card
               key={`sol-skel-${id}`}
-              className="h-32 w-full rounded-xl"
-            />
+              className="relative bg-card/50 border border-border/80 overflow-hidden shadow-sm rounded-xl"
+            >
+              <div className="absolute top-3 right-3 flex gap-2">
+                <Skeleton className="size-8 rounded-md" />
+                <Skeleton className="size-8 rounded-md" />
+              </div>
+
+              <div className="p-6">
+                <div className="flex items-start gap-6">
+                  <Skeleton className="size-14 shrink-0 rounded-xl" />
+                  <div className="min-w-0 flex-1 pt-1 space-y-3">
+                    <Skeleton className="h-5 w-2/5" />
+                    <Skeleton className="h-4 w-4/5" />
+                  </div>
+                </div>
+              </div>
+            </Card>
           ))}
+
+          <Skeleton className="h-16 w-full rounded-xl" />
         </div>
       </div>
     );
