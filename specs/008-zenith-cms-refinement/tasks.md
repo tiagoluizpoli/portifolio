@@ -91,15 +91,27 @@ This project is executed in isolated **Verification Rounds**. Each round must be
 ## Phase 7: [US4] Managed Platforms (Round 7)
 **Goal**: Atomic side-drawer for platform CRUD.
 
-- [ ] T036 [US4] [TEST] [FE] Verify Platform Drawer CRUD lifecycle: TS-FE-001, TS-FE-002, TS-FE-006.
-- [ ] T037 [US4] [TEST] [INT] Verify Consumer Sync (Contact Form updates): TS-INT-001, TS-INT-002.
+- [x] T036 [US4] [TEST] [FE] Verify Platform Drawer CRUD lifecycle: TS-FE-001, TS-FE-002, TS-FE-006.
+- [x] T037 [US4] [TEST] [INT] Verify Consumer Sync (Contact Form updates): TS-INT-001, TS-INT-002.
 - [x] T038 [US4] Create `PlatformManagerDrawer` component with `IconPicker` integration.
-- [ ] T039 [US4] Update Contact form to consume the managed Platforms collection.
+- [x] T039 [US4] Update Contact form to consume the managed Platforms collection.
 
 **Checkpoint**: Managed platforms active.
 
 ---
 
+## Phase 8: Global Empty & Error States
+**Goal**: Resilient UI for failed connections and empty collections.
+
+- [x] T042 [INFRA] Create `CmsEmptyState` reusable component for all collection sections.
+- [x] T043 [INFRA] Create `CmsErrorState` reusable component for error scenarios.
+- [x] T044 [INFRA] Integrate empty/error states into Skills form with error handling.
+- [x] T045 [INFRA] Integrate empty/error states into Solutions form with error handling.
+
+**Checkpoint**: Global error resilience active.
+
+---
+
 ## Final Phase: Polish & Quality Gate
 - [x] T040 Run `pnpm guard` to ensure zero linting or type-safety errors.
-- [ ] T041 Execute Final E2E Journey (TC-E2E-001, TC-E2E-002).
+- [x] T041 Execute Final E2E Journey (TC-E2E-001, TC-E2E-002) + Prepare for deployment.

@@ -39,7 +39,7 @@ export function SolutionsHeader({
         />
         <CmsSaveButton
           isSaving={isSaving}
-          canSubmit={canSubmit}
+          canSubmit={canSubmit && !isPristine}
           onClick={onSubmit}
         />
       </div>

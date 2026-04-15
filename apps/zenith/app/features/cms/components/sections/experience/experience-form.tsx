@@ -6,6 +6,8 @@ import { useEffect, useMemo } from 'react';
 import { useCmsContext } from '../../../context/cms-context';
 import { type HistoryInput, historySchema } from '../../../types/history';
 import { CmsDiscardButton } from '../../common/cms-discard-button';
+import { CmsEmptyState } from '../../common/cms-empty-state';
+import { CmsErrorState } from '../../common/cms-error-state';
 import { CmsSaveButton } from '../../common/cms-save-button';
 import { ExperienceItem } from './experience-item';
 import { ExperienceSkeleton } from './experience-skeleton';
@@ -78,8 +80,56 @@ export function ExperienceForm() {
     form.setFieldValue('items', (prev) => prev.filter((_, i) => i !== index));
   };
 
+  // Error state
+  if (experience.isError) {
+    return (
+      <div className="space-y-8 animate-in fade-in duration-500">
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <h2 className="text-2xl font-black uppercase tracking-tighter text-foreground">
+              Professional Journey
+            </h2>
+            <p className="text-xs text-muted-foreground/60 uppercase tracking-widest font-bold">
+              Orchestrate your career timeline and milestones
+            </p>
+          </div>
+        </div>
+        <CmsErrorState
+          sectionName="Experience Records"
+          errorMessage="Failed to load your work experience. Please check your connection."
+          onRetry={() => window.location.reload()}
+          showDismiss={false}
+        />
+      </div>
+    );
+  }
+
   if (experience.isLoading) {
     return <ExperienceSkeleton />;
+  }
+
+  const items = form.getFieldValue('items') || [];
+  if (!items || items.length === 0) {
+    return (
+      <div className="space-y-8 animate-in fade-in duration-500">
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <h2 className="text-2xl font-black uppercase tracking-tighter text-foreground">
+              Professional Journey
+            </h2>
+            <p className="text-xs text-muted-foreground/60 uppercase tracking-widest font-bold">
+              Orchestrate your career timeline and milestones
+            </p>
+          </div>
+        </div>
+        <CmsEmptyState
+          sectionName="Experience"
+          description="No experience records yet. Start building your professional narrative."
+          onAction={addItem}
+          actionLabel="Add Experience"
+        />
+      </div>
+    );
   }
 
   return (

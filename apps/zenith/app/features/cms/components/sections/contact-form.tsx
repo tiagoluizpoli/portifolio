@@ -4,6 +4,7 @@ import { useCmsContext } from '../../context/cms-context';
 import { usePlatformsQuery } from '../../hooks/use-cms-queries';
 import type { ContactInput } from '../../types/contact';
 import { CmsDiscardButton } from '../common/cms-discard-button';
+import { CmsErrorState } from '../common/cms-error-state';
 import { CmsSaveButton } from '../common/cms-save-button';
 import { ContactFieldsSection } from './contact/contact-fields-section';
 import { SocialPresenceSection } from './contact/social-presence-section';
@@ -78,6 +79,30 @@ export function ContactForm() {
   const removeSocial = (index: number) => {
     form.removeFieldValue('socials', index);
   };
+
+  // Error state
+  if (contact.isError) {
+    return (
+      <div className="space-y-8 animate-in fade-in duration-500">
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <h2 className="text-2xl font-black uppercase tracking-tighter text-foreground">
+              Professional Outreach
+            </h2>
+            <p className="text-xs text-muted-foreground/60 uppercase tracking-widest font-bold">
+              Manage your contact channels and social presence
+            </p>
+          </div>
+        </div>
+        <CmsErrorState
+          sectionName="Contact Information"
+          errorMessage="Failed to load your contact information. Please check your connection."
+          onRetry={() => window.location.reload()}
+          showDismiss={false}
+        />
+      </div>
+    );
+  }
 
   if (contact.isLoading) {
     return (

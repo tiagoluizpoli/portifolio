@@ -3,6 +3,7 @@ import { zodValidator } from '@tanstack/zod-form-adapter';
 import { Info } from 'lucide-react';
 import { useCmsContext } from '../../context/cms-context';
 import { type HomeInput, homeSchema } from '../../types/home';
+import { CmsErrorState } from '../common/cms-error-state';
 import { FileUploader } from '../common/file-uploader';
 import { CmsFormField } from '../common/form-field';
 import { HomeHeader } from './home-header';
@@ -48,6 +49,30 @@ export function HomeForm() {
       await saveSection('home', value);
     },
   });
+
+  // Error state
+  if (home.isError) {
+    return (
+      <div className="space-y-8 animate-in fade-in duration-500">
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <h2 className="text-2xl font-black uppercase tracking-tighter text-foreground">
+              Portfolio Identity
+            </h2>
+            <p className="text-xs text-muted-foreground/60 uppercase tracking-widest font-bold">
+              Define your personal brand and visual identity
+            </p>
+          </div>
+        </div>
+        <CmsErrorState
+          sectionName="Portfolio Identity"
+          errorMessage="Failed to load your portfolio identity. Please check your connection."
+          onRetry={() => window.location.reload()}
+          showDismiss={false}
+        />
+      </div>
+    );
+  }
 
   if (home.isLoading) {
     return <HomeFormSkeleton />;

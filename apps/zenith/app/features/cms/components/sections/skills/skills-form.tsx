@@ -8,6 +8,8 @@ import {
   type SkillsInput,
   skillsSchema,
 } from '../../../types/assets';
+import { CmsEmptyState } from '../../common/cms-empty-state';
+import { CmsErrorState } from '../../common/cms-error-state';
 import { SkillDialog } from './skill-dialog';
 import { type SkillCategory, SkillsFilters } from './skills-filters';
 import { SkillsGrid } from './skills-grid';
@@ -119,6 +121,27 @@ export function SkillsForm() {
       .map(({ index }) => index);
   }, [form.getFieldValue('items'), activeTab, searchQuery]);
 
+  // Error state
+  if (skills.isError) {
+    return (
+      <div className="space-y-8 animate-in fade-in duration-500">
+        <SkillsHeader
+          isSaving={false}
+          isPristine={true}
+          canSubmit={false}
+          onReset={() => {}}
+          onSubmit={() => {}}
+        />
+        <CmsErrorState
+          sectionName="Skills"
+          errorMessage="Failed to load your technical skills. Please check your connection."
+          onRetry={() => window.location.reload()}
+          showDismiss={false}
+        />
+      </div>
+    );
+  }
+
   if (skills.isLoading) {
     return (
       <div className="space-y-8 animate-in fade-in duration-500">
@@ -149,9 +172,9 @@ export function SkillsForm() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((id) => (
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((_id) => (
             <Card
-              key={`skel-${id}`}
+              key={`skel-${_id}`}
               className="relative bg-card/50 border border-border/80 overflow-hidden h-24 shadow-sm"
             >
               <div className="absolute top-3 left-3 flex gap-2 z-10">
@@ -205,18 +228,27 @@ export function SkillsForm() {
       />
 
       <div className="space-y-4">
-        <form.Field name="items">
-          {(field) => (
-            <SkillsGrid
-              items={field.state.value}
-              filteredIndices={filteredIndices}
-              onEdit={handleEdit}
-              onRemove={handleRemove}
-              onReorder={handleReorder}
-              activeTab={activeTab}
-            />
-          )}
-        </form.Field>
+        {currentItems.length === 0 ? (
+          <CmsEmptyState
+            sectionName="Skill"
+            description="Add your technical expertise to showcase your capabilities."
+            onAction={handleAdd}
+            actionLabel="Add Skill"
+          />
+        ) : (
+          <form.Field name="items">
+            {(field) => (
+              <SkillsGrid
+                items={field.state.value}
+                filteredIndices={filteredIndices}
+                onEdit={handleEdit}
+                onRemove={handleRemove}
+                onReorder={handleReorder}
+                activeTab={activeTab}
+              />
+            )}
+          </form.Field>
+        )}
       </div>
 
       <SkillDialog

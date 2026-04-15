@@ -8,6 +8,8 @@ import {
   type SolutionsInput,
   solutionsListSchema,
 } from '../../../types/assets';
+import { CmsEmptyState } from '../../common/cms-empty-state';
+import { CmsErrorState } from '../../common/cms-error-state';
 import { SolutionDialog } from './solution-dialog';
 import { SolutionsGrid } from './solutions-grid';
 import { SolutionsHeader } from './solutions-header';
@@ -52,7 +54,9 @@ export function SolutionsForm() {
       onChange: solutionsListSchema,
     },
     onSubmit: async ({ value }: { value: SolutionsInput }) => {
-      await saveSection('solutions', value.items as unknown as Solution[]);
+      // Filter out iconId (not supported by backend for solutions)
+      const cleanedItems = value.items.map(({ iconId, ...item }) => item);
+      await saveSection('solutions', cleanedItems as unknown as Solution[]);
     },
   } as const;
 
@@ -104,6 +108,27 @@ export function SolutionsForm() {
       newItems.map((item, index) => ({ ...item, sort: index })),
     );
   };
+
+  // Error state
+  if (solutions.isError) {
+    return (
+      <div className="space-y-8 animate-in fade-in duration-500">
+        <SolutionsHeader
+          isSaving={false}
+          isPristine={true}
+          canSubmit={false}
+          onReset={() => {}}
+          onSubmit={() => {}}
+        />
+        <CmsErrorState
+          sectionName="Solutions"
+          errorMessage="Failed to load your professional offerings. Please check your connection."
+          onRetry={() => window.location.reload()}
+          showDismiss={false}
+        />
+      </div>
+    );
+  }
 
   if (solutions.isLoading) {
     return (
@@ -167,18 +192,27 @@ export function SolutionsForm() {
         )}
       </form.Subscribe>
 
-      <form.Field name="items">
-        {/* biome-ignore lint/suspicious/noExplicitAny: TanStack depth bypass */}
-        {(field: any) => (
-          <SolutionsGrid
-            items={field.state.value}
-            onAdd={handleAdd}
-            onEdit={handleEdit}
-            onRemove={handleRemove}
-            onReorder={handleReorder}
-          />
-        )}
-      </form.Field>
+      {currentItems.length === 0 ? (
+        <CmsEmptyState
+          sectionName="Solution"
+          description="Add your professional offerings and specialized services."
+          onAction={handleAdd}
+          actionLabel="Add Solution"
+        />
+      ) : (
+        <form.Field name="items">
+          {/* biome-ignore lint/suspicious/noExplicitAny: TanStack depth bypass */}
+          {(field: any) => (
+            <SolutionsGrid
+              items={field.state.value}
+              onAdd={handleAdd}
+              onEdit={handleEdit}
+              onRemove={handleRemove}
+              onReorder={handleReorder}
+            />
+          )}
+        </form.Field>
+      )}
 
       <SolutionDialog
         open={isDialogOpen}

@@ -6,6 +6,8 @@ import { useEffect, useMemo } from 'react';
 import { useCmsContext } from '../../context/cms-context';
 import { type HistoryInput, historySchema } from '../../types/history';
 import { CmsDiscardButton } from '../common/cms-discard-button';
+import { CmsEmptyState } from '../common/cms-empty-state';
+import { CmsErrorState } from '../common/cms-error-state';
 import { CmsSaveButton } from '../common/cms-save-button';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -82,6 +84,29 @@ export function EducationForm() {
     form.setFieldValue('items', (prev) => prev.filter((_, i) => i !== index));
   };
 
+  if (education.isError) {
+    return (
+      <div className="space-y-8 animate-in fade-in duration-500">
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <h2 className="text-2xl font-black uppercase tracking-tighter text-foreground">
+              Academic Foundation
+            </h2>
+            <p className="text-xs text-muted-foreground/60 uppercase tracking-widest font-bold">
+              Orchestrate your educational chronology and credentials
+            </p>
+          </div>
+        </div>
+        <CmsErrorState
+          sectionName="Education Records"
+          errorMessage="Failed to load your educational history. Please check your connection."
+          onRetry={() => window.location.reload()}
+          showDismiss={false}
+        />
+      </div>
+    );
+  }
+
   if (education.isLoading) {
     return (
       <div className="space-y-8">
@@ -150,223 +175,237 @@ export function EducationForm() {
 
       <div className="space-y-6">
         <form.Field name="items">
-          {(field) =>
-            education.isLoading
-              ? [1, 2].map((id) => (
-                  <Card
-                    key={`edu-skeleton-${id}`}
-                    className="bg-card/50 border border-border/50 shadow-none overflow-hidden"
-                  >
-                    <CardContent className="p-6">
-                      <div className="grid gap-6 lg:grid-cols-3">
-                        <div className="space-y-4">
-                          <div className="space-y-2">
-                            <Skeleton className="h-3 w-24" />
-                            <Skeleton className="h-10 w-full" />
-                          </div>
-                          <div className="space-y-2">
-                            <Skeleton className="h-3 w-20" />
-                            <Skeleton className="h-10 w-full" />
-                          </div>
+          {(field) => {
+            const items = field.state.value as HistoryItem[] | undefined;
+            if (education.isLoading) {
+              return [1, 2].map((id) => (
+                <Card
+                  key={`edu-skeleton-${id}`}
+                  className="bg-card/50 border border-border/50 shadow-none overflow-hidden"
+                >
+                  <CardContent className="p-6">
+                    <div className="grid gap-6 lg:grid-cols-3">
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Skeleton className="h-3 w-24" />
+                          <Skeleton className="h-10 w-full" />
                         </div>
-                        <div className="space-y-4">
-                          <div className="space-y-2">
-                            <Skeleton className="h-3 w-24" />
-                            <Skeleton className="h-10 w-full" />
-                          </div>
-                          <div className="space-y-2">
-                            <Skeleton className="h-3 w-20" />
-                            <Skeleton className="h-10 w-full" />
-                          </div>
-                        </div>
-                        <div className="space-y-4">
-                          <div className="space-y-2">
-                            <Skeleton className="h-3 w-32" />
-                            <Skeleton className="h-[100px] w-full" />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <Skeleton className="h-4 w-24" />
-                            <Skeleton className="h-8 w-20" />
-                          </div>
+                        <div className="space-y-2">
+                          <Skeleton className="h-3 w-20" />
+                          <Skeleton className="h-10 w-full" />
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                ))
-              : field.state.value?.map((item, index) => (
-                  <Card
-                    key={item.id}
-                    className="bg-card/50 border border-border/50 shadow-none overflow-hidden group hover:border-primary/30 transition-all duration-300"
-                  >
-                    <CardContent className="p-6">
-                      <div className="grid gap-6 lg:grid-cols-3">
-                        <div className="space-y-4">
-                          <form.Field name={`items[${index}].title`}>
-                            {(subField) => (
-                              <div className="space-y-2">
-                                <Label
-                                  htmlFor={`edu-title-${index}`}
-                                  className="text-[10px] font-bold uppercase tracking-widest text-primary/60"
-                                >
-                                  Degree / Certification
-                                </Label>
-                                <div className="relative">
-                                  <GraduationCap className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/40" />
-                                  <Input
-                                    id={`edu-title-${index}`}
-                                    name={`items[${index}].title`}
-                                    value={subField.state.value ?? ''}
-                                    onChange={(e) =>
-                                      subField.handleChange(e.target.value)
-                                    }
-                                    placeholder="B.Sc. in Computer Science"
-                                    className="pl-10 bg-transparent h-10 text-sm font-bold"
-                                  />
-                                </div>
-                              </div>
-                            )}
-                          </form.Field>
-
-                          <form.Field name={`items[${index}].organization`}>
-                            {(subField) => (
-                              <div className="space-y-2">
-                                <Label
-                                  htmlFor={`edu-org-${index}`}
-                                  className="text-[10px] font-bold uppercase tracking-widest text-primary/60"
-                                >
-                                  Institution
-                                </Label>
-                                <Input
-                                  id={`edu-org-${index}`}
-                                  name={`items[${index}].organization`}
-                                  value={subField.state.value ?? ''}
-                                  onChange={(e) =>
-                                    subField.handleChange(e.target.value)
-                                  }
-                                  placeholder="University of Excellence"
-                                  className="bg-transparent h-10 text-sm"
-                                />
-                              </div>
-                            )}
-                          </form.Field>
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Skeleton className="h-3 w-24" />
+                          <Skeleton className="h-10 w-full" />
                         </div>
-
-                        <div className="space-y-4">
-                          <form.Field name={`items[${index}].period`}>
-                            {(subField) => (
-                              <div className="space-y-2">
-                                <Label
-                                  htmlFor={`edu-period-${index}`}
-                                  className="text-[10px] font-bold uppercase tracking-widest text-primary/60"
-                                >
-                                  Period
-                                </Label>
-                                <div className="relative">
-                                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/40" />
-                                  <Input
-                                    id={`edu-period-${index}`}
-                                    name={`items[${index}].period`}
-                                    value={subField.state.value ?? ''}
-                                    onChange={(e) =>
-                                      subField.handleChange(e.target.value)
-                                    }
-                                    placeholder="2016 — 2020"
-                                    className="pl-10 bg-transparent h-10 text-sm"
-                                  />
-                                </div>
-                              </div>
-                            )}
-                          </form.Field>
-
-                          <form.Field name={`items[${index}].location`}>
-                            {(subField) => (
-                              <div className="space-y-2">
-                                <Label
-                                  htmlFor={`edu-loc-${index}`}
-                                  className="text-[10px] font-bold uppercase tracking-widest text-primary/60"
-                                >
-                                  Location
-                                </Label>
-                                <div className="relative">
-                                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/40" />
-                                  <Input
-                                    id={`edu-loc-${index}`}
-                                    name={`items[${index}].location`}
-                                    value={subField.state.value ?? ''}
-                                    onChange={(e) =>
-                                      subField.handleChange(e.target.value)
-                                    }
-                                    placeholder="Remote / London, UK"
-                                    className="pl-10 bg-transparent h-10 text-sm"
-                                  />
-                                </div>
-                              </div>
-                            )}
-                          </form.Field>
+                        <div className="space-y-2">
+                          <Skeleton className="h-3 w-20" />
+                          <Skeleton className="h-10 w-full" />
                         </div>
+                      </div>
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Skeleton className="h-3 w-32" />
+                          <Skeleton className="h-[100px] w-full" />
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <Skeleton className="h-4 w-24" />
+                          <Skeleton className="h-8 w-20" />
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ));
+            }
 
-                        <div className="space-y-4">
-                          <form.Field name={`items[${index}].description`}>
-                            {(subField) => (
-                              <div className="space-y-2">
-                                <Label
-                                  htmlFor={`edu-desc-${index}`}
-                                  className="text-[10px] font-bold uppercase tracking-widest text-primary/60"
-                                >
-                                  Achievements & Focus
-                                </Label>
-                                <Textarea
-                                  id={`edu-desc-${index}`}
-                                  name={`items[${index}].description`}
-                                  value={subField.state.value ?? ''}
-                                  onChange={(e) =>
-                                    subField.handleChange(e.target.value)
-                                  }
-                                  placeholder="Specialized in Distributed Systems..."
-                                  className="bg-transparent min-h-[100px] text-xs resize-none"
-                                />
-                              </div>
-                            )}
-                          </form.Field>
+            if (!items || items.length === 0) {
+              return (
+                <CmsEmptyState
+                  sectionName="Education Record"
+                  description="Add your academic background, degrees, and certifications."
+                  onAction={addItem}
+                  actionLabel="Add Education"
+                />
+              );
+            }
 
-                          <div className="flex items-center justify-between">
-                            <form.Field name={`items[${index}].current`}>
-                              {(subField) => (
-                                <div className="flex items-center gap-2">
-                                  <Checkbox
-                                    id={`current-${item.id}`}
-                                    checked={subField.state.value}
-                                    onCheckedChange={(checked) =>
-                                      subField.handleChange(!!checked)
-                                    }
-                                  />
-                                  <Label
-                                    htmlFor={`current-${item.id}`}
-                                    className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60"
-                                  >
-                                    Still Studying
-                                  </Label>
-                                </div>
-                              )}
-                            </form.Field>
-
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => removeItem(index)}
-                              className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/30 hover:text-destructive hover:bg-destructive/10"
+            return items.map((item, index) => (
+              <Card
+                key={item.id}
+                className="bg-card/50 border border-border/50 shadow-none overflow-hidden group hover:border-primary/30 transition-all duration-300"
+              >
+                <CardContent className="p-6">
+                  <div className="grid gap-6 lg:grid-cols-3">
+                    <div className="space-y-4">
+                      <form.Field name={`items[${index}].title`}>
+                        {(subField) => (
+                          <div className="space-y-2">
+                            <Label
+                              htmlFor={`edu-title-${index}`}
+                              className="text-[10px] font-bold uppercase tracking-widest text-primary/60"
                             >
-                              <Trash2 size={12} className="mr-2" />
-                              Remove
-                            </Button>
+                              Degree / Certification
+                            </Label>
+                            <div className="relative">
+                              <GraduationCap className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/40" />
+                              <Input
+                                id={`edu-title-${index}`}
+                                name={`items[${index}].title`}
+                                value={subField.state.value ?? ''}
+                                onChange={(e) =>
+                                  subField.handleChange(e.target.value)
+                                }
+                                placeholder="B.Sc. in Computer Science"
+                                className="pl-10 bg-transparent h-10 text-sm font-bold"
+                              />
+                            </div>
                           </div>
-                        </div>
+                        )}
+                      </form.Field>
+
+                      <form.Field name={`items[${index}].organization`}>
+                        {(subField) => (
+                          <div className="space-y-2">
+                            <Label
+                              htmlFor={`edu-org-${index}`}
+                              className="text-[10px] font-bold uppercase tracking-widest text-primary/60"
+                            >
+                              Institution
+                            </Label>
+                            <Input
+                              id={`edu-org-${index}`}
+                              name={`items[${index}].organization`}
+                              value={subField.state.value ?? ''}
+                              onChange={(e) =>
+                                subField.handleChange(e.target.value)
+                              }
+                              placeholder="University of Excellence"
+                              className="bg-transparent h-10 text-sm"
+                            />
+                          </div>
+                        )}
+                      </form.Field>
+                    </div>
+
+                    <div className="space-y-4">
+                      <form.Field name={`items[${index}].period`}>
+                        {(subField) => (
+                          <div className="space-y-2">
+                            <Label
+                              htmlFor={`edu-period-${index}`}
+                              className="text-[10px] font-bold uppercase tracking-widest text-primary/60"
+                            >
+                              Period
+                            </Label>
+                            <div className="relative">
+                              <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/40" />
+                              <Input
+                                id={`edu-period-${index}`}
+                                name={`items[${index}].period`}
+                                value={subField.state.value ?? ''}
+                                onChange={(e) =>
+                                  subField.handleChange(e.target.value)
+                                }
+                                placeholder="2016 — 2020"
+                                className="pl-10 bg-transparent h-10 text-sm"
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </form.Field>
+
+                      <form.Field name={`items[${index}].location`}>
+                        {(subField) => (
+                          <div className="space-y-2">
+                            <Label
+                              htmlFor={`edu-loc-${index}`}
+                              className="text-[10px] font-bold uppercase tracking-widest text-primary/60"
+                            >
+                              Location
+                            </Label>
+                            <div className="relative">
+                              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/40" />
+                              <Input
+                                id={`edu-loc-${index}`}
+                                name={`items[${index}].location`}
+                                value={subField.state.value ?? ''}
+                                onChange={(e) =>
+                                  subField.handleChange(e.target.value)
+                                }
+                                placeholder="Remote / London, UK"
+                                className="pl-10 bg-transparent h-10 text-sm"
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </form.Field>
+                    </div>
+
+                    <div className="space-y-4">
+                      <form.Field name={`items[${index}].description`}>
+                        {(subField) => (
+                          <div className="space-y-2">
+                            <Label
+                              htmlFor={`edu-desc-${index}`}
+                              className="text-[10px] font-bold uppercase tracking-widest text-primary/60"
+                            >
+                              Achievements & Focus
+                            </Label>
+                            <Textarea
+                              id={`edu-desc-${index}`}
+                              name={`items[${index}].description`}
+                              value={subField.state.value ?? ''}
+                              onChange={(e) =>
+                                subField.handleChange(e.target.value)
+                              }
+                              placeholder="Specialized in Distributed Systems..."
+                              className="bg-transparent min-h-[100px] text-xs resize-none"
+                            />
+                          </div>
+                        )}
+                      </form.Field>
+
+                      <div className="flex items-center justify-between">
+                        <form.Field name={`items[${index}].current`}>
+                          {(subField) => (
+                            <div className="flex items-center gap-2">
+                              <Checkbox
+                                id={`current-${item.id}`}
+                                checked={subField.state.value}
+                                onCheckedChange={(checked) =>
+                                  subField.handleChange(!!checked)
+                                }
+                              />
+                              <Label
+                                htmlFor={`current-${item.id}`}
+                                className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60"
+                              >
+                                Still Studying
+                              </Label>
+                            </div>
+                          )}
+                        </form.Field>
+
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeItem(index)}
+                          className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/30 hover:text-destructive hover:bg-destructive/10"
+                        >
+                          <Trash2 size={12} className="mr-2" />
+                          Remove
+                        </Button>
                       </div>
-                    </CardContent>
-                  </Card>
-                ))
-          }
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ));
+          }}
         </form.Field>
 
         <Button
