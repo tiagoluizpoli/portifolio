@@ -63,8 +63,8 @@ describe('HomeForm (Phase 6 Restoration)', () => {
       </TooltipProvider>,
     );
 
-    // Expect the heading to be correct
-    expect(screen.getByText(/Hero Identity/i)).toBeDefined();
+    // Expect the section to expose the active metadata field set
+    expect(screen.getByLabelText(/Maturity Identity/i)).toBeDefined();
 
     // Look for the grid container specifically
     const gridContainer = screen.getByTestId('home-split-grid');
@@ -91,7 +91,7 @@ describe('HomeForm (Phase 6 Restoration)', () => {
       </TooltipProvider>,
     );
 
-    const journeyInput = screen.getByLabelText(/Base Year/i);
+    const journeyInput = screen.getByLabelText(/Journey Started/i);
     expect(journeyInput.getAttribute('type')).toBe('number');
     expect(journeyInput.className).toContain('no-spinner');
   });

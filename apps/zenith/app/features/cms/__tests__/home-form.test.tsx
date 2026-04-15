@@ -106,7 +106,7 @@ describe('HomeForm (US1)', () => {
   it('renders home section fields correctly', async () => {
     render(<HomeForm />);
 
-    expect(await screen.findByText(/Hero Identity/i)).toBeTruthy();
+    expect(await screen.findByText(/Maturity Identity/i)).toBeTruthy();
     const nameInput = (await screen.findByLabelText(
       /First Name/i,
     )) as HTMLInputElement;
