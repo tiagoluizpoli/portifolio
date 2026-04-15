@@ -108,30 +108,6 @@ export function ExperienceForm() {
     return <ExperienceSkeleton />;
   }
 
-  const items = form.getFieldValue('items') || [];
-  if (!items || items.length === 0) {
-    return (
-      <div className="space-y-8 animate-in fade-in duration-500">
-        <div className="flex items-center justify-between">
-          <div className="space-y-2">
-            <h2 className="text-2xl font-black uppercase tracking-tighter text-foreground">
-              Professional Journey
-            </h2>
-            <p className="text-xs text-muted-foreground/60 uppercase tracking-widest font-bold">
-              Orchestrate your career timeline and milestones
-            </p>
-          </div>
-        </div>
-        <CmsEmptyState
-          sectionName="Experience"
-          description="No experience records yet. Start building your professional narrative."
-          onAction={addItem}
-          actionLabel="Add Experience"
-        />
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex items-center justify-between">
@@ -166,18 +142,33 @@ export function ExperienceForm() {
 
       <div className="space-y-6">
         <form.Field name="items">
-          {(field) => (
-            <>
-              {field.state.value?.map((_, index) => (
-                <ExperienceItem
-                  key={field.state.value[index].id}
-                  index={index}
-                  form={form}
-                  onRemove={removeItem}
+          {(field) => {
+            const items = field.state.value as HistoryItem[] | undefined;
+
+            if (!items || items.length === 0) {
+              return (
+                <CmsEmptyState
+                  sectionName="Experience"
+                  description="No experience records yet. Start building your professional narrative."
+                  onAction={addItem}
+                  actionLabel="Add Experience"
                 />
-              ))}
-            </>
-          )}
+              );
+            }
+
+            return (
+              <>
+                {items.map((_, index) => (
+                  <ExperienceItem
+                    key={items[index].id}
+                    index={index}
+                    form={form}
+                    onRemove={removeItem}
+                  />
+                ))}
+              </>
+            );
+          }}
         </form.Field>
 
         <Button
