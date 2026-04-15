@@ -12,6 +12,7 @@ import { SkillDialog } from './skill-dialog';
 import { type SkillCategory, SkillsFilters } from './skills-filters';
 import { SkillsGrid } from './skills-grid';
 import { SkillsHeader } from './skills-header';
+import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { generateId } from '@/lib/utils';
 
@@ -120,17 +121,56 @@ export function SkillsForm() {
 
   if (skills.isLoading) {
     return (
-      <div className="space-y-8">
-        <div className="flex items-center justify-between">
-          <Skeleton className="h-10 w-48" />
-          <div className="flex gap-2">
-            <Skeleton className="h-10 w-24" />
-            <Skeleton className="h-10 w-32" />
+      <div className="space-y-8 animate-in fade-in duration-500">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-border/40">
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-56" />
+            <Skeleton className="h-4 w-80" />
+          </div>
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-9 w-24 rounded-md" />
+            <Skeleton className="h-9 w-28 rounded-md" />
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+        <div className="flex flex-col md:flex-row gap-x-3 gap-y-4 items-center">
+          <div className="flex-1 relative w-full">
+            <Skeleton className="h-10 w-full rounded-md" />
+          </div>
+
+          <Skeleton className="h-10 w-32 rounded-md shrink-0" />
+
+          <div className="h-10 shrink-0 rounded-md border border-border/40 bg-card/40 p-1 flex gap-1">
+            <Skeleton className="h-full w-14 rounded-sm" />
+            <Skeleton className="h-full w-20 rounded-sm" />
+            <Skeleton className="h-full w-16 rounded-sm" />
+            <Skeleton className="h-full w-20 rounded-sm" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((id) => (
-            <Skeleton key={`skel-${id}`} className="h-20 w-full rounded-xl" />
+            <Card
+              key={`skel-${id}`}
+              className="relative bg-card/50 border border-border/80 overflow-hidden h-24 shadow-sm"
+            >
+              <div className="absolute top-3 left-3 flex gap-2 z-10">
+                <Skeleton className="h-4 w-10 rounded-sm" />
+                <Skeleton className="h-4 w-12 rounded-sm" />
+              </div>
+
+              <div className="absolute top-2 right-2 flex gap-1">
+                <Skeleton className="size-7 rounded-md" />
+                <Skeleton className="size-7 rounded-md" />
+              </div>
+
+              <CardContent className="p-5 pt-10 h-full flex items-center gap-5">
+                <Skeleton className="size-12 shrink-0 rounded-lg" />
+                <div className="min-w-0 flex-1 space-y-2">
+                  <Skeleton className="h-4 w-3/5" />
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>

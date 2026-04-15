@@ -1,12 +1,13 @@
 import { useForm } from '@tanstack/react-form';
 import { zodValidator } from '@tanstack/zod-form-adapter';
-import { Info, Loader2 } from 'lucide-react';
+import { Info } from 'lucide-react';
 import { useCmsContext } from '../../context/cms-context';
 import { type HomeInput, homeSchema } from '../../types/home';
 import { FileUploader } from '../common/file-uploader';
 import { CmsFormField } from '../common/form-field';
 import { HomeHeader } from './home-header';
 import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Tooltip,
   TooltipContent,
@@ -16,7 +17,7 @@ import {
 
 /**
  * HomeForm (Constitution §XVII, §I)
- * Section 01: Hero Identity.
+ * Section 01: Hero Identity & Journey.
  *
  * Consolidated architectural implementation. Eliminates 'types.ts' shims
  * and leverages direct inference for 100% type safety without modularity overhead.
@@ -49,11 +50,7 @@ export function HomeForm() {
   });
 
   if (home.isLoading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <Loader2 className="size-8 animate-spin text-primary/20" />
-      </div>
-    );
+    return <HomeFormSkeleton />;
   }
 
   return (
@@ -117,7 +114,7 @@ export function HomeForm() {
                   label="Headline / Hero Punchline"
                   textarea
                   placeholder="What describes your core value?"
-                  className="min-h-[64px] font-semibold"
+                  className="min-h-16 font-semibold"
                 />
               )}
             </form.Field>
@@ -129,7 +126,7 @@ export function HomeForm() {
                   label="Biography / Narrative"
                   textarea
                   placeholder="A brief story..."
-                  className="min-h-[80px] text-muted-foreground/80 leading-loose"
+                  className="min-h-20 text-muted-foreground/80 leading-loose"
                 />
               )}
             </form.Field>
@@ -139,7 +136,7 @@ export function HomeForm() {
                 {(field) => (
                   <CmsFormField
                     field={field}
-                    label="Base Year"
+                    label="Journey Started"
                     type="number"
                     showBadge="YYYY"
                     className="text-lg font-black italic tabular-nums tracking-wider"
@@ -174,7 +171,7 @@ export function HomeForm() {
                     <Info className="size-3" />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent className="bg-background border-border text-[10px] font-medium uppercase tracking-widest text-primary p-3 max-w-[200px]">
+                <TooltipContent className="bg-background border-border text-[10px] font-medium uppercase tracking-widest text-primary p-3 max-w-50">
                   Profile picture is shared across all locales. CV is specific
                   to the language.
                 </TooltipContent>
@@ -206,5 +203,74 @@ export function HomeForm() {
         </div>
       </div>
     </TooltipProvider>
+  );
+}
+
+function HomeFormSkeleton() {
+  return (
+    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 w-full">
+      <div className="flex items-center justify-between px-1 mb-6">
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-32" />
+          <Skeleton className="h-4 w-44" />
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-8 w-20 rounded-md" />
+          <Skeleton className="h-8 w-32 rounded-md" />
+        </div>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2" data-testid="home-split-grid">
+        <Card className="bg-transparent border-border space-y-4 shadow-none">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-3">
+              <Skeleton className="h-3 w-20" />
+              <Skeleton className="h-11 w-full" />
+            </div>
+            <div className="space-y-3">
+              <Skeleton className="h-3 w-20" />
+              <Skeleton className="h-11 w-full" />
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <Skeleton className="h-3 w-40" />
+            <Skeleton className="h-11 w-full" />
+          </div>
+
+          <div className="space-y-3">
+            <Skeleton className="h-3 w-32" />
+            <Skeleton className="h-28 w-full rounded-xl" />
+          </div>
+
+          <div className="space-y-3">
+            <Skeleton className="h-3 w-36" />
+            <Skeleton className="h-32 w-full rounded-xl" />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/40">
+            <div className="space-y-3">
+              <Skeleton className="h-3 w-24" />
+              <Skeleton className="h-11 w-full" />
+            </div>
+            <div className="space-y-3">
+              <Skeleton className="h-3 w-24" />
+              <Skeleton className="h-11 w-full" />
+            </div>
+          </div>
+        </Card>
+
+        <Card className="bg-transparent border-border flex flex-col items-center gap-4 shadow-none p-0 pt-4">
+          <div className="flex items-center gap-2 w-full px-1">
+            <Skeleton className="h-3 w-24" />
+            <Skeleton className="size-3 rounded-full" />
+          </div>
+
+          <Skeleton className="h-40 w-full rounded-3xl" />
+          <Skeleton className="h-40 w-full rounded-3xl" />
+        </Card>
+      </div>
+    </div>
   );
 }
