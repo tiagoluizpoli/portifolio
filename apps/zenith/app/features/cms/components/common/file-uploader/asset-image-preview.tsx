@@ -27,7 +27,7 @@ export function AssetImagePreview({
             <Skeleton className="size-full absolute inset-0 z-10 animate-pulse bg-muted" />
           )}
           <img
-            src={previewUrl || imageSrc || ''}
+            src={previewUrl || imageSrc || undefined}
             alt="preview"
             onLoad={onImageLoad}
             className={cn(
