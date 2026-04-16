@@ -44,6 +44,10 @@ export function ContactForm() {
           ...item,
           platformId: (item.platformId as string) || '',
           username: (item.username as string) || (item.url as string) || '',
+          iconId:
+            (item.iconId as string) ||
+            (item.iconCode as string) ||
+            'lucide:link',
           active: (item.active as boolean) ?? true,
           sort: (item.sort as number) ?? 0,
         };
@@ -54,7 +58,15 @@ export function ContactForm() {
   const form: ContactFormInstance = useContactFormBase(
     initialData,
     async (value: ContactInput) => {
-      await saveSection('contact', value as unknown as ContactData);
+      const normalizedValue: ContactData = {
+        ...(value as unknown as ContactData),
+        socials: (value.socials || []).map((social) => ({
+          ...social,
+          iconId: social.iconId || 'lucide:link',
+        })),
+      };
+
+      await saveSection('contact', normalizedValue);
     },
   );
 

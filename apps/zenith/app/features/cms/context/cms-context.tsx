@@ -95,26 +95,62 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
     contactQuery.data,
   ]);
 
+  const resolveSocialIconId = useCallback(
+    (social: ContactData['socials'][number]) => {
+      const legacyIconCode =
+        'iconCode' in social && typeof social.iconCode === 'string'
+          ? social.iconCode
+          : undefined;
+
+      return social.iconId || legacyIconCode || 'lucide:link';
+    },
+    [],
+  );
+
   // 3. Centralized Save Strategy
   const saveSection = useCallback(
     async (section: string, data: unknown) => {
       startSaving(async () => {
         try {
           const payload = { locale: currentLocale, data };
+          const saveHome = saveHomeSection as unknown as (args: {
+            data: { locale: string; data: HomeData };
+          }) => Promise<unknown>;
+          const saveAbout = saveAboutSection as unknown as (args: {
+            data: { locale: string; data: AboutData };
+          }) => Promise<unknown>;
+          const saveHistory = saveHistorySection as unknown as (args: {
+            data: {
+              type: 'experience' | 'education';
+              locale: string;
+              items: HistoryItem[];
+            };
+          }) => Promise<unknown>;
+          const saveSkills = saveSkillsSection as unknown as (args: {
+            data: { locale: string; items: Skill[] };
+          }) => Promise<unknown>;
+          const saveSolutions = saveSolutionsSection as unknown as (args: {
+            data: { locale: string; items: Solution[] };
+          }) => Promise<unknown>;
+          const saveContact = saveContactSection as unknown as (args: {
+            data: { locale: string; data: ContactData };
+          }) => Promise<unknown>;
+
           switch (section) {
             case 'home':
-              // biome-ignore lint/suspicious/noExplicitAny: infrastructure-level cast
-              await (saveHomeSection as any)({ data: payload });
+              await saveHome({
+                data: payload as { locale: string; data: HomeData },
+              });
               await homeQuery.refetch();
               break;
             case 'about':
-              // biome-ignore lint/suspicious/noExplicitAny: infrastructure-level cast
-              await (saveAboutSection as any)({ data: payload });
+              await saveAbout({
+                data: payload as { locale: string; data: AboutData },
+              });
               await aboutQuery.refetch();
               break;
             case 'experience':
-              // biome-ignore lint/suspicious/noExplicitAny: infrastructure-level cast
-              await (saveHistorySection as any)({
+              await saveHistory({
                 data: {
                   type: 'experience',
                   locale: currentLocale,
@@ -124,8 +160,7 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
               await expQuery.refetch();
               break;
             case 'education':
-              // biome-ignore lint/suspicious/noExplicitAny: infrastructure-level cast
-              await (saveHistorySection as any)({
+              await saveHistory({
                 data: {
                   type: 'education',
                   locale: currentLocale,
@@ -135,24 +170,33 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
               await eduQuery.refetch();
               break;
             case 'skills':
-              // biome-ignore lint/suspicious/noExplicitAny: infrastructure-level cast
-              await (saveSkillsSection as any)({
+              await saveSkills({
                 data: { locale: currentLocale, items: data as Skill[] },
               });
               await skillsQuery.refetch();
               break;
             case 'solutions':
-              // biome-ignore lint/suspicious/noExplicitAny: infrastructure-level cast
-              await (saveSolutionsSection as any)({
+              await saveSolutions({
                 data: { locale: currentLocale, items: data as Solution[] },
               });
               await solutionsQuery.refetch();
               break;
-            case 'contact':
-              // biome-ignore lint/suspicious/noExplicitAny: infrastructure-level cast
-              await (saveContactSection as any)({ data: payload });
+            case 'contact': {
+              const contactData = data as ContactData;
+              const normalizedContact: ContactData = {
+                ...contactData,
+                socials: (contactData.socials || []).map((social) => ({
+                  ...social,
+                  iconId: resolveSocialIconId(social),
+                })),
+              };
+
+              await saveContact({
+                data: { locale: currentLocale, data: normalizedContact },
+              });
               await contactQuery.refetch();
               break;
+            }
           }
         } catch (error) {
           console.error(`[Zenith] Failed to save section ${section}:`, error);
@@ -168,6 +212,7 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
       skillsQuery,
       solutionsQuery,
       contactQuery,
+      resolveSocialIconId,
     ],
   );
 
