@@ -5,9 +5,11 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
-  lint:
+  test-fast:
+    name: Fast Checks (Required)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,9 +30,45 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
-      - name: Biome Check
+      - name: Lint
         run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Unit/Contract Tests
+        run: pnpm test
 
       - name: Commitlint
         if: github.event_name == 'pull_request'
         run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }}
+
+  integration-live:
+    name: Live Integration (Appwrite)
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    env:
+      APPWRITE_ENDPOINT_IT: ${{ secrets.APPWRITE_ENDPOINT_IT }}
+      APPWRITE_PROJECT_ID_IT: ${{ secrets.APPWRITE_PROJECT_ID_IT }}
+      APPWRITE_API_KEY_IT: ${{ secrets.APPWRITE_API_KEY_IT }}
+      APPWRITE_DATABASE_ID_IT: ${{ secrets.APPWRITE_DATABASE_ID_IT }}
+      APPWRITE_TABLE_ID_IT: ${{ secrets.APPWRITE_TABLE_ID_IT }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Run live integration tests
+        run: pnpm --filter @repo/appwrite test:integration

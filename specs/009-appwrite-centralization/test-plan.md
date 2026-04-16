@@ -25,6 +25,7 @@ This plan ensures a zero-regression, 100% coverage implementation for the centra
 - **Schema Rejection**: Zod validation fails for missing required fields (e.g., missing `internalCode`).
 - **Data Type Mismatch**: Attempting to save a string in a boolean field (e.g., `isPlaceholder`).
 - **Mapper Scrubbing**: Verify `DocumentMapper.toAppwrite` correctly ignores extra fields provided by consumers.
+- **Env Group Rejection**: `getEnv({...})` rejects unknown/invalid flag requests at type/runtime boundaries.
 
 ### Class 4: Permission Failures (Authorization)
 - **AuthService**: Verify 401 response when session is expired.
@@ -46,6 +47,23 @@ This plan ensures a zero-regression, 100% coverage implementation for the centra
 ### Class 8: Catastrophic Failures (Full System)
 - **Missing ENV**: Package crash-at-boot if `APPWRITE_PROJECT_ID` is null.
 - **Network Offline**: Verify package provides clear "No Connection" error instead of hanging.
+- **Grouped Fail Fast**: If one variable is missing inside a requested env group, helper returns no partial output and throws a descriptive catastrophic config error.
+
+## FR/US Test Mapping
+
+| Requirement | Test Focus                                             | Expected Outcome                                             |
+| ----------- | ------------------------------------------------------ | ------------------------------------------------------------ |
+| FR-PKG-006  | `MetricSyncService` rollback tests                     | Partial sync creation triggers compensating delete           |
+| FR-PKG-008  | `AuthService` lifecycle tests                          | Session create/get/delete and error mapping validated        |
+| FR-PKG-011  | `@repo/config` group schema tests                      | Group values validated by Zod and typed                      |
+| FR-PKG-012  | `getEnv({...})` inference tests                        | Returned object keys/types match requested `true` flags only |
+| FR-PKG-013  | Integration tests (`@repo/config` -> `@repo/appwrite`) | Appwrite initializes only with typed validated config        |
+| FR-PKG-014  | Initialization behavior tests                          | No implicit auto-init; explicit initialization required      |
+
+## Additional Guardrails (Env Centralization)
+- Shared env package API remains minimal: one public helper + type exports.
+- All consuming apps avoid direct ad-hoc Appwrite env parsing once migrated.
+- Compile-time key safety enforced for requested env group names.
 
 ## Coverage Mandate & Guardrails
 - **Threshold**: 100% (Lines, Branches, Functions, Statements).

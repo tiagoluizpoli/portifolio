@@ -5,25 +5,27 @@ Seamless, type-safe Appwrite interaction with property normalization.
 ## Initialization
 
 ```typescript
-import { createClient } from '@repo/appwrite';
+import { getEnv } from '@repo/config';
+import { initializeAppwrite } from '@repo/appwrite';
 
-const appwrite = createClient({
-  projectId: process.env.APPWRITE_PROJECT_ID,
-  apiKey: process.env.APPWRITE_API_KEY,
+const env = getEnv({ appwrite: true });
+
+initializeAppwrite({
+  endpoint: env.appwrite.endpoint,
+  projectId: env.appwrite.projectId,
+  apiKey: env.appwrite.apiKey,
 });
 ```
 
 ## Consuming Repositories
 
 ```typescript
-import { MetricRepository } from '@repo/appwrite';
+import { ImpactMetricRepository } from '@repo/appwrite';
 
-const repo = new MetricRepository(appwrite, 'db_id');
+const repo = new ImpactMetricRepository('database_id');
 
-// Property normalization: $id -> id
 const metric = await repo.findById('123');
-console.log(metric.id); // '123'
-console.log(metric.createdAt); // ISO String
+console.log(metric?.id);
 ```
 
 ## Using Specialized Services
@@ -32,7 +34,7 @@ console.log(metric.createdAt); // ISO String
 ```typescript
 import { MetricSyncService } from '@repo/appwrite';
 
-const syncService = new MetricSyncService(repo);
+const syncService = new MetricSyncService();
 await syncService.sync('about_doc_id', enMetric);
 ```
 
@@ -40,10 +42,21 @@ await syncService.sync('about_doc_id', enMetric);
 ```typescript
 import { StorageService } from '@repo/appwrite';
 
-const storage = new StorageService(appwrite);
+const storage = new StorageService();
 const file = await storage.upload({
-  bucketId: 'pictures', // Resolved internally by env or logic
-  file: base64String,
-  name: 'profile.jpg'
+  kind: 'picture',
+  file: inputFile,
+  name: 'profile.jpg',
 });
+```
+
+## Shared Env Package Helper
+
+```typescript
+import { getEnv } from '@repo/config';
+
+const env = getEnv({ appwrite: true, database: true });
+
+env.appwrite.endpoint;
+env.database.url;
 ```

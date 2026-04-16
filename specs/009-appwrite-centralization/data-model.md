@@ -110,3 +110,21 @@ All entities in this package MUST follow these normalization rules during SDK tr
 - **type**: string
 - **iconCode**: string
 - **status**: string
+
+---
+
+## Configuration Group Entities (`@repo/config`)
+
+### AppwriteGroup
+- **endpoint**: string
+- **projectId**: string
+- **apiKey**: string (optional)
+- **databaseId**: string
+- **bucketPicturesId**: string
+- **bucketPdfsId**: string
+
+### DatabaseGroup
+- **url**: string
+
+### StorageGroup
+- **publicBaseUrl**: string

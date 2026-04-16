@@ -10,6 +10,12 @@
 **Rational**: Use Vitest with `coverage.thresholds` set to `100` for lines, branches, functions, and statements. Any PR/Commit that drops below this will fail the CI/CD pipeline.
 **Alternatives considered**: 90% threshold. Rejected per user's "MASTERMIND" mandate.
 
+## Decision: Shared Env Package with Single Group Helper
+**Rational**: Centralizing env validation in `@repo/config` removes duplicated parsing logic across apps and keeps fail-fast behavior consistent. A single helper (`getEnv({ group: true })`) provides a minimal public API while preserving internal loader modularity.
+**Alternatives considered**:
+- Expose one public function per group (`loadAppwriteEnv`, `loadDatabaseEnv`, ...). Rejected due to API sprawl and inconsistent usage patterns in consumers.
+- Implicit Appwrite auto-initialization from env reads. Rejected due to lifecycle ambiguity and reduced control in multi-runtime contexts.
+
 ## Implementation Details
 
 ### Property Mapper Template

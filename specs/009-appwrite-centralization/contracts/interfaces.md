@@ -65,3 +65,40 @@ export interface IMetricSyncService {
   cleanup(aboutId: string, internalCode: string): Promise<void>;
 }
 ```
+
+### IEnvGroupLoader
+Single public helper from shared env package for typed grouped resolution.
+
+```typescript
+type EnvGroupKey = 'appwrite' | 'database' | 'storage';
+
+type EnvGroupFlags = {
+  [K in EnvGroupKey]?: true;
+};
+
+interface EnvGroupMap {
+  appwrite: {
+    endpoint: string;
+    projectId: string;
+    apiKey?: string;
+    databaseId: string;
+    bucketPicturesId: string;
+    bucketPdfsId: string;
+  };
+  database: {
+    url: string;
+  };
+  storage: {
+    publicBaseUrl: string;
+  };
+}
+
+export type EnvGroupResult<F extends EnvGroupFlags> = {
+  [K in keyof F as F[K] extends true ? K : never]:
+    K extends keyof EnvGroupMap ? EnvGroupMap[K] : never;
+};
+
+export declare function getEnv<F extends EnvGroupFlags>(
+  flags: F,
+): EnvGroupResult<F>;
+```
