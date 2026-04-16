@@ -10,6 +10,7 @@
     "includes": [
       "**/src/**/*",
       "**/app/**/*",
+      "**/tsconfig.json",
       "**/.vscode/**/*",
       "specs/**/*",
       ".agents/**/*",
