@@ -8,6 +8,8 @@
  * Security: All functions in this file execute exclusively server-side via
  * `createServerFn`. Client code cannot access rollback logic or env credentials.
  */
+
+import { Buffer } from 'node:buffer';
 import {
   createPortfolioItemSchema,
   getAssetPreviewSchema,
@@ -20,7 +22,7 @@ import {
   PortfolioService,
 } from '@repo/appwrite-core/server';
 import { createServerFn } from '@tanstack/react-start';
-import { env } from '@/config/env';
+import { bootstrapAppwriteRuntime } from './bootstrap.js';
 
 // ---------------------------------------------------------------------------
 // Lazy Service Initialization (Singleton)
@@ -34,6 +36,8 @@ let serviceInstance: PortfolioService | null = null;
  */
 function getPortfolioService() {
   if (!serviceInstance) {
+    const env = bootstrapAppwriteRuntime();
+
     // Top-level side effects are moved here to prevent leakage into the client bundle
     PortfolioService.init(env);
     serviceInstance = new PortfolioService(
@@ -58,6 +62,8 @@ export const getAppWriteData = createServerFn({ method: 'GET' }).handler(
 
 export const testSecretIsolation = createServerFn({ method: 'GET' }).handler(
   async () => {
+    const env = bootstrapAppwriteRuntime();
+
     return {
       hasKey: !!env.APPWRITE_API_KEY,
       message: 'Isolation Test',

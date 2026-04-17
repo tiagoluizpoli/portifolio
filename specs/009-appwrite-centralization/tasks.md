@@ -87,17 +87,17 @@ Goal: Final audit and parity check against legacy implementation.
 Goal: Introduce shared typed env-group loading and integrate it with Appwrite initialization.
 
 ### [Task T7.1] Shared `@repo/config` Package Foundation
-- [ ] **S7.1.1** Create `packages/config/` workspace package with `package.json`, `tsconfig.json`, and source layout.
-- [ ] **S7.1.2** Implement internal Zod group schemas and registry for supported groups in `packages/config/src/groups/*`.
-- [ ] **S7.1.3** Implement typed helper `getEnv({ group: true })` returning keyed requested-group objects in `packages/config/src/loader.ts`.
+- [X] **S7.1.1** Create `packages/config/` workspace package with `package.json`, `tsconfig.json`, and source layout.
+- [X] **S7.1.2** Implement internal Zod group schemas and registry for supported groups in `packages/config/src/groups/*`.
+- [X] **S7.1.3** Implement typed helper `getEnv({ group: true })` returning keyed requested-group objects in `packages/config/src/loader.ts`.
 
 ### [Task T7.2] Appwrite Integration Path
-- [ ] **S7.2.1** Update `@repo/appwrite` docs/contracts to consume explicit typed config from `@repo/config` outputs.
-- [ ] **S7.2.2** Add integration examples for Migrator/Web bootstraps (`@repo/config` -> `initializeAppwrite`) in quickstart docs.
-- [ ] **S7.2.3** Ensure `@repo/appwrite` remains explicit-init only (no implicit auto-initialize behavior).
-- [ ] **S7.2.4** Integrate `@repo/config` group helper into `apps/migrator` bootstrap and pass typed config into `initializeAppwrite`.
-- [ ] **S7.2.5** Integrate `@repo/config` group helper into `apps/zenith` server bootstrap for Appwrite client initialization.
+- [X] **S7.2.1** Update `@repo/appwrite` docs/contracts to consume explicit typed config from `@repo/config` outputs.
+- [X] **S7.2.2** Add integration examples for Migrator/Web bootstraps (`@repo/config` -> `initializeAppwrite`) in quickstart docs.
+- [X] **S7.2.3** Ensure `@repo/appwrite` remains explicit-init only (no implicit auto-initialize behavior).
+- [x] **S7.2.4** Integrate `@repo/config` group helper into `apps/migrator` bootstrap and pass typed config into `initializeAppwrite`.
+- [x] **S7.2.5** Integrate `@repo/config` group helper into `apps/zenith` server bootstrap for Appwrite client initialization.
 
 ### [Task T7.3] Centralization Verification (Mandatory Tests)
-- [ ] **S7.3.1** [P] Validate Class 1, 3, 8 scenarios for `@repo/config` helper (`packages/config/tests/**`).
-- [ ] **S7.3.2** [P] Validate cross-package integration of typed env output into Appwrite initialization.
+- [x] **S7.3.1** [P] Validate Class 1, 3, 8 scenarios for `@repo/config` helper (`packages/config/tests/**`).
+- [x] **S7.3.2** [P] Validate cross-package integration of typed env output into Appwrite initialization.

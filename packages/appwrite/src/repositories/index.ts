@@ -1,3 +1,3 @@
-export * from './base-repository';
-export * from './interfaces';
-export * from './specialized-repositories';
+export * from './base-repository.js';
+export * from './interfaces.js';
+export * from './specialized-repositories.js';

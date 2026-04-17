@@ -14,9 +14,10 @@ import {
   AppwriteProvider,
   CmsService,
 } from '../../../../../packages/appwrite-core/src/server';
-import { env } from '@/config/env';
+import { bootstrapAppwriteRuntime } from '../appwrite/bootstrap.js';
 
 function getService(): CmsService {
+  const env = bootstrapAppwriteRuntime();
   AppwriteProvider.initialize(env as unknown as AppwriteEnv);
   return new CmsService(AppwriteProvider.client, env.APPWRITE_DATABASE_ID, [
     'en',

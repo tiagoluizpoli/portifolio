@@ -79,11 +79,13 @@ type EnvGroupFlags = {
 interface EnvGroupMap {
   appwrite: {
     endpoint: string;
+    endpointPublic?: string;
     projectId: string;
-    apiKey?: string;
+    apiKey: string;
     databaseId: string;
-    bucketPicturesId: string;
-    bucketPdfsId: string;
+    curatorTeamId: string;
+    bucketPicturesId?: string;
+    bucketPdfsId?: string;
   };
   database: {
     url: string;
@@ -102,3 +104,24 @@ export declare function getEnv<F extends EnvGroupFlags>(
   flags: F,
 ): EnvGroupResult<F>;
 ```
+
+### Appwrite Initialization Contract
+`@repo/appwrite` is initialized from the typed output of `@repo/config` only.
+
+```typescript
+import { getEnv } from '@repo/config';
+import { initializeAppwrite } from '@repo/appwrite';
+
+const env = getEnv({ appwrite: true });
+
+initializeAppwrite({
+  endpoint: env.appwrite.endpoint,
+  projectId: env.appwrite.projectId,
+  apiKey: env.appwrite.apiKey,
+});
+```
+
+### Consumption Rules
+- Consumer apps must not read `process.env.APPWRITE_*` directly to build Appwrite runtime config.
+- Runtime initialization values for `@repo/appwrite` must come from `getEnv(...)` typed group output.
+- `@repo/appwrite` remains explicit-init only; no implicit auto-initialize behavior is allowed.

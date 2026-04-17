@@ -1,8 +1,7 @@
-import { validateAppwriteEnv } from '@repo/appwrite-core';
-import { AppwriteProvider } from '@repo/appwrite-core/server';
 import dotenv from 'dotenv';
 import { MigratePortfolioUseCase } from '../application/migrate-portfolio.use-case.js';
 import { SchemaManager } from '../infrastructure/schema.manager.js';
+import { bootstrapAppwriteRuntime } from './bootstrap-appwrite.js';
 
 dotenv.config();
 
@@ -33,11 +32,8 @@ async function main() {
 
     console.log(`[INIT] Conflict Strategy: ${conflictStrategy}`);
 
-    // Initialize Appwrite Provider
-    const config = validateAppwriteEnv(
-      process.env as Record<string, string | undefined>,
-    );
-    AppwriteProvider.initialize(config);
+    // Initialize Appwrite runtime
+    bootstrapAppwriteRuntime();
 
     // 1. infrastructure Setup (Schema & Storage)
     const schemaManager = new SchemaManager();

@@ -1,7 +1,7 @@
-import { validateAppwriteEnv } from '@repo/appwrite-core';
 import type { HomeData } from '@repo/appwrite-core/domain';
 import { AppwriteProvider, CmsService } from '@repo/appwrite-core/server';
 import dotenv from 'dotenv';
+import { bootstrapAppwriteRuntime } from '../main/bootstrap-appwrite.js';
 
 dotenv.config();
 
@@ -9,14 +9,10 @@ async function seed() {
   console.log('🌱 Seeding Appwrite CMS with mock data...');
 
   try {
-    const config = validateAppwriteEnv(
-      process.env as Record<string, string | undefined>,
-    );
-
-    AppwriteProvider.initialize(config);
+    const { appwrite } = bootstrapAppwriteRuntime();
     const service = new CmsService(
       AppwriteProvider.client,
-      config.APPWRITE_DATABASE_ID,
+      appwrite.databaseId,
       ['en', 'pt'],
     );
 

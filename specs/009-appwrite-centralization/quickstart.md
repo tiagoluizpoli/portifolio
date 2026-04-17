@@ -60,3 +60,39 @@ const env = getEnv({ appwrite: true, database: true });
 env.appwrite.endpoint;
 env.database.url;
 ```
+
+## Integration Examples
+
+### Migrator Bootstrap (`apps/migrator`)
+
+```typescript
+import { getEnv } from '@repo/config';
+import { initializeAppwrite } from '@repo/appwrite';
+
+const env = getEnv({ appwrite: true });
+
+initializeAppwrite({
+  endpoint: env.appwrite.endpoint,
+  projectId: env.appwrite.projectId,
+  apiKey: env.appwrite.apiKey,
+});
+
+// Continue migrator flow using @repo/appwrite repositories/services
+```
+
+### Web/Zenith Server Bootstrap (`apps/zenith`)
+
+```typescript
+import { getEnv } from '@repo/config';
+import { initializeAppwrite } from '@repo/appwrite';
+
+const env = getEnv({ appwrite: true, storage: true });
+
+initializeAppwrite({
+  endpoint: env.appwrite.endpoint,
+  projectId: env.appwrite.projectId,
+  apiKey: env.appwrite.apiKey,
+});
+
+// Use env.storage.publicBaseUrl for server-side asset URL policies when needed
+```
