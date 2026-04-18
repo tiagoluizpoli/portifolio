@@ -12,8 +12,8 @@ This document summarizes the audio feedback regarding the `SeedEngine` implement
 #### Audio 2 (00:59 - 01:52)
 > "So, just to be crystal clear, we use clean architecture for a reason. Query, this query dot limit, query dot offset is clearly something that doesn't belong in the service layer. It should be in the infrastructure layer, in the repository, you know? That's the main concern. I mean, we should use separation of concerns. Things from infrastructure should never leak to the services. I mean, you know the drill, dude. Don't make me repeat it."
 
-#### Audio 3 (01:53 - end)
-> "Before you do anything, just give me a transcription for all those audios I just sent and a summary of understanding of what you understood from the audio. And then you can generate a prompt enhancer using both the transcriptions and what you understood, okay? But do nothing. Those are the three main informations I want: transcription with all the audios, your understanding summarized, and the output of a prompt enhancer using both transcription and your understanding. This is it."
+#### Audio 4 (00:00 - 00:17)
+> "Dude, you pulled up React Architect. It's wrong. We're dealing with a purely script application. There are no interface, no UI whatsoever. What the hell?"
 
 ---
 
@@ -26,36 +26,37 @@ The core feedback focuses on a violation of **Separation of Concerns** within th
     *   **Repository Layer**: Should be the **exclusive** holder of SDK-specific knowledge. It should handle translation from domain-level parameters (like `pageSize`, `offset`, or `filters`) into the specific sync/async query structures required by Appwrite.
     *   **Service Layer (`SeedEngine`)**: Should act as a clean orchestrator. It should only communicate with repositories using domain-native types (plain objects/numbers) and should not need to import or understand the Appwrite `Query` builder.
 *   **The "Weird Thing"**: In `SeedEngine.ts`, the `listAllRows` method manually iterates using `Query.limit(pageSize)` and `Query.offset(offset)`. This logic must be refactored so the service simply requests data, and the repository manages the pagination mechanics.
+*   **Pure Scripting Context**: This is a CLI application (`appwrite-migrator`). There is **zero UI/React** involved. All logic must be optimized for server-side/scripting execution and high-fidelity backend architecture.
 
 ---
 
 ### 3. Enhanced Prompt (Engineering Brief)
 
-Engaging the **Appwrite Specialist**, **React Architect**, and **Speckit Analyst** as the active squad for this architectural hardening.
+Engaging the **Appwrite Specialist**, **Speckit Analyst**, and **Test Master** as the active squad for this architectural hardening.
 
 # Architectural Hardening: Encapsulating Infrastructure Leakage
 
 ## Context
-A recent audit of `SeedEngine.ts` revealed that infrastructure-specific logic (Appwrite SDK `Query` builders) has leaked into the Service layer. This violates our Clean Architecture standards on separation of concerns. We need to move all SDK-specific query construction into the Repository layer.
+A recent audit of `SeedEngine.ts` revealed that infrastructure-specific logic (Appwrite SDK `Query` builders) has leaked into the Service layer. This violates our Clean Architecture standards on separation of concerns. We need to move all SDK-specific query construction into the Repository layer for this purely script-based CLI application.
 
 ## Specialists Engaged
 - **Appwrite Specialist**: Deep-dive knowledge of the SDK and Repository patterns.
-- **React Architect**: Enforcing pattern discipline and layer isolation.
-- **Speckit Analyst**: Ensuring requirements alignment and coverage.
+- **Speckit Analyst**: Ensuring requirements alignment, architectural planning, and task breakdown.
+- **Test Master**: Enforcing strict backend coverage and catastrophic failure scenario verification.
 
 ## Technical Requirements
-- **Refactor `IRepository`**: Update the `findMany` signature to accept high-level domain options (e.g., `options: RepositoryQueryOptions`) instead of raw `string[]` queries.
-- **BaseRepository Implementation**: Move the construction of `Query.limit`, `Query.offset`, and other filters into the `BaseRepository` or specialized repositories.
+- **Refactor `IRepository`**: Update the `findMany` signature in `packages/appwrite/src/repositories/interfaces.ts` to accept high-level domain options (e.g., `options: RepositoryQueryOptions`) instead of raw `string[]` queries.
+- **BaseRepository Implementation**: Move the construction of `Query.limit`, `Query.offset`, and other filters into the `BaseRepository` logic.
 - **Service Decoupling**: Purge the `Query` import from `SeedEngine.ts`. Update `listAllRows` to pass simple integers for pagination.
 - **Type Safety**: Ensure the new query options are fully typed and strictly enforced. No `any` leakage during the translation from domain options to SDK queries.
 
 ## Success Criteria
 - **Zero Leakage**: `SeedEngine.ts` must have zero imports from or references to Appwrite's internal `Query` system.
-- **Atomic Pass**: `pnpm guard` must pass with 100% success rate.
-- **Coverage**: Maintain 100% test coverage for the refactored repository logic.
+- **Atomic Pass**: `pnpm guard` must pass with 100% success rate across the workspace.
+- **Coverage**: Maintain 100% test coverage for all refactored logic, including edge cases for pagination boundaries.
 - **Encapsulated Infrastructure**: All `Query.*` calls must be contained within `packages/appwrite/src/repositories`.
 
 ## Governance
-- **300-Line Limit**: Ensure that the addition of query translation logic doesn't push repositories over the line limit.
+- **300-Line Component Limit**: Ensure that the addition of query translation logic doesn't push repository files over the line limit.
 - **Named Exports Only**: Maintain strictly named exports for all new types and interfaces.
-- **Aesthetic Logic**: Ensure the orchestration in `SeedEngine` remains readable and focused on the "What" (the domain logic) rather than the "How" (the SDK implementation).
+- **Pure Scripting Performance**: Ensure the orchestration in `SeedEngine` remains efficient, avoiding redundant SDK calls and optimized for batch/paginated processing.
