@@ -12,8 +12,8 @@ This document summarizes the audio feedback regarding the `SeedEngine` implement
 #### Audio 2 (00:59 - 01:52)
 > "So, just to be crystal clear, we use clean architecture for a reason. Query, this query dot limit, query dot offset is clearly something that doesn't belong in the service layer. It should be in the infrastructure layer, in the repository, you know? That's the main concern. I mean, we should use separation of concerns. Things from infrastructure should never leak to the services. I mean, you know the drill, dude. Don't make me repeat it."
 
-#### Audio 4 (00:00 - 00:17)
-> "Dude, you pulled up React Architect. It's wrong. We're dealing with a purely script application. There are no interface, no UI whatsoever. What the hell?"
+#### Audio 5 (00:00 - 00:52)
+> "Man, don't limit this to a squad to like three, four to five, I don't know, only specialists. Yes, it's good to have the specialist, but we do need all of the remaining skills we have out there. I mean, for example, we definitely could use the clean code purist. I don't know, we could use the tanstack master. We could use a lot of, I don't know. Go through the skill list and fetch every single skill that could be beneficial for this. That's it. Not only a team, not only a squad. Well, we can have this squad, I mean the main persons who do stuff, but they should be able to be empowered by some other skills, you know? That's it."
 
 ---
 
@@ -27,22 +27,31 @@ The core feedback focuses on a violation of **Separation of Concerns** within th
     *   **Service Layer (`SeedEngine`)**: Should act as a clean orchestrator. It should only communicate with repositories using domain-native types (plain objects/numbers) and should not need to import or understand the Appwrite `Query` builder.
 *   **The "Weird Thing"**: In `SeedEngine.ts`, the `listAllRows` method manually iterates using `Query.limit(pageSize)` and `Query.offset(offset)`. This logic must be refactored so the service simply requests data, and the repository manages the pagination mechanics.
 *   **Pure Scripting Context**: This is a CLI application (`appwrite-migrator`). There is **zero UI/React** involved. All logic must be optimized for server-side/scripting execution and high-fidelity backend architecture.
+*   **Inclusive Capability Model**: Instead of a isolated team, the task will be driven by a **Core Squad** for execution and supported by an **Empowerment Squad** that provides specialized guardrails (Clean Code, State/Logic Orchestration, Testing Exhaustion, etc.).
 
 ---
 
 ### 3. Enhanced Prompt (Engineering Brief)
 
-Engaging the **Appwrite Specialist**, **Speckit Analyst**, and **Test Master** as the active squad for this architectural hardening.
+Engaging a multi-dimensional squad to ensure architectural excellence and zero-defect execution.
 
 # Architectural Hardening: Encapsulating Infrastructure Leakage
 
 ## Context
-A recent audit of `SeedEngine.ts` revealed that infrastructure-specific logic (Appwrite SDK `Query` builders) has leaked into the Service layer. This violates our Clean Architecture standards on separation of concerns. We need to move all SDK-specific query construction into the Repository layer for this purely script-based CLI application.
+A recent audit of `SeedEngine.ts` revealed that infrastructure-specific logic (Appwrite SDK `Query` builders) has leaked into the Service layer. We are refactoring this purely script-based CLI application to enforce strict Clean Architecture boundaries and centralize all SDK-specific construction within the Repository layer.
 
 ## Specialists Engaged
-- **Appwrite Specialist**: Deep-dive knowledge of the SDK and Repository patterns.
-- **Speckit Analyst**: Ensuring requirements alignment, architectural planning, and task breakdown.
-- **Test Master**: Enforcing strict backend coverage and catastrophic failure scenario verification.
+
+### Core Squad (Execution)
+- **Appwrite Specialist**: Primary owner of SDK integration and Repository mapping.
+- **Speckit Analyst/Plan**: Architectural blueprinting and task synchronization.
+- **Test Master**: Enforcing backend coverage (Vitest) and failure scenario verification.
+
+### Empowerment Squad (Governance & Quality)
+- **Clean Code Purist (`code-review`)**: Ensuring SOLID principles, perfect naming, and infrastructure isolation.
+- **TanStack Master**: Optimizing logic orchestration and data-fetching patterns (even in non-React contexts).
+- **Git Commit Specialist**: Crafting a clean, atomic, and semantic implementation history.
+- **Speckit Checklist**: Generating custom quality gates to validate the refactor's success.
 
 ## Technical Requirements
 - **Refactor `IRepository`**: Update the `findMany` signature in `packages/appwrite/src/repositories/interfaces.ts` to accept high-level domain options (e.g., `options: RepositoryQueryOptions`) instead of raw `string[]` queries.
@@ -57,6 +66,7 @@ A recent audit of `SeedEngine.ts` revealed that infrastructure-specific logic (A
 - **Encapsulated Infrastructure**: All `Query.*` calls must be contained within `packages/appwrite/src/repositories`.
 
 ## Governance
-- **300-Line Component Limit**: Ensure that the addition of query translation logic doesn't push repository files over the line limit.
+- **300-Line Component Limit**: No repository or service file may exceed 300 lines; use pattern-based decomposition if necessary.
 - **Named Exports Only**: Maintain strictly named exports for all new types and interfaces.
-- **Pure Scripting Performance**: Ensure the orchestration in `SeedEngine` remains efficient, avoiding redundant SDK calls and optimized for batch/paginated processing.
+- **Backend Performance**: Optimized for batch processing and efficient memory management during large-scale migrations.
+- **Semantic Commit Hygiene**: Every change must be part of a meaningful, verified commit block.
