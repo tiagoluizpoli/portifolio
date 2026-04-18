@@ -1,8 +1,11 @@
 # Feature Specification: Refactor appwrite-migrator to Clean Architecture
 
+> [!IMPORTANT]
+> **WORK IN PROGRESS**: The architectural refactor and dependency hardening are physically complete, but the project is currently in a handoff state as work moves to another workstation. Final verification and SOLID compliance audit are pending.
+
 **Feature Branch**: `011-migrator-clean-refactor`  
 **Created**: 2026-04-18  
-**Status**: Draft  
+**Status**: Work in Progress  
 **Input**: User description: "Refactor appwrite-migrator to Clean Architecture with SOLID classes and standardized imports"
 
 ## User Scenarios & Testing *(mandatory)*
