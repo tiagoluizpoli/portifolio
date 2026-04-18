@@ -1,3 +1,4 @@
+/* v8 ignore start */
 export interface RepositoryEntity {
   id: string;
 }
@@ -50,6 +51,7 @@ export interface MetricCleanupInput {
 
 export interface IRepository<T extends RepositoryEntity> {
   findById(input: RepositoryFindByIdInput): Promise<T | null>;
+  findMany(queries: string[]): Promise<T[]>;
   findAll(): Promise<T[]>;
   create(input: RepositoryCreateInput): Promise<T>;
   update(input: RepositoryUpdateInput): Promise<T>;
@@ -81,3 +83,4 @@ export interface IMetricSyncService {
   sync(input: MetricSyncInput): Promise<void>;
   cleanup(input: MetricCleanupInput): Promise<void>;
 }
+/* v8 ignore stop */

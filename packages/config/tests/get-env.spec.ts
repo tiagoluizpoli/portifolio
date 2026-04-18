@@ -189,17 +189,17 @@ describe('getEnv', () => {
       );
     });
 
-    it('fails fast for missing required migrator mode', () => {
+    it('defaults migrator mode to check when missing', () => {
       delete process.env.MIGRATOR_MODE;
 
-      expect(() => {
-        getEnv(
-          { migrator: true },
-          {
-            skipEnvFileLoad: true,
-          },
-        );
-      }).toThrow('@repo/config invalid "migrator" env group');
+      const result = getEnv(
+        { migrator: true },
+        {
+          skipEnvFileLoad: true,
+        },
+      );
+      
+      expect(result.migrator.mode).toBe('check');
     });
 
     it('fails for unsupported migrator mode values', () => {

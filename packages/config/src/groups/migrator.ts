@@ -3,7 +3,7 @@ import { z } from 'zod';
 const nonSeedModeSchema = z.enum(['check', 'migrate', 'template']);
 
 const normalizedMigratorSchema = z.object({
-  mode: z.string().trim().toLowerCase(),
+  mode: z.string().trim().toLowerCase().default('check'),
   seedBucketId: z.string().trim().min(1).optional(),
   seedFileName: z.string().trim().min(1).optional(),
 });

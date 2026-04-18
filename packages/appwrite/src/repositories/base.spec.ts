@@ -176,6 +176,24 @@ describe('BaseRepository', () => {
     await expect(repository.runQueryPublic(['limit(10)'])).rejects.toBe(error);
   });
 
+  it('findMany delegates to runQuery (via listRows) with specific queries', async () => {
+    const sdk = createSdk();
+    sdk.listRows.mockResolvedValue({
+      rows: [{ $id: '2', name: 'Two' }],
+    });
+
+    const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
+    const result = await repository.findMany(['equal("name", "Two")']);
+
+    expect(result).toEqual([{ id: '2', name: 'Two' }]);
+    expect(sdk.listRows).toHaveBeenCalledTimes(1);
+    expect(sdk.listRows).toHaveBeenCalledWith({
+      databaseId: 'db',
+      tableId: 'col',
+      queries: ['equal("name", "Two")'],
+    });
+  });
+
   it('uses default parse implementation when not overridden', () => {
     const sdk = createSdk();
     const repository = new RawRepository(sdk as unknown as never, 'db', 'col');

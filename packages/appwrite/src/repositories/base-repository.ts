@@ -71,6 +71,10 @@ export abstract class BaseRepository<T extends RepositoryEntity>
     }
   }
 
+  async findMany(queries: string[]): Promise<T[]> {
+    return this.runQuery(queries);
+  }
+
   async findAll(): Promise<T[]> {
     return this.runQuery([Query.limit(1000)]);
   }
