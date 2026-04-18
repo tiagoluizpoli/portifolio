@@ -1,0 +1,230 @@
+{
+  "version": 1,
+  "generatedAt": "2026-04-18T05:31:26.661Z",
+  "tables": {
+    "about": {
+      "uniqueLogicKeys": {
+        "byLocale": [
+          "locale"
+        ],
+        "byName": [
+          "locale",
+          "name"
+        ],
+        "byTitle": [
+          "locale",
+          "title"
+        ],
+        "byBio": [
+          "locale",
+          "bio"
+        ]
+      },
+      "rows": [
+        {
+          "name": "about_name",
+          "title": "about_title",
+          "bio": "about_bio",
+          "locale": "en"
+        }
+      ]
+    },
+    "home": {
+      "uniqueLogicKeys": {
+        "byLocaleHeroTitle": [
+          "locale",
+          "heroTitle"
+        ],
+        "byLocaleHeroSubtitle": [
+          "locale",
+          "heroSubtitle"
+        ],
+        "byLocaleCtaText": [
+          "locale",
+          "ctaText"
+        ],
+        "byLocaleCtaLink": [
+          "locale",
+          "ctaLink"
+        ]
+      },
+      "rows": [
+        {
+          "heroTitle": "home_heroTitle",
+          "heroSubtitle": "home_heroSubtitle",
+          "ctaText": "home_ctaText",
+          "ctaLink": "home_ctaLink",
+          "locale": "en"
+        }
+      ]
+    },
+    "contact_info": {
+      "uniqueLogicKeys": {
+        "byLocaleEmail": [
+          "locale",
+          "email"
+        ],
+        "byLocalePhone": [
+          "locale",
+          "phone"
+        ],
+        "byLocaleLocation": [
+          "locale",
+          "location"
+        ]
+      },
+      "rows": [
+        {
+          "email": "seed@example.com",
+          "phone": "contact_info_phone",
+          "location": "contact_info_location",
+          "locale": "en"
+        }
+      ]
+    },
+    "socials": {
+      "uniqueLogicKeys": {
+        "byPlatformUsername": [
+          "platformId",
+          "username"
+        ]
+      },
+      "rows": [
+        {
+          "platformId": "socials_platformId",
+          "username": "socials_username",
+          "iconId": "socials_iconId",
+          "active": true,
+          "sort": 0
+        }
+      ]
+    },
+    "platforms": {
+      "uniqueLogicKeys": {
+        "byTitle": [
+          "title"
+        ]
+      },
+      "rows": [
+        {
+          "title": "platforms_title",
+          "urlTemplate": "platforms_urlTemplate",
+          "iconCode": "platforms_iconCode",
+          "status": "active",
+          "sort": 0
+        }
+      ]
+    },
+    "solutions": {
+      "uniqueLogicKeys": {
+        "byLocaleTitle": [
+          "title",
+          "locale"
+        ]
+      },
+      "rows": [
+        {
+          "title": "solutions_title",
+          "description": "solutions_description",
+          "iconCode": "solutions_iconCode",
+          "sort": 0,
+          "locale": "en"
+        }
+      ]
+    },
+    "skills": {
+      "uniqueLogicKeys": {
+        "byTypeTitle": [
+          "title",
+          "type"
+        ]
+      },
+      "rows": [
+        {
+          "title": "skills_title",
+          "type": "frontend",
+          "iconCode": "skills_iconCode",
+          "status": "active",
+          "sort": 0
+        }
+      ]
+    },
+    "educations": {
+      "uniqueLogicKeys": {
+        "byLocaleTitleOrganization": [
+          "title",
+          "organization",
+          "locale"
+        ]
+      },
+      "rows": [
+        {
+          "title": "educations_title",
+          "organization": "educations_organization",
+          "location": "educations_location",
+          "period": "educations_period",
+          "description": "educations_description",
+          "current": false,
+          "sort": 0,
+          "locale": "en"
+        }
+      ]
+    },
+    "experiences": {
+      "uniqueLogicKeys": {
+        "byLocaleTitleOrganization": [
+          "title",
+          "organization",
+          "locale"
+        ]
+      },
+      "rows": [
+        {
+          "title": "experiences_title",
+          "organization": "experiences_organization",
+          "location": "experiences_location",
+          "period": "experiences_period",
+          "description": "experiences_description",
+          "current": false,
+          "sort": 0,
+          "locale": "en"
+        }
+      ]
+    },
+    "impact_metrics": {
+      "uniqueLogicKeys": {
+        "byAboutCodeLocale": [
+          "aboutId",
+          "internalCode",
+          "locale"
+        ]
+      },
+      "rows": [
+        {
+          "aboutId": "impact_metrics_aboutId",
+          "internalCode": "impact_metrics_internalCode",
+          "label": "impact_metrics_label",
+          "value": "impact_metrics_value",
+          "sourceId": "impact_metrics_sourceId",
+          "isPlaceholder": false,
+          "locale": "en"
+        }
+      ]
+    },
+    "metric_sources": {
+      "uniqueLogicKeys": {
+        "byName": [
+          "name"
+        ]
+      },
+      "rows": [
+        {
+          "name": "metric_sources_name",
+          "type": "metric_sources_type",
+          "iconCode": "metric_sources_iconCode",
+          "status": "metric_sources_status"
+        }
+      ]
+    }
+  }
+}
