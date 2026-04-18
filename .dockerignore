@@ -1,0 +1,9 @@
+*
+
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+
+!apps/appwrite-migrator/**
+!packages/appwrite/**
+!packages/config/**

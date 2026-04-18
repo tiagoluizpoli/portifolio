@@ -1,6 +1,7 @@
 # Logs
 legacy/
 .env
+.env*
 logs
 *.log
 npm-debug.log*
@@ -11,10 +12,14 @@ lerna-debug.log*
 
 node_modules
 dist
+build
 dist-ssr
 coverage
 **/coverage/
 *.local
+*.tmp
+*.swp
+Thumbs.db
 
 # Editor directories and files
 .vscode/*

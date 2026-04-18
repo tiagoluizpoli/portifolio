@@ -91,6 +91,21 @@
   },
   "overrides": [
     {
+      "includes": ["packages/appwrite/**/*", "apps/appwrite-migrator/**/*"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useConsistentTypeDefinitions": {
+              "level": "error",
+              "options": {
+                "style": "interface"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
       "includes": ["**/src/routes/**/*", "**/routeTree.gen.ts"],
       "linter": {
         "rules": {

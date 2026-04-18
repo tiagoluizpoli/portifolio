@@ -14,10 +14,9 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "types": ["node"],
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["app/*"],
-      "#/*": ["app/*"]
+      "@/*": ["./app/*"],
+      "#/*": ["./app/*"]
     }
   },
   "include": ["app", "app.config.ts"],
