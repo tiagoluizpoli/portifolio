@@ -1,11 +1,13 @@
 import type { z } from 'zod';
 import { appwriteGroupSchema, resolveAppwriteGroup } from './appwrite.js';
 import { databaseGroupSchema, resolveDatabaseGroup } from './database.js';
+import { migratorGroupSchema, resolveMigratorGroup } from './migrator.js';
 import { resolveStorageGroup, storageGroupSchema } from './storage.js';
 
 export const groupSchemas = {
   appwrite: appwriteGroupSchema,
   database: databaseGroupSchema,
+  migrator: migratorGroupSchema,
   storage: storageGroupSchema,
 } as const;
 
@@ -22,5 +24,6 @@ export type EnvGroupResolverMap = {
 export const groupResolvers: EnvGroupResolverMap = {
   appwrite: resolveAppwriteGroup,
   database: resolveDatabaseGroup,
+  migrator: resolveMigratorGroup,
   storage: resolveStorageGroup,
 };

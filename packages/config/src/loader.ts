@@ -1,3 +1,6 @@
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { parseEnv } from 'node:util';
 import {
   type EnvGroupKey,
   type EnvGroupMap,
@@ -15,13 +18,23 @@ export type EnvGroupResult<TFlags extends EnvGroupFlags> = {
     : never]: K extends EnvGroupKey ? EnvGroupMap[K] : never;
 };
 
+export interface EnvLoadOptions {
+  envFilePath?: string;
+  skipEnvFileLoad?: boolean;
+}
+
+let lastDefaultEnvFilePath: string | null = null;
+
 function isEnvGroupKey(value: string): value is EnvGroupKey {
   return value in groupSchemas;
 }
 
 export function getEnv<TFlags extends EnvGroupFlags>(
   flags: TFlags,
+  options?: EnvLoadOptions,
 ): EnvGroupResult<TFlags> {
+  maybeLoadEnvFile(options);
+
   const requestedEntries = Object.entries(flags ?? {});
 
   for (const [key] of requestedEntries) {
@@ -42,4 +55,50 @@ export function getEnv<TFlags extends EnvGroupFlags>(
   }
 
   return output as EnvGroupResult<TFlags>;
+}
+
+function maybeLoadEnvFile(options?: EnvLoadOptions): void {
+  if (options?.skipEnvFileLoad) {
+    return;
+  }
+
+  const hasCustomEnvFile = typeof options?.envFilePath === 'string';
+  const defaultEnvFilePath = resolve(process.cwd(), '.env');
+
+  if (!hasCustomEnvFile && lastDefaultEnvFilePath === defaultEnvFilePath) {
+    return;
+  }
+
+  const envFilePath = options?.envFilePath ?? defaultEnvFilePath;
+
+  if (!hasCustomEnvFile) {
+    lastDefaultEnvFilePath = defaultEnvFilePath;
+  }
+
+  if (!existsSync(envFilePath)) {
+    if (hasCustomEnvFile) {
+      throw new Error(
+        `@repo/config could not load custom env file: "${envFilePath}"`,
+      );
+    }
+
+    return;
+  }
+
+  try {
+    const parsed = parseEnv(readFileSync(envFilePath, 'utf8'));
+
+    for (const [key, value] of Object.entries(parsed)) {
+      if (process.env[key] === undefined) {
+        process.env[key] = value;
+      }
+    }
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : 'unknown load error';
+
+    throw new Error(
+      `@repo/config failed to load env file "${envFilePath}": ${message}`,
+    );
+  }
 }

@@ -1,5 +1,6 @@
 export { appwriteGroupSchema } from './appwrite.js';
 export { databaseGroupSchema } from './database.js';
+export { migratorGroupSchema } from './migrator.js';
 export type {
   EnvGroupKey,
   EnvGroupMap,
