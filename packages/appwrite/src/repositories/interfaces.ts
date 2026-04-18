@@ -12,12 +12,48 @@ export interface ImpactMetricEntity extends RepositoryEntity {
   isPlaceholder: boolean;
 }
 
+export interface RepositoryFindByIdInput {
+  id: string;
+}
+
+export interface RepositoryCreateInput {
+  data: Record<string, unknown>;
+}
+
+export interface RepositoryUpdateInput {
+  id: string;
+  data: Record<string, unknown>;
+}
+
+export interface RepositoryDeleteInput {
+  id: string;
+}
+
+export interface ImpactMetricFindByInternalCodeInput {
+  internalCode: string;
+}
+
+export interface ImpactMetricFindByAboutAndInternalCodeInput {
+  aboutId: string;
+  internalCode: string;
+}
+
+export interface MetricSyncInput {
+  aboutId: string;
+  source: ImpactMetricEntity;
+}
+
+export interface MetricCleanupInput {
+  aboutId: string;
+  internalCode: string;
+}
+
 export interface IRepository<T extends RepositoryEntity> {
-  findById(id: string): Promise<T | null>;
+  findById(input: RepositoryFindByIdInput): Promise<T | null>;
   findAll(): Promise<T[]>;
-  create(data: Record<string, unknown>): Promise<T>;
-  update(id: string, data: Record<string, unknown>): Promise<T>;
-  delete(id: string): Promise<void>;
+  create(input: RepositoryCreateInput): Promise<T>;
+  update(input: RepositoryUpdateInput): Promise<T>;
+  delete(input: RepositoryDeleteInput): Promise<void>;
 }
 
 export interface IAboutRepository extends IRepository<{ id: string }> {}
@@ -33,14 +69,15 @@ export interface IMetricSourceRepository extends IRepository<{ id: string }> {}
 
 export interface IImpactMetricRepository
   extends IRepository<ImpactMetricEntity> {
-  findByInternalCode(internalCode: string): Promise<ImpactMetricEntity | null>;
+  findByInternalCode(
+    input: ImpactMetricFindByInternalCodeInput,
+  ): Promise<ImpactMetricEntity | null>;
   findByAboutAndInternalCode(
-    aboutId: string,
-    internalCode: string,
+    input: ImpactMetricFindByAboutAndInternalCodeInput,
   ): Promise<ImpactMetricEntity[]>;
 }
 
 export interface IMetricSyncService {
-  sync(aboutId: string, source: ImpactMetricEntity): Promise<void>;
-  cleanup(aboutId: string, internalCode: string): Promise<void>;
+  sync(input: MetricSyncInput): Promise<void>;
+  cleanup(input: MetricCleanupInput): Promise<void>;
 }

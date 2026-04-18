@@ -1,6 +1,8 @@
+export { ID, Query, type TablesDB } from 'node-appwrite';
 export type { AppwriteClientConfig } from './client.js';
-export { initializeAppwrite } from './client.js';
+export { getTablesClient, initializeAppwrite } from './client.js';
 export * from './errors/appwrite-errors.js';
+export { blueprints } from './migrations/blueprints.js';
 export * from './repositories/index.js';
 export * from './schemas/index.js';
 export * from './services/index.js';

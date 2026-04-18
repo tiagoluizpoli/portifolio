@@ -72,13 +72,15 @@ describe('Specialized repositories', () => {
       locale: 'en',
     });
 
-    await expect(repository.findById('1')).resolves.toMatchObject({ id: '1' });
+    await expect(repository.findById({ id: '1' })).resolves.toMatchObject({
+      id: '1',
+    });
   });
 
   it('Class 2 edge path returns null for 404', async () => {
     const repository = new HomeRepository('db');
     sdkMock.getRow.mockRejectedValue({ code: 404 });
-    await expect(repository.findById('missing')).resolves.toBeNull();
+    await expect(repository.findById({ id: 'missing' })).resolves.toBeNull();
   });
 
   it('Class 4 auth path maps 401 to AppwriteAuthException', async () => {
@@ -92,9 +94,9 @@ describe('Specialized repositories', () => {
   it('Class 5 system path maps 500 to AppwriteSystemException', async () => {
     const repository = new PlatformRepository('db');
     sdkMock.createRow.mockRejectedValue({ code: 500 });
-    await expect(repository.create({ title: 'x' })).rejects.toBeInstanceOf(
-      AppwriteSystemException,
-    );
+    await expect(
+      repository.create({ data: { title: 'x' } }),
+    ).rejects.toBeInstanceOf(AppwriteSystemException);
   });
 
   it('impact metric repository supports findByInternalCode', async () => {
@@ -119,7 +121,7 @@ describe('Specialized repositories', () => {
     });
 
     await expect(
-      repository.findByInternalCode('metric-1'),
+      repository.findByInternalCode({ internalCode: 'metric-1' }),
     ).resolves.toMatchObject({
       internalCode: 'metric-1',
     });
@@ -128,7 +130,9 @@ describe('Specialized repositories', () => {
   it('impact metric repository returns null when query is empty', async () => {
     const repository = new ImpactMetricRepository('db');
     sdkMock.listRows.mockResolvedValue({ total: 0, rows: [] });
-    await expect(repository.findByInternalCode('none')).resolves.toBeNull();
+    await expect(
+      repository.findByInternalCode({ internalCode: 'none' }),
+    ).resolves.toBeNull();
   });
 
   it('impact metric repository supports findByAboutAndInternalCode', async () => {
@@ -153,7 +157,10 @@ describe('Specialized repositories', () => {
     });
 
     await expect(
-      repository.findByAboutAndInternalCode('about-1', 'metric-1'),
+      repository.findByAboutAndInternalCode({
+        aboutId: 'about-1',
+        internalCode: 'metric-1',
+      }),
     ).resolves.toHaveLength(1);
   });
 });

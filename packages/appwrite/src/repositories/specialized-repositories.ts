@@ -35,6 +35,8 @@ import type {
   IHomeRepository,
   IImpactMetricRepository,
   IMetricSourceRepository,
+  ImpactMetricFindByAboutAndInternalCodeInput,
+  ImpactMetricFindByInternalCodeInput,
   IPlatformRepository,
   ISkillRepository,
   ISocialRepository,
@@ -149,8 +151,9 @@ export class ImpactMetricRepository
   }
 
   async findByInternalCode(
-    internalCode: string,
+    input: ImpactMetricFindByInternalCodeInput,
   ): Promise<ImpactMetricFull | null> {
+    const { internalCode } = input;
     const result = await this.runQuery([
       Query.equal('internalCode', internalCode),
     ]);
@@ -158,9 +161,9 @@ export class ImpactMetricRepository
   }
 
   async findByAboutAndInternalCode(
-    aboutId: string,
-    internalCode: string,
+    input: ImpactMetricFindByAboutAndInternalCodeInput,
   ): Promise<ImpactMetricFull[]> {
+    const { aboutId, internalCode } = input;
     return this.runQuery([
       Query.equal('aboutId', aboutId),
       Query.equal('internalCode', internalCode),

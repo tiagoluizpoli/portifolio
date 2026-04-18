@@ -2,7 +2,14 @@ import { ID, Query, type TablesDB } from 'node-appwrite';
 import { mapAppwriteError } from '../errors/appwrite-errors.js';
 import { InternalLogger } from '../utils/logger.js';
 import { DocumentMapper } from '../utils/mapper.js';
-import type { IRepository, RepositoryEntity } from './interfaces.js';
+import type {
+  IRepository,
+  RepositoryCreateInput,
+  RepositoryDeleteInput,
+  RepositoryEntity,
+  RepositoryFindByIdInput,
+  RepositoryUpdateInput,
+} from './interfaces.js';
 
 export abstract class BaseRepository<T extends RepositoryEntity>
   implements IRepository<T>
@@ -39,7 +46,8 @@ export abstract class BaseRepository<T extends RepositoryEntity>
     }
   }
 
-  async findById(id: string): Promise<T | null> {
+  async findById(input: RepositoryFindByIdInput): Promise<T | null> {
+    const { id } = input;
     const timer = this.logger.start(`${this.collectionId}.findById`);
     try {
       const raw = await this.sdk.getRow({
@@ -67,7 +75,8 @@ export abstract class BaseRepository<T extends RepositoryEntity>
     return this.runQuery([Query.limit(1000)]);
   }
 
-  async create(data: Record<string, unknown>): Promise<T> {
+  async create(input: RepositoryCreateInput): Promise<T> {
+    const { data } = input;
     const timer = this.logger.start(`${this.collectionId}.create`);
     try {
       const raw = await this.sdk.createRow({
@@ -85,7 +94,8 @@ export abstract class BaseRepository<T extends RepositoryEntity>
     }
   }
 
-  async update(id: string, data: Record<string, unknown>): Promise<T> {
+  async update(input: RepositoryUpdateInput): Promise<T> {
+    const { id, data } = input;
     const timer = this.logger.start(`${this.collectionId}.update`);
     try {
       const raw = await this.sdk.updateRow({
@@ -103,7 +113,8 @@ export abstract class BaseRepository<T extends RepositoryEntity>
     }
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(input: RepositoryDeleteInput): Promise<void> {
+    const { id } = input;
     const timer = this.logger.start(`${this.collectionId}.delete`);
     try {
       await this.sdk.deleteRow({

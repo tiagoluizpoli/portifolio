@@ -49,7 +49,7 @@ describe('BaseRepository', () => {
       logger,
     );
 
-    await expect(repository.findById('1')).resolves.toEqual({
+    await expect(repository.findById({ id: '1' })).resolves.toEqual({
       id: '1',
       name: 'Ada',
     });
@@ -60,7 +60,7 @@ describe('BaseRepository', () => {
     sdk.getRow.mockRejectedValue({ code: 404 });
     const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
 
-    await expect(repository.findById('404')).resolves.toBeNull();
+    await expect(repository.findById({ id: '404' })).resolves.toBeNull();
   });
 
   it('findById rethrows unknown errors', async () => {
@@ -69,7 +69,7 @@ describe('BaseRepository', () => {
     sdk.getRow.mockRejectedValue(error);
 
     const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
-    await expect(repository.findById('1')).rejects.toBe(error);
+    await expect(repository.findById({ id: '1' })).rejects.toBe(error);
   });
 
   it('findAll delegates to listRows with query limit', async () => {
@@ -90,7 +90,7 @@ describe('BaseRepository', () => {
     sdk.createRow.mockResolvedValue({ $id: '1', name: 'New' });
 
     const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
-    const created = await repository.create({ name: 'New' });
+    const created = await repository.create({ data: { name: 'New' } });
 
     expect(created).toEqual({ id: '1', name: 'New' });
     expect(sdk.createRow).toHaveBeenCalledTimes(1);
@@ -102,7 +102,9 @@ describe('BaseRepository', () => {
     sdk.createRow.mockRejectedValue(error);
 
     const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
-    await expect(repository.create({ name: 'x' })).rejects.toBe(error);
+    await expect(repository.create({ data: { name: 'x' } })).rejects.toBe(
+      error,
+    );
   });
 
   it('update maps payload and result', async () => {
@@ -110,7 +112,10 @@ describe('BaseRepository', () => {
     sdk.updateRow.mockResolvedValue({ $id: '1', name: 'Updated' });
 
     const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
-    const updated = await repository.update('1', { name: 'Updated' });
+    const updated = await repository.update({
+      id: '1',
+      data: { name: 'Updated' },
+    });
 
     expect(updated).toEqual({ id: '1', name: 'Updated' });
     expect(sdk.updateRow).toHaveBeenCalledTimes(1);
@@ -122,7 +127,9 @@ describe('BaseRepository', () => {
     sdk.updateRow.mockRejectedValue(error);
 
     const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
-    await expect(repository.update('1', { name: 'x' })).rejects.toBe(error);
+    await expect(
+      repository.update({ id: '1', data: { name: 'x' } }),
+    ).rejects.toBe(error);
   });
 
   it('delete forwards sdk call', async () => {
@@ -130,7 +137,7 @@ describe('BaseRepository', () => {
     sdk.deleteRow.mockResolvedValue(undefined);
 
     const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
-    await repository.delete('1');
+    await repository.delete({ id: '1' });
 
     expect(sdk.deleteRow).toHaveBeenCalledWith({
       databaseId: 'db',
@@ -145,7 +152,7 @@ describe('BaseRepository', () => {
     sdk.deleteRow.mockRejectedValue(error);
 
     const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
-    await expect(repository.delete('1')).rejects.toBe(error);
+    await expect(repository.delete({ id: '1' })).rejects.toBe(error);
   });
 
   it('runQuery returns parsed entities', async () => {

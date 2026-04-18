@@ -51,17 +51,19 @@ describe('MetricSyncService', () => {
       .mockResolvedValueOnce(makeSource({ id: 'metric-pt', locale: 'pt' }));
 
     const service = new MetricSyncService(repository);
-    await service.sync('about-1', makeSource());
+    await service.sync({ aboutId: 'about-1', source: makeSource() });
 
     expect(repository.create).toHaveBeenCalledTimes(2);
     expect(repository.create).toHaveBeenNthCalledWith(2, {
-      aboutId: 'about-1',
-      internalCode: 'clients-served',
-      locale: 'pt',
-      label: 'Clients served',
-      value: '200+',
-      sourceId: 'source-1',
-      isPlaceholder: true,
+      data: {
+        aboutId: 'about-1',
+        internalCode: 'clients-served',
+        locale: 'pt',
+        label: 'Clients served',
+        value: '200+',
+        sourceId: 'source-1',
+        isPlaceholder: true,
+      },
     });
   });
 
@@ -78,12 +80,15 @@ describe('MetricSyncService', () => {
     ]);
 
     const service = new MetricSyncService(repository);
-    await service.sync('about-1', makeSource());
+    await service.sync({ aboutId: 'about-1', source: makeSource() });
 
     expect(repository.create).not.toHaveBeenCalled();
-    expect(repository.update).toHaveBeenCalledWith('metric-pt', {
-      sourceId: 'source-1',
-      isPlaceholder: true,
+    expect(repository.update).toHaveBeenCalledWith({
+      id: 'metric-pt',
+      data: {
+        sourceId: 'source-1',
+        isPlaceholder: true,
+      },
     });
   });
 
@@ -96,7 +101,7 @@ describe('MetricSyncService', () => {
     );
 
     const service = new MetricSyncService(repository);
-    await service.sync('about-1', makeSource());
+    await service.sync({ aboutId: 'about-1', source: makeSource() });
 
     expect(repository.create).toHaveBeenCalledTimes(1);
   });
@@ -108,10 +113,13 @@ describe('MetricSyncService', () => {
     ]);
 
     const service = new MetricSyncService(repository);
-    await service.cleanup('about-1', 'clients-served');
+    await service.cleanup({
+      aboutId: 'about-1',
+      internalCode: 'clients-served',
+    });
 
     expect(repository.delete).toHaveBeenCalledTimes(1);
-    expect(repository.delete).toHaveBeenCalledWith('metric-pt');
+    expect(repository.delete).toHaveBeenCalledWith({ id: 'metric-pt' });
   });
 
   it('creates EN ghost row when source locale is PT', async () => {
@@ -127,23 +135,25 @@ describe('MetricSyncService', () => {
     );
 
     const service = new MetricSyncService(repository);
-    await service.sync(
-      'about-1',
-      makeSource({
+    await service.sync({
+      aboutId: 'about-1',
+      source: makeSource({
         id: 'metric-pt-source',
         locale: 'pt',
         label: 'Clientes atendidos',
       }),
-    );
+    });
 
     expect(repository.create).toHaveBeenCalledWith({
-      aboutId: 'about-1',
-      internalCode: 'clients-served',
-      locale: 'en',
-      label: 'Clientes atendidos',
-      value: '200+',
-      sourceId: 'source-1',
-      isPlaceholder: true,
+      data: {
+        aboutId: 'about-1',
+        internalCode: 'clients-served',
+        locale: 'en',
+        label: 'Clientes atendidos',
+        value: '200+',
+        sourceId: 'source-1',
+        isPlaceholder: true,
+      },
     });
   });
 
@@ -153,9 +163,9 @@ describe('MetricSyncService', () => {
     });
 
     const service = new MetricSyncService(repository);
-    await expect(service.sync('about-1', makeSource())).rejects.toBeInstanceOf(
-      AppwriteSystemException,
-    );
+    await expect(
+      service.sync({ aboutId: 'about-1', source: makeSource() }),
+    ).rejects.toBeInstanceOf(AppwriteSystemException);
   });
 
   it('rolls back newly created source when counterpart creation fails', async () => {
@@ -166,10 +176,10 @@ describe('MetricSyncService', () => {
 
     const service = new MetricSyncService(repository);
 
-    await expect(service.sync('about-1', makeSource())).rejects.toBeInstanceOf(
-      AppwriteSystemException,
-    );
-    expect(repository.delete).toHaveBeenCalledWith('created-source');
+    await expect(
+      service.sync({ aboutId: 'about-1', source: makeSource() }),
+    ).rejects.toBeInstanceOf(AppwriteSystemException);
+    expect(repository.delete).toHaveBeenCalledWith({ id: 'created-source' });
   });
 
   it('does not rollback when source already existed and update fails', async () => {
@@ -181,9 +191,9 @@ describe('MetricSyncService', () => {
 
     const service = new MetricSyncService(repository);
 
-    await expect(service.sync('about-1', makeSource())).rejects.toBeInstanceOf(
-      AppwriteSystemException,
-    );
+    await expect(
+      service.sync({ aboutId: 'about-1', source: makeSource() }),
+    ).rejects.toBeInstanceOf(AppwriteSystemException);
     expect(repository.delete).not.toHaveBeenCalled();
   });
 
@@ -196,9 +206,9 @@ describe('MetricSyncService', () => {
 
     const service = new MetricSyncService(repository);
 
-    await expect(service.sync('about-1', makeSource())).rejects.toBeInstanceOf(
-      AppwritePermissionException,
-    );
+    await expect(
+      service.sync({ aboutId: 'about-1', source: makeSource() }),
+    ).rejects.toBeInstanceOf(AppwritePermissionException);
   });
 
   it('maps cleanup failures to system exception', async () => {
@@ -208,7 +218,7 @@ describe('MetricSyncService', () => {
 
     const service = new MetricSyncService(repository);
     await expect(
-      service.cleanup('about-1', 'clients-served'),
+      service.cleanup({ aboutId: 'about-1', internalCode: 'clients-served' }),
     ).rejects.toBeInstanceOf(AppwriteSystemException);
   });
 
