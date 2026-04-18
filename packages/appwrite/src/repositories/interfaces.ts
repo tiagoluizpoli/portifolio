@@ -1,4 +1,13 @@
 /* v8 ignore start */
+import { z } from 'zod';
+
+export const repositoryQueryOptionsSchema = z.object({
+  limit: z.number().int().positive().max(5000).optional(),
+  offset: z.number().int().nonnegative().optional(),
+});
+
+export type RepositoryQueryOptions = z.infer<typeof repositoryQueryOptionsSchema>;
+
 export interface RepositoryEntity {
   id: string;
 }
@@ -51,7 +60,7 @@ export interface MetricCleanupInput {
 
 export interface IRepository<T extends RepositoryEntity> {
   findById(input: RepositoryFindByIdInput): Promise<T | null>;
-  findMany(queries: string[]): Promise<T[]>;
+  findMany(options?: RepositoryQueryOptions): Promise<T[]>;
   findAll(): Promise<T[]>;
   create(input: RepositoryCreateInput): Promise<T>;
   update(input: RepositoryUpdateInput): Promise<T>;

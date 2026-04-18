@@ -26,6 +26,13 @@ export class AppwriteCatastrophicConfigError extends Error {
   }
 }
 
+export class InvalidRepositoryQueryError extends Error {
+  constructor(message = 'Invalid repository query parameters provided') {
+    super(message);
+    this.name = 'InvalidRepositoryQueryError';
+  }
+}
+
 export function mapAppwriteError(error: unknown): Error {
   const candidate = error as { code?: unknown; message?: unknown };
   const code =

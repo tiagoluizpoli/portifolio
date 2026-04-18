@@ -18,8 +18,9 @@ src/
 ├── cli/              # MigratorCli orchestrator
 ├── core/             # Types, constants, errors
 ├── services/         # Mode-specific business logic
-│   ├── seeder.ts     # Internal seeding engine
-│   └── ...           # Service classes
+│   ├── seeder.ts     # Internal seeding engine implementation
+│   ├── destructive-officer.ts # Destructive force handling logic
+│   └── ...           # Service classes (check, migrate, seed, etc.)
 └── index.ts          # Minimal bootstrap entry point
 tests/
 └── e2e/              # Orchestration & lifecycle tests

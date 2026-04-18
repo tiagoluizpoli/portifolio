@@ -1,14 +1,17 @@
 import { ID, Query, type TablesDB } from 'node-appwrite';
-import { mapAppwriteError } from '../errors/appwrite-errors.js';
+import { z } from 'zod';
+import { mapAppwriteError, InvalidRepositoryQueryError } from '../errors/appwrite-errors.js';
 import { InternalLogger } from '../utils/logger.js';
 import { DocumentMapper } from '../utils/mapper.js';
-import type {
-  IRepository,
-  RepositoryCreateInput,
-  RepositoryDeleteInput,
-  RepositoryEntity,
-  RepositoryFindByIdInput,
-  RepositoryUpdateInput,
+import {
+  type IRepository,
+  type RepositoryCreateInput,
+  type RepositoryDeleteInput,
+  type RepositoryEntity,
+  type RepositoryFindByIdInput,
+  type RepositoryUpdateInput,
+  type RepositoryQueryOptions,
+  repositoryQueryOptionsSchema,
 } from './interfaces.js';
 
 export abstract class BaseRepository<T extends RepositoryEntity>
@@ -71,8 +74,32 @@ export abstract class BaseRepository<T extends RepositoryEntity>
     }
   }
 
-  async findMany(queries: string[]): Promise<T[]> {
-    return this.runQuery(queries);
+  async findMany(options?: RepositoryQueryOptions): Promise<T[]> {
+    const timer = this.logger.start(`${this.collectionId}.findMany`);
+    try {
+      const validated = repositoryQueryOptionsSchema.safeParse(options ?? {});
+
+      if (!validated.success) {
+        throw new InvalidRepositoryQueryError(
+          `Invalid query options: ${validated.error.issues.map((e) => e.message).join(', ')}`,
+        );
+      }
+
+      const queries: string[] = [];
+      if (validated.data.limit !== undefined) {
+        queries.push(Query.limit(validated.data.limit));
+      }
+      if (validated.data.offset !== undefined) {
+        queries.push(Query.offset(validated.data.offset));
+      }
+
+      const result = await this.runQuery(queries);
+      this.logger.finish(timer, 'success');
+      return result;
+    } catch (error) {
+      this.logger.finish(timer, 'error');
+      throw error;
+    }
   }
 
   async findAll(): Promise<T[]> {

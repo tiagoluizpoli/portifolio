@@ -1,4 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
+import { Query } from 'node-appwrite';
+import { InvalidRepositoryQueryError } from '../errors/appwrite-errors';
 import { InternalLogger } from '../utils/logger';
 import { BaseRepository } from './base-repository';
 
@@ -176,22 +178,49 @@ describe('BaseRepository', () => {
     await expect(repository.runQueryPublic(['limit(10)'])).rejects.toBe(error);
   });
 
-  it('findMany delegates to runQuery (via listRows) with specific queries', async () => {
+  it('findMany maps limit and offset to sdk queries', async () => {
     const sdk = createSdk();
     sdk.listRows.mockResolvedValue({
       rows: [{ $id: '2', name: 'Two' }],
     });
 
     const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
-    const result = await repository.findMany(['equal("name", "Two")']);
+    const result = await repository.findMany({ limit: 10, offset: 5 });
 
     expect(result).toEqual([{ id: '2', name: 'Two' }]);
-    expect(sdk.listRows).toHaveBeenCalledTimes(1);
-    expect(sdk.listRows).toHaveBeenCalledWith({
-      databaseId: 'db',
-      tableId: 'col',
-      queries: ['equal("name", "Two")'],
-    });
+    expect(sdk.listRows).toHaveBeenCalledWith(
+      expect.objectContaining({
+        queries: [Query.limit(10), Query.offset(5)],
+      }),
+    );
+  });
+
+  it('findMany works with empty options', async () => {
+    const sdk = createSdk();
+    sdk.listRows.mockResolvedValue({ rows: [] });
+
+    const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
+    await repository.findMany();
+
+    expect(sdk.listRows).toHaveBeenCalledWith(
+      expect.objectContaining({
+        queries: [],
+      }),
+    );
+  });
+
+  it('findMany throws InvalidRepositoryQueryError on invalid options', async () => {
+    const sdk = createSdk();
+    const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
+
+    // negative limit
+    await expect(repository.findMany({ limit: -1 })).rejects.toThrow(
+      InvalidRepositoryQueryError,
+    );
+    // negative offset
+    await expect(repository.findMany({ offset: -1 })).rejects.toThrow(
+      InvalidRepositoryQueryError,
+    );
   });
 
   it('uses default parse implementation when not overridden', () => {

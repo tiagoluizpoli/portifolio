@@ -53,6 +53,21 @@ As an architect, I want to ensure that any change to one feature (e.g., Template
 
 ---
 
+### User Story 4 - Infrastructure Leakage Isolation (Priority: P1)
+
+As an architect, I want to ensure the Service layer strictly uses domain-native typescript types to query data so that Appwrite SDK intricacies (like `Query.limit`) do not leak out of the Repository layer.
+
+**Why this priority**: Essential to enforce the true separation of concerns required by Clean Architecture.
+
+**Independent Test**: Visually or automatically searching for `Query.*` inside `src/services/` should yield zero results.
+
+**Acceptance Scenarios**:
+
+1. **Given** a service needing paginated data, **When** it calls the repository, **Then** it passes a typed primitives object (`RepositoryQueryOptions`).
+2. **Given** the `BaseRepository`, **When** parsing domain options, **Then** it validates the payload using Zod and maps it to SDK primitives.
+
+---
+
 ### Edge Cases
 
 - **CLI Flag Conflicts**: The refactored parser must still correctly handle and error on conflicting flags (e.g., providing both `--seed` and `--migrate`).

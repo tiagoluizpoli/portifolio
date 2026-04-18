@@ -89,11 +89,37 @@
 
 ---
 
+## Phase 6: User Story 4 - Infrastructure Leakage Isolation (Priority: P1)
+
+**Goal**: Purge Appwrite SDK primitives out of the Application layer interfaces.
+
+### Epic: Repository Interface Decoupling
+- [x] T027 [US4] Define `RepositoryQueryOptions` with `{ limit?: number, offset?: number }` in `packages/appwrite/src/repositories/interfaces.ts`.
+- [x] T028 [US4] Define Zod schema `repositoryQueryOptionsSchema` to enforce type safety natively.
+- [x] T029 [US4] Create `InvalidRepositoryQueryError` in `packages/appwrite/src/errors/appwrite-errors.ts`.
+- [x] T030 [US4] Update `IRepository.findMany` to accept `options?: RepositoryQueryOptions`.
+
+### Epic: Base Repository Hardening
+- [x] T031 [US4] Parse incoming `options` against schema in `base-repository.ts::findMany()`.
+- [x] T032 [US4] Map validation errors to `InvalidRepositoryQueryError`.
+- [x] T033 [US4] Construct `Query.limit` and `Query.offset` from validated options.
+- [x] T034 [US4] Update `base.spec.ts` matching validations for the new logic.
+
+### Epic: Application Service Isolation
+- [x] T035 [US4] Purge `import { Query }` from `packages/appwrite/src/services/seed-engine.ts`.
+- [x] T036 [US4] Update `SeedEngine.listAllRows` pagination to pass objects.
+- [x] T037 [US4] Update `seed-engine.spec.ts` mocks formatting.
+- [x] T038 [US4] Purge `import { Query }` from `packages/appwrite/src/services/storage.ts`.
+- [x] T039 [US4] Align `StorageService` query construction tightly.
+
+---
+
 ## Final Phase: Polish & Cross-Cutting Concerns
 
-- [ ] T024 [P] Update `apps/appwrite-migrator/README.md` with new project structure
-- [ ] T025 Performance audit: Verify `MigratorCli` instantiation time
-- [ ] T026 Final code review for SOLID principles adherence (SRP, ISP, DIP)
+- [x] T024 [P] Update `apps/appwrite-migrator/README.md` with new project structure
+- [x] T025 Performance audit: Verify `MigratorCli` instantiation time
+- [x] T026 Final code review for SOLID principles adherence (SRP, ISP, DIP)
+- [ ] T040 Rerun `pnpm typecheck` to verify monorepo typings stability across all refactored implementations.
 
 ---
 

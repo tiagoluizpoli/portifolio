@@ -24,15 +24,16 @@ export class MigratorCli {
 
     const context = this.buildContextWithConfig(flags, env);
 
-    const services = {
-      check: new CheckService(),
-      migrate: new MigrateService(),
-      seed: new SeedService(),
-      template: new TemplateService(),
-    };
-
-    const service = services[context.mode];
+    const service = this.getServicePattern(context.mode);
     await service.execute(context);
+  }
+
+  private getServicePattern(mode: MigratorMode) {
+    if (mode === 'check') return new CheckService();
+    if (mode === 'migrate') return new MigrateService();
+    if (mode === 'seed') return new SeedService();
+    if (mode === 'template') return new TemplateService();
+    throw new Error(`Unsupported service mode: ${mode}`);
   }
 
   private buildContextWithConfig(
