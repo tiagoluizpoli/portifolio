@@ -1,16 +1,19 @@
-import { ID, Query, type TablesDB } from 'node-appwrite';
-import { z } from 'zod';
-import { mapAppwriteError, InvalidRepositoryQueryError } from '../errors/appwrite-errors.js';
+import { ID, type TablesDB } from 'node-appwrite';
+import {
+  InvalidRepositoryQueryError,
+  mapAppwriteError,
+} from '../errors/appwrite-errors.js';
 import { InternalLogger } from '../utils/logger.js';
 import { DocumentMapper } from '../utils/mapper.js';
+import { QueryMapper } from '../utils/query-mapper.js';
 import {
   type IRepository,
   type RepositoryCreateInput,
   type RepositoryDeleteInput,
   type RepositoryEntity,
   type RepositoryFindByIdInput,
-  type RepositoryUpdateInput,
   type RepositoryQueryOptions,
+  type RepositoryUpdateInput,
   repositoryQueryOptionsSchema,
 } from './interfaces.js';
 
@@ -85,14 +88,7 @@ export abstract class BaseRepository<T extends RepositoryEntity>
         );
       }
 
-      const queries: string[] = [];
-      if (validated.data.limit !== undefined) {
-        queries.push(Query.limit(validated.data.limit));
-      }
-      if (validated.data.offset !== undefined) {
-        queries.push(Query.offset(validated.data.offset));
-      }
-
+      const queries = QueryMapper.toAppwriteQueries(validated.data);
       const result = await this.runQuery(queries);
       this.logger.finish(timer, 'success');
       return result;
@@ -103,7 +99,7 @@ export abstract class BaseRepository<T extends RepositoryEntity>
   }
 
   async findAll(): Promise<T[]> {
-    return this.runQuery([Query.limit(1000)]);
+    return this.runQuery(QueryMapper.toAppwriteQueries({ limit: 1000 }));
   }
 
   async create(input: RepositoryCreateInput): Promise<T> {

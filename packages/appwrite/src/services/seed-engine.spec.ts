@@ -97,8 +97,14 @@ describe('SeedEngine', () => {
 
       expect(mockRepositoryFactory.getRepository).toHaveBeenCalledWith('about');
       expect(mockRepository.findMany).toHaveBeenCalledTimes(2);
-      expect(mockRepository.findMany).toHaveBeenCalledWith({ limit: 2, offset: 0 });
-      expect(mockRepository.findMany).toHaveBeenCalledWith({ limit: 2, offset: 2 });
+      expect(mockRepository.findMany).toHaveBeenCalledWith({
+        limit: 2,
+        offset: 0,
+      });
+      expect(mockRepository.findMany).toHaveBeenCalledWith({
+        limit: 2,
+        offset: 2,
+      });
 
       expect(result).toEqual([{ id: 'row1' }, { id: 'row2' }, { id: 'row3' }]);
     });

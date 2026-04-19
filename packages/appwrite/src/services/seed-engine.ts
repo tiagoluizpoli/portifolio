@@ -1,7 +1,4 @@
-import {
-  type RepositoryFactory,
-  type StorageService,
-} from '../index.js';
+import type { RepositoryFactory, StorageService } from '../index.js';
 
 export interface SeedOperation {
   action: 'create' | 'update';
@@ -30,7 +27,7 @@ export class SeedEngine {
   constructor(
     private readonly repositoryFactory: RepositoryFactory,
     private readonly storageService: StorageService,
-  ) { }
+  ) {}
 
   async downloadPayload(input: {
     bucketId: string;
@@ -52,8 +49,8 @@ export class SeedEngine {
   async fetchRemoteState(input: {
     tableIds: string[];
     pageSize: number;
-  }): Promise<Record<string, { id: string;[key: string]: unknown }[]>> {
-    const state: Record<string, { id: string;[key: string]: unknown }[]> = {};
+  }): Promise<Record<string, { id: string; [key: string]: unknown }[]>> {
+    const state: Record<string, { id: string; [key: string]: unknown }[]> = {};
 
     await Promise.all(
       input.tableIds.map(async (tableId) => {
@@ -67,8 +64,8 @@ export class SeedEngine {
   async listAllRows(
     tableId: string,
     pageSize: number,
-  ): Promise<{ id: string;[key: string]: unknown }[]> {
-    const rows: { id: string;[key: string]: unknown }[] = [];
+  ): Promise<{ id: string; [key: string]: unknown }[]> {
+    const rows: { id: string; [key: string]: unknown }[] = [];
     let offset = 0;
     const repo = this.repositoryFactory.getRepository(tableId);
 

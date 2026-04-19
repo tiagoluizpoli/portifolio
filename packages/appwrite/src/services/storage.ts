@@ -1,4 +1,4 @@
-import { ID, Query } from 'node-appwrite';
+import { ID } from 'node-appwrite';
 import { z } from 'zod';
 import { getStorageClient } from '../client.js';
 import {
@@ -6,6 +6,7 @@ import {
   AppwriteSystemException,
   mapAppwriteError,
 } from '../errors/appwrite-errors.js';
+import { QueryMapper } from '../utils/query-mapper.js';
 
 const uploadPayloadSchema = z.object({
   name: z.string().min(1),
@@ -196,7 +197,10 @@ export class StorageService {
       while (true) {
         const response = await this.storage.listFiles({
           bucketId: payload.bucketId,
-          queries: [Query.limit(this.fileSearchPageSize), Query.offset(offset)],
+          queries: QueryMapper.toAppwriteQueries({
+            limit: this.fileSearchPageSize,
+            offset,
+          }),
         });
 
         const matches = response.files.filter(

@@ -6,7 +6,9 @@ export const repositoryQueryOptionsSchema = z.object({
   offset: z.number().int().nonnegative().optional(),
 });
 
-export type RepositoryQueryOptions = z.infer<typeof repositoryQueryOptionsSchema>;
+export type RepositoryQueryOptions = z.infer<
+  typeof repositoryQueryOptionsSchema
+>;
 
 export interface RepositoryEntity {
   id: string;
