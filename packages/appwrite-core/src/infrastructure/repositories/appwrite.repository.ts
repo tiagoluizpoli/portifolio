@@ -1,4 +1,5 @@
 import { type Client, ID, type Models, TablesDB } from 'node-appwrite';
+import { asTableId, type TableId } from '../../domain/repositories/ids.js';
 import type { IRepository } from '../../domain/repositories/interfaces.js';
 import { ExceptionMapper } from '../../domain/services/exception-mapper.js';
 
@@ -15,11 +16,14 @@ export abstract class AppWriteRepository<T extends { id: string }>
   constructor(
     client: Client,
     protected databaseId: string,
-    protected tableId: string,
+    tableId: TableId | string,
   ) {
     if (!client) throw new Error('AppWrite client is required');
     this.tables = new TablesDB(client);
+    this.tableId = asTableId(tableId);
   }
+
+  protected tableId: TableId;
 
   async findById(id: string): Promise<T | null> {
     try {
