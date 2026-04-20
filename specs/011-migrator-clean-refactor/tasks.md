@@ -64,28 +64,28 @@
 **Goal**: Break down "God Classes" and God Test Suites into atomic services.
 
 ### T048 [US5] Extract `SeederValidator`
-- [ ] Move Zod row-level validation.
-- [ ] Move `validateApiLevelConstraints` logic.
-- [ ] Implement unit tests for validator.
+- [x] Move Zod row-level validation.
+- [x] Move `validateApiLevelConstraints` logic.
+- [x] Implement unit tests for validator.
 
 ### T049 [US5] Extract `SeederPlanner`
-- [ ] Move `buildUpsertPlan` logic.
-- [ ] Move deduplication signature calculation.
-- [ ] Implement unit tests for planner.
+- [x] Move `buildUpsertPlan` logic.
+- [x] Move deduplication signature calculation.
+- [x] Implement unit tests for planner.
 
 ### T050 [US5] Extract `SeederExecutor`
-- [ ] Move `executeUpsertPlan` transactional loop.
-- [ ] Implement retry and rate-limiting logic.
-- [ ] Implement unit tests for executor.
+- [x] Move `executeUpsertPlan` transactional loop.
+- [x] Implement retry and rate-limiting logic.
+- [x] Implement unit tests for executor.
 
 ### T051 [US5] Extract `TemplateGenerator`
-- [ ] Move `generateTemplateArtifacts` and Markdown logic.
-- [ ] Implement unit tests for generator.
+- [x] Move `generateTemplateArtifacts` and Markdown logic.
+- [x] Implement unit tests for generator.
 
 ### T052 [US5] Extract `SchemaComparator` utility
-- [ ] Port logic for table/column/index difference calculation from DestructiveOfficer.
-- [ ] Ensure `DestructiveOfficer.ts` adheres to **Principle VIII** (< 300 lines).
-- [ ] Implement unit tests for comparator.
+- [x] Port logic for table/column/index difference calculation from DestructiveOfficer.
+- [x] Ensure `DestructiveOfficer.ts` adheres to **Principle VIII** (< 300 lines).
+- [x] Implement unit tests for comparator.
 
 ---
 
@@ -93,15 +93,15 @@
 **Goal**: Enforce branded types and purge all "unsafe" casts.
 
 ### T053 [US6] Define Domain Branded Types in `packages/appwrite-core`
-- [ ] Implement `TableId`, `BucketId`, `FileId` brands.
+- [x] Implement `TableId`, `BucketId`, `FileId` brands.
 
 ### T054 [US6] Refactor Infrastructure to use Branded Types
-- [ ] Propagate brands through `BaseRepository` and `StorageService`.
+- [x] Propagate brands through `BaseRepository` and `StorageService`.
 
 ### T055 [US6] Purge Legacy Unsafe Casts
-- [ ] Replace `as unknown as ExistingSeedState` with safe mappers.
-- [ ] Fix unsafe casts in `MigratorCli.spec.ts`.
-- [ ] Fix `row as Record<string, unknown>` in seeder services.
+- [x] Replace `as unknown as ExistingSeedState` with safe mappers.
+- [x] Fix unsafe casts in `MigratorCli.spec.ts`.
+- [x] Fix `row as Record<string, unknown>` in seeder services.
 
 ---
 
@@ -109,13 +109,13 @@
 **Goal**: Zero-trust schema-driven flag validation.
 
 ### T056 [US7] Implement `cliConfigSchema` using Zod
-- [ ] Integrate `Commander.js` for flag extraction.
-- [ ] Pass raw flags into `cliConfigSchema` for strict validation.
-- [ ] Implement strict rejection of unrecognized or conflicting flags.
+- [x] Integrate `Commander.js` for flag extraction.
+- [x] Pass raw flags into `cliConfigSchema` for strict validation.
+- [x] Implement strict rejection of unrecognized or conflicting flags.
 
 ---
 
 ## Epic: Final Quality Gate
-- [ ] T057 [P] Final Monorepo Certification
-    - [ ] Rerun `pnpm guard` with 100% coverage target.
-    - [ ] Verify `spec.md` and `plan.md` alignment with final source code.
+- [x] T057 [P] Final Monorepo Certification
+    - [x] Rerun `pnpm guard` with 100% coverage target.
+    - [x] Verify `spec.md` and `plan.md` alignment with final source code.
