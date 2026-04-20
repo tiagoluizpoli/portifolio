@@ -1,5 +1,9 @@
-import { blueprints, type MigrationRemoteState } from '@repo/appwrite';
+import type { MigrationRemoteState } from '@repo/appwrite';
 import { z } from 'zod';
+import {
+  type DestructiveDiscrepancies,
+  SchemaComparator,
+} from '@/services/check/schema-comparator';
 
 export const DESTRUCTIVE_STATE_FILE_NAME = 'destructive-state.json';
 
@@ -15,12 +19,6 @@ const destructiveStateSchema = z.object({
 });
 
 export type DestructiveState = z.infer<typeof destructiveStateSchema>;
-
-export interface DestructiveDiscrepancies {
-  tables: string[];
-  columns: Record<string, string[]>;
-  indexes: Record<string, string[]>;
-}
 
 export interface DestructiveAuthorization {
   tables: string[];
@@ -48,16 +46,6 @@ export class DestructiveStateParseError extends Error {
 
 function sortUnique(values: string[]): string[] {
   return [...new Set(values)].sort((left, right) => left.localeCompare(right));
-}
-
-function sortRecord(
-  values: Record<string, string[]>,
-): Record<string, string[]> {
-  return Object.fromEntries(
-    Object.entries(values)
-      .map(([key, list]) => [key, sortUnique(list)] as const)
-      .sort(([left], [right]) => left.localeCompare(right)),
-  );
 }
 
 function emptyState(timestamp: string): DestructiveState {
@@ -94,62 +82,16 @@ function normalizeAuthorization(
   return Object.fromEntries(entries);
 }
 
-function tableMap(): Map<
-  string,
-  { columns: Set<string>; indexes: Set<string> }
-> {
-  return new Map(
-    blueprints.map((table) => [
-      table.id,
-      {
-        columns: new Set(table.columns.map((column) => column.key)),
-        indexes: new Set(table.indexes.map((index) => index.key)),
-      },
-    ]),
-  );
-}
-
 export class DestructiveOfficer {
-  constructor(private readonly store: DestructiveStateStore) {}
+  constructor(
+    private readonly store: DestructiveStateStore,
+    private readonly comparator: SchemaComparator = new SchemaComparator(),
+  ) {}
 
   detectDiscrepancies(input: {
     remoteState: MigrationRemoteState;
   }): DestructiveDiscrepancies {
-    const catalog = tableMap();
-    const tableDiscrepancies: string[] = [];
-    const columnDiscrepancies: Record<string, string[]> = {};
-    const indexDiscrepancies: Record<string, string[]> = {};
-
-    for (const remoteTable of input.remoteState.tables) {
-      const known = catalog.get(remoteTable.tableId);
-
-      if (!known) {
-        tableDiscrepancies.push(remoteTable.tableId);
-        continue;
-      }
-
-      const unknownColumns = remoteTable.columnKeys.filter(
-        (columnKey) => !known.columns.has(columnKey),
-      );
-
-      if (unknownColumns.length > 0) {
-        columnDiscrepancies[remoteTable.tableId] = sortUnique(unknownColumns);
-      }
-
-      const unknownIndexes = remoteTable.indexKeys.filter(
-        (indexKey) => !known.indexes.has(indexKey),
-      );
-
-      if (unknownIndexes.length > 0) {
-        indexDiscrepancies[remoteTable.tableId] = sortUnique(unknownIndexes);
-      }
-    }
-
-    return {
-      tables: sortUnique(tableDiscrepancies),
-      columns: sortRecord(columnDiscrepancies),
-      indexes: sortRecord(indexDiscrepancies),
-    };
+    return this.comparator.detectDiscrepancies(input);
   }
 
   async syncLivingState(input: {

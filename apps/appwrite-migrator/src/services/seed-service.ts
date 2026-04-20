@@ -3,6 +3,7 @@ import { BaseService } from '@/core/base-service';
 import { SEED_PAGE_SIZE, SEED_TABLE_IDS } from '@/core/constants';
 import type { MigratorContext } from '@/core/types';
 import {
+  type ExistingSeedRow,
   type ExistingSeedState,
   SeederService as InternalSeeder,
   type SeedTableId,
@@ -42,7 +43,7 @@ export class SeedService extends BaseService {
 
     const plan = internalSeeder.buildUpsertPlan({
       validatedRows,
-      existingRows: existingRows as unknown as ExistingSeedState,
+      existingRows: this.normalizeExistingSeedState(existingRows),
     });
 
     const executionPlan = {
@@ -66,7 +67,7 @@ export class SeedService extends BaseService {
 
     this.log(
       'seed',
-      `Seed complete. operations=${plan.operations.length} created=${stats.created} updated=${stats.updated} ignored=${stats.ignored} retries=${stats.retries}`,
+      `Seed complete. operations=${plan.operations.length} created=${stats.created} updated=${stats.updated} ignored=${plan.summary.ignore} retries=${stats.retries}`,
     );
   }
 
@@ -104,5 +105,48 @@ export class SeedService extends BaseService {
 
   private isRecord(value: unknown): value is Record<string, unknown> {
     return typeof value === 'object' && value !== null;
+  }
+
+  private normalizeExistingSeedState(input: unknown): ExistingSeedState {
+    if (!this.isRecord(input)) {
+      return {};
+    }
+
+    const normalized: ExistingSeedState = {};
+
+    for (const tableId of SEED_TABLE_IDS) {
+      const tableRows = input[tableId];
+
+      if (!Array.isArray(tableRows)) {
+        continue;
+      }
+
+      const rows = tableRows
+        .map((row) => this.toExistingSeedRow(row))
+        .filter((row): row is ExistingSeedRow => row !== null);
+
+      if (rows.length > 0) {
+        normalized[tableId] = rows;
+      }
+    }
+
+    return normalized;
+  }
+
+  private toExistingSeedRow(input: unknown): ExistingSeedRow | null {
+    if (!this.isRecord(input)) {
+      return null;
+    }
+
+    const id = input.id;
+
+    if (typeof id !== 'string' || id.trim().length === 0) {
+      return null;
+    }
+
+    return {
+      ...input,
+      id,
+    };
   }
 }

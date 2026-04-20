@@ -17,6 +17,7 @@
   "dependencies": {
     "@repo/appwrite": "workspace:*",
     "@repo/config": "workspace:*",
+    "commander": "^14.0.3",
     "tsx": "^4.21.0",
     "zod": "4.3.6"
   },
