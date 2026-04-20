@@ -8,7 +8,11 @@
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck",
     "guard": "pnpm lint && pnpm typecheck && pnpm test",
-    "sync:copilot-skills": "bash ./scripts/sync-copilot-skills.sh"
+    "sync:copilot-skills": "bash ./scripts/sync-copilot-skills.sh",
+    "migrator:check": "pnpm --filter appwrite-migrator migrator -- --check",
+    "migrator:migrate": "pnpm --filter appwrite-migrator migrator -- --migrate",
+    "migrator:seed": "pnpm --filter appwrite-migrator migrator -- --seed",
+    "migrator:template": "pnpm --filter appwrite-migrator migrator -- --template"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.8",

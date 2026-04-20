@@ -42,5 +42,30 @@ Unified structure: `assets/`, `components/`, `features/`, `domain/`, `infrastruc
 1. `pnpm install` (initializes hooks and venv).
 2. `pnpm lint` to verify code quality.
 
+## 🧰 Appwrite Migrator Usage (from repo root)
+
+Run the Appwrite migrator through root scripts:
+
+- `pnpm migrator:check` — audit remote schema drift.
+- `pnpm migrator:migrate` — apply blueprint schema changes.
+- `pnpm migrator:seed` — seed data (requires payload file).
+- `pnpm migrator:template` — generate seed template output.
+
+Common examples:
+
+```bash
+# check using current .env
+pnpm migrator:check
+
+# migrate using a specific env file
+pnpm migrator:migrate -- --env .env.staging
+
+# seed using a payload file
+pnpm migrator:seed -- --payload ./apps/appwrite-migrator/seed-template.json
+
+# generate template artifacts to a custom output path
+pnpm migrator:template -- --output ./temp/seed-template.json
+```
+
 ---
 *Legacy code archived in `/legacy` folder.*
