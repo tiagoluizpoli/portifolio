@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { SeederExecutor, SeedRateLimitError } from './seeder-executor';
+import type { SeedTableId } from './seeder-validator';
 
 describe('SeederExecutor', () => {
   it('executes upsert plan successfully with create/update/ignore', async () => {
@@ -8,20 +9,20 @@ describe('SeederExecutor', () => {
     const plan = {
       operations: [
         {
-          tableId: 'about' as const,
+          tableId: 'about' as SeedTableId,
           rowIndex: 0,
           action: 'create' as const,
           data: { locale: 'en', name: 'Tiago' },
         },
         {
-          tableId: 'about' as const,
+          tableId: 'about' as SeedTableId,
           rowIndex: 1,
           action: 'update' as const,
           rowId: 'about-1',
           data: { locale: 'en', name: 'Tiago Updated' },
         },
         {
-          tableId: 'about' as const,
+          tableId: 'about' as SeedTableId,
           rowIndex: 2,
           action: 'ignore' as const,
           rowId: 'about-2',
@@ -61,7 +62,7 @@ describe('SeederExecutor', () => {
     const plan = {
       operations: [
         {
-          tableId: 'about' as const,
+          tableId: 'about' as SeedTableId,
           rowIndex: 0,
           action: 'create' as const,
           data: { locale: 'en', name: 'Tiago' },
@@ -100,7 +101,7 @@ describe('SeederExecutor', () => {
     const plan = {
       operations: [
         {
-          tableId: 'about' as const,
+          tableId: 'about' as SeedTableId,
           rowIndex: 0,
           action: 'create' as const,
           data: { locale: 'en', name: 'Tiago' },
@@ -131,7 +132,7 @@ describe('SeederExecutor', () => {
     const plan = {
       operations: [
         {
-          tableId: 'about' as const,
+          tableId: 'about' as SeedTableId,
           rowIndex: 0,
           action: 'create' as const,
           data: { locale: 'en', name: 'Tiago' },

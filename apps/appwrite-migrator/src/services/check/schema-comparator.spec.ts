@@ -1,3 +1,4 @@
+import { asTableId } from '@repo/appwrite-core';
 import { describe, expect, it } from 'vitest';
 import { SchemaComparator } from './schema-comparator.js';
 
@@ -9,13 +10,13 @@ describe('SchemaComparator', () => {
       remoteState: {
         tables: [
           {
-            tableId: 'about',
+            tableId: asTableId('about'),
             tableName: 'About',
             columnKeys: ['name', 'title', 'bio', 'locale', 'legacyField'],
             indexKeys: ['idx_locale', 'idx_legacy'],
           },
           {
-            tableId: 'legacy_table',
+            tableId: asTableId('legacy_table'),
             tableName: 'Legacy',
             columnKeys: ['foo'],
             indexKeys: [],
@@ -36,19 +37,19 @@ describe('SchemaComparator', () => {
       remoteState: {
         tables: [
           {
-            tableId: 'zzz_table',
+            tableId: asTableId('zzz_table'),
             tableName: 'ZZZ',
             columnKeys: ['foo'],
             indexKeys: [],
           },
           {
-            tableId: 'aaa_table',
+            tableId: asTableId('aaa_table'),
             tableName: 'AAA',
             columnKeys: ['bar'],
             indexKeys: [],
           },
           {
-            tableId: 'about',
+            tableId: asTableId('about'),
             tableName: 'About',
             columnKeys: ['legacyB', 'legacyA', 'legacyA', 'name'],
             indexKeys: ['idx_zeta', 'idx_alpha', 'idx_alpha', 'idx_locale'],

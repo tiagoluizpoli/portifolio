@@ -1,3 +1,4 @@
+import { asTableId, type TableId } from '@repo/appwrite-core';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { MigratorCli } from '@/cli/migrator-cli';
 import { PendingStructuralChangesError } from '@/core/errors';
@@ -60,7 +61,7 @@ describe('Final Voyage E2E', () => {
             missingTables: [],
             missingColumns: [
               {
-                tableId: 'about',
+                tableId: asTableId('about') as TableId as TableId,
                 tableName: 'About',
                 columns: [
                   { key: 'name', type: 'string', required: true, size: 255 },

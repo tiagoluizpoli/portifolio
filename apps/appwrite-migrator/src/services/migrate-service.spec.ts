@@ -1,4 +1,5 @@
 import { MigrationService } from '@repo/appwrite';
+import { asTableId, type TableId } from '@repo/appwrite-core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MOCK_CONFIG } from '../tests/helpers/config.mock';
 import { MigrateService } from '@/services/migrate-service';
@@ -14,7 +15,9 @@ describe('MigrateService', () => {
   it('runs migrate and logs results', async () => {
     const mockResult = {
       createdTables: ['table1'],
-      createdColumns: [{ tableId: 'table1', columnKey: 'col1' }],
+      createdColumns: [
+        { tableId: asTableId('table1') as TableId, columnKey: 'col1' },
+      ],
       createdIndexes: [],
     };
 

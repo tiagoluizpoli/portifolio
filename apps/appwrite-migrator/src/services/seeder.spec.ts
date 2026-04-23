@@ -1,8 +1,10 @@
+import { asTableId } from '@repo/appwrite-core';
 import { describe, expect, it } from 'vitest';
 import {
   SeedDeduplicationError,
   SeederService,
   SeedRateLimitError,
+  type SeedTableId,
   SeedValidationError,
 } from './seeder.js';
 
@@ -302,20 +304,20 @@ describe('SeederService', () => {
     const plan = {
       operations: [
         {
-          tableId: 'about' as const,
+          tableId: asTableId('about') as SeedTableId,
           rowIndex: 0,
           action: 'create' as const,
           data: { locale: 'en', name: 'Tiago' },
         },
         {
-          tableId: 'about' as const,
+          tableId: asTableId('about') as SeedTableId,
           rowIndex: 1,
           action: 'update' as const,
           rowId: 'about-1',
           data: { locale: 'en', name: 'Tiago Updated' },
         },
         {
-          tableId: 'about' as const,
+          tableId: asTableId('about') as SeedTableId,
           rowIndex: 2,
           action: 'ignore' as const,
           rowId: 'about-2',
@@ -374,7 +376,7 @@ describe('SeederService', () => {
     const plan = {
       operations: [
         {
-          tableId: 'about' as const,
+          tableId: asTableId('about') as SeedTableId,
           rowIndex: 0,
           action: 'create' as const,
           data: { locale: 'en', name: 'Tiago' },
@@ -413,7 +415,7 @@ describe('SeederService', () => {
     const plan = {
       operations: [
         {
-          tableId: 'about' as const,
+          tableId: asTableId('about') as SeedTableId,
           rowIndex: 0,
           action: 'create' as const,
           data: { locale: 'en', name: 'Tiago' },

@@ -85,18 +85,27 @@ function buildProgram(): Command {
 
 function normalizeError(error: unknown): Error {
   if (error instanceof Error) {
-    return new Error(error.message);
+    return error;
   }
 
   return new Error('Failed to parse CLI arguments.');
 }
 
+function normalizeArgv(argv: string[]): string[] {
+  if (argv.length > 0 && argv[0] === '--') {
+    return argv.slice(1);
+  }
+
+  return argv;
+}
+
 export function parseCliConfig(argv: string[]): CliConfig {
   const program = buildProgram();
+  const normalizedArgv = normalizeArgv(argv);
 
   let options: unknown;
   try {
-    program.parse(argv, { from: 'user' });
+    program.parse(normalizedArgv, { from: 'user' });
     options = program.opts();
   } catch (error: unknown) {
     throw normalizeError(error);

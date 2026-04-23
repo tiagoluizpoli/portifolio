@@ -1,3 +1,4 @@
+import { asTableId } from '@repo/appwrite-core';
 import { describe, expect, it, vi } from 'vitest';
 import {
   DestructiveOfficer,
@@ -32,13 +33,13 @@ describe('DestructiveOfficer', () => {
       remoteState: {
         tables: [
           {
-            tableId: 'about',
+            tableId: asTableId('about'),
             tableName: 'About',
             columnKeys: ['name', 'title', 'bio', 'locale', 'legacyField'],
             indexKeys: ['idx_locale', 'idx_legacy'],
           },
           {
-            tableId: 'legacy_table',
+            tableId: asTableId('legacy_table'),
             tableName: 'Legacy',
             columnKeys: ['foo'],
             indexKeys: [],
@@ -61,7 +62,7 @@ describe('DestructiveOfficer', () => {
       remoteState: {
         tables: [
           {
-            tableId: 'about',
+            tableId: asTableId('about'),
             tableName: 'About',
             columnKeys: ['name', 'title', 'bio', 'locale', 'legacyField'],
             indexKeys: ['idx_locale', 'idx_legacy'],
@@ -110,7 +111,7 @@ describe('DestructiveOfficer', () => {
       remoteState: {
         tables: [
           {
-            tableId: 'about',
+            tableId: asTableId('about'),
             tableName: 'About',
             columnKeys: ['name', 'title', 'bio', 'locale', 'legacyField'],
             indexKeys: ['idx_locale', 'idx_legacy'],
@@ -134,14 +135,14 @@ describe('DestructiveOfficer', () => {
       state: {
         version: 1,
         updatedAt: '2026-04-17T10:00:00.000Z',
-        tables: { legacy_table: true },
-        columns: { about: { legacyField: true } },
-        indexes: { about: { idx_legacy: true } },
+        tables: { [asTableId('legacy_table')]: true },
+        columns: { [asTableId('about')]: { legacyField: true } },
+        indexes: { [asTableId('about')]: { idx_legacy: true } },
       },
       applied: {
-        tables: ['legacy_table'],
-        columns: { about: ['legacyField'] },
-        indexes: { about: ['idx_legacy'] },
+        tables: [asTableId('legacy_table')],
+        columns: { [asTableId('about')]: ['legacyField'] },
+        indexes: { [asTableId('about')]: ['idx_legacy'] },
       },
     });
 

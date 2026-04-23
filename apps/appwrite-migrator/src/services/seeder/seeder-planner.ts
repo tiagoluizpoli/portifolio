@@ -1,4 +1,5 @@
 import { blueprints } from '@repo/appwrite';
+import type { TableId } from '@repo/appwrite-core';
 import {
   rowSchemaByTable,
   type SeedTableId,
@@ -64,7 +65,7 @@ function resolveBatchSignature(
   tableId: SeedTableId,
   row: Record<string, unknown>,
 ): { key: string; value: string } | null {
-  const tableBlueprint = blueprintById.get(tableId);
+  const tableBlueprint = blueprintById.get(tableId as TableId);
 
   if (!tableBlueprint) {
     return null;
@@ -98,7 +99,7 @@ function findUniqueMatch(
   matchedBy?: string;
   conflict?: SeedDeduplicationConflict;
 } {
-  const tableBlueprint = blueprintById.get(tableId);
+  const tableBlueprint = blueprintById.get(tableId as TableId);
 
   if (!tableBlueprint) {
     return {};

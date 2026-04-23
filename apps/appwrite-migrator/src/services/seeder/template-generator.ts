@@ -1,4 +1,5 @@
 import { blueprints } from '@repo/appwrite';
+import { asTableId } from '@repo/appwrite-core';
 import { rowSchemaByTable, type SeedTableId } from './seeder-validator';
 import type { SeedTemplate, SeedTemplateArtifacts } from '@/services/seeder';
 
@@ -70,7 +71,7 @@ function buildMarkdownSpec(template: SeedTemplate): string {
   ];
 
   for (const tableId of Object.keys(rowSchemaByTable) as SeedTableId[]) {
-    const tableBlueprint = blueprintById.get(tableId);
+    const tableBlueprint = blueprintById.get(asTableId(tableId));
 
     if (!tableBlueprint) {
       continue;
@@ -123,7 +124,7 @@ export class TemplateGenerator {
     const tables = {} as SeedTemplate['tables'];
 
     for (const tableId of Object.keys(rowSchemaByTable) as SeedTableId[]) {
-      const tableBlueprint = blueprintById.get(tableId);
+      const tableBlueprint = blueprintById.get(asTableId(tableId));
 
       if (!tableBlueprint) {
         tables[tableId] = {

@@ -23,6 +23,7 @@ import {
   type SolutionInsert,
   SolutionInsertSchema,
 } from '@repo/appwrite';
+import { asTableId, type TableId } from '@repo/appwrite-core';
 import { z } from 'zod';
 
 export type SeedTableId =
@@ -125,7 +126,7 @@ const blueprintById = new Map(blueprints.map((table) => [table.id, table]));
 
 const apiRulesByTable = Object.fromEntries(
   (Object.keys(rowSchemaByTable) as SeedTableId[]).map((tableId) => {
-    const tableBlueprint = blueprintById.get(tableId);
+    const tableBlueprint = blueprintById.get(tableId as TableId);
 
     if (!tableBlueprint) {
       return [tableId, [] as ApiValidationRule[]];
@@ -264,67 +265,67 @@ export class SeederValidator {
     };
 
     validateTableRows({
-      tableId: 'about',
+      tableId: asTableId('about') as SeedTableId,
       rows: shaped.about,
       validated,
       failures,
     });
     validateTableRows({
-      tableId: 'home',
+      tableId: asTableId('home') as SeedTableId,
       rows: shaped.home,
       validated,
       failures,
     });
     validateTableRows({
-      tableId: 'contact_info',
+      tableId: asTableId('contact_info') as SeedTableId,
       rows: shaped.contact_info,
       validated,
       failures,
     });
     validateTableRows({
-      tableId: 'socials',
+      tableId: asTableId('socials') as SeedTableId,
       rows: shaped.socials,
       validated,
       failures,
     });
     validateTableRows({
-      tableId: 'platforms',
+      tableId: asTableId('platforms') as SeedTableId,
       rows: shaped.platforms,
       validated,
       failures,
     });
     validateTableRows({
-      tableId: 'solutions',
+      tableId: asTableId('solutions') as SeedTableId,
       rows: shaped.solutions,
       validated,
       failures,
     });
     validateTableRows({
-      tableId: 'skills',
+      tableId: asTableId('skills') as SeedTableId,
       rows: shaped.skills,
       validated,
       failures,
     });
     validateTableRows({
-      tableId: 'educations',
+      tableId: asTableId('educations') as SeedTableId,
       rows: shaped.educations,
       validated,
       failures,
     });
     validateTableRows({
-      tableId: 'experiences',
+      tableId: asTableId('experiences') as SeedTableId,
       rows: shaped.experiences,
       validated,
       failures,
     });
     validateTableRows({
-      tableId: 'impact_metrics',
+      tableId: asTableId('impact_metrics') as SeedTableId,
       rows: shaped.impact_metrics,
       validated,
       failures,
     });
     validateTableRows({
-      tableId: 'metric_sources',
+      tableId: asTableId('metric_sources') as SeedTableId,
       rows: shaped.metric_sources,
       validated,
       failures,

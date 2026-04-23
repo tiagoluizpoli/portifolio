@@ -23,6 +23,18 @@ describe('parseCliConfig', () => {
     });
   });
 
+  it('parses mode when argv starts with delimiter', () => {
+    const parsed = parseCliConfig(['--', '--check']);
+
+    expect(parsed).toEqual({
+      mode: 'check',
+      env: undefined,
+      payload: undefined,
+      output: undefined,
+      force: false,
+    });
+  });
+
   it('rejects multiple active mode flags', () => {
     expect(() => parseCliConfig(['--seed', '--migrate'])).toThrow(
       /Only one mode can be active/,
