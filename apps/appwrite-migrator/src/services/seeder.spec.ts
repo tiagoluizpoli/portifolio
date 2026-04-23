@@ -9,7 +9,7 @@ import {
 } from './seeder.js';
 
 describe('SeederService', () => {
-  it('generates layered JSON template based on blueprints', () => {
+  it('generates direct JSON template based on blueprints', () => {
     const service = new SeederService();
 
     const result = service.generateTemplateArtifacts({
@@ -17,12 +17,9 @@ describe('SeederService', () => {
     });
 
     expect(result.template.version).toBe(1);
-    expect(result.template.tables.about.rows).toHaveLength(1);
-    expect(result.template.tables.about.uniqueLogicKeys.byLocale).toEqual([
-      'locale',
-    ]);
-    expect(result.template.tables.contact_info.rows[0]?.email).toContain('@');
-    expect(result.template.tables.skills.rows[0]?.title).toBeTypeOf('string');
+    expect(result.template.tables.about).toHaveLength(1);
+    expect(result.template.tables.contact_info[0]?.email).toContain('@');
+    expect(result.template.tables.skills[0]?.title).toBeTypeOf('string');
   });
 
   it('generates markdown specification with all table sections', () => {
@@ -502,14 +499,14 @@ describe('SeederService', () => {
     ).toThrow(SeedValidationError);
   });
 
-  it('rejects whitespace-only strings by API-level constraints', () => {
+  it('rejects missing required fields by schema constraints', () => {
     const service = new SeederService();
 
     expect(() =>
       service.validateRows({
         about: [
           {
-            name: '   ',
+            // name missing
             title: 'Engineer',
             bio: 'Building clean systems',
             locale: 'en',
@@ -554,7 +551,7 @@ describe('SeederService', () => {
       service.validateRows({
         about: [
           {
-            name: '   ',
+            // name missing
             title: 'Engineer',
             bio: 'Building clean systems',
             locale: 'en',

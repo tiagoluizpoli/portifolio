@@ -1,43 +1,34 @@
+import type {
+  AboutInsert,
+  ContactInfoInsert,
+  EducationInsert,
+  ExperienceInsert,
+  HomeInsert,
+  ImpactMetricInsert,
+  MetricSourceInsert,
+  PlatformInsert,
+  SkillInsert,
+  SocialInsert,
+  SolutionInsert,
+} from '@repo/appwrite';
 import {
-  type AboutInsert,
   AboutInsertSchema,
-  blueprints,
-  type ContactInfoInsert,
   ContactInfoInsertSchema,
-  type EducationInsert,
   EducationInsertSchema,
-  type ExperienceInsert,
   ExperienceInsertSchema,
-  type HomeInsert,
   HomeInsertSchema,
-  type ImpactMetricInsert,
   ImpactMetricInsertSchema,
-  type MetricSourceInsert,
   MetricSourceInsertSchema,
-  type PlatformInsert,
   PlatformInsertSchema,
-  type SkillInsert,
   SkillInsertSchema,
-  type SocialInsert,
   SocialInsertSchema,
-  type SolutionInsert,
   SolutionInsertSchema,
 } from '@repo/appwrite';
-import { asTableId, type TableId } from '@repo/appwrite-core';
 import { z } from 'zod';
+import { validateApiLevelConstraints } from './seeder-validator-rules';
+import { SEED_TABLE_IDS } from '@/core/constants';
 
-export type SeedTableId =
-  | 'about'
-  | 'home'
-  | 'contact_info'
-  | 'socials'
-  | 'platforms'
-  | 'solutions'
-  | 'skills'
-  | 'educations'
-  | 'experiences'
-  | 'impact_metrics'
-  | 'metric_sources';
+export type SeedTableId = (typeof SEED_TABLE_IDS)[number];
 
 export interface SeedValidationIssue {
   path: string;
@@ -74,15 +65,6 @@ export interface ValidatedSeedPayload {
   metric_sources: MetricSourceInsert[];
 }
 
-type ApiConstrainedColumnType = 'string' | 'email';
-
-interface ApiValidationRule {
-  key: string;
-  type: ApiConstrainedColumnType;
-  required: boolean;
-  size?: number;
-}
-
 const seedShapeSchema = z
   .object({
     about: z.array(z.unknown()).default([]),
@@ -104,8 +86,6 @@ const pathSchema = z.object({
   message: z.string(),
 });
 
-const emailSchema = z.string().email();
-
 export const rowSchemaByTable: {
   [K in SeedTableId]: z.ZodSchema<ValidatedSeedPayload[K][number]>;
 } = {
@@ -122,34 +102,6 @@ export const rowSchemaByTable: {
   metric_sources: MetricSourceInsertSchema,
 };
 
-const blueprintById = new Map(blueprints.map((table) => [table.id, table]));
-
-const apiRulesByTable = Object.fromEntries(
-  (Object.keys(rowSchemaByTable) as SeedTableId[]).map((tableId) => {
-    const tableBlueprint = blueprintById.get(tableId as TableId);
-
-    if (!tableBlueprint) {
-      return [tableId, [] as ApiValidationRule[]];
-    }
-
-    const rules: ApiValidationRule[] = tableBlueprint.columns
-      .filter(
-        (
-          column,
-        ): column is typeof column & { type: ApiConstrainedColumnType } =>
-          column.type === 'string' || column.type === 'email',
-      )
-      .map((column) => ({
-        key: column.key,
-        type: column.type,
-        required: column.required,
-        size: column.type === 'string' ? column.size : undefined,
-      }));
-
-    return [tableId, rules];
-  }),
-) as Record<SeedTableId, ApiValidationRule[]>;
-
 function formatIssues(error: z.ZodError): SeedValidationIssue[] {
   return error.issues.map((issue) => {
     const parsed = pathSchema.parse({
@@ -162,49 +114,6 @@ function formatIssues(error: z.ZodError): SeedValidationIssue[] {
       message: parsed.message,
     };
   });
-}
-
-function validateApiLevelConstraints(
-  tableId: SeedTableId,
-  row: ValidatedSeedPayload[SeedTableId][number],
-): SeedValidationIssue[] {
-  const issues: SeedValidationIssue[] = [];
-
-  for (const rule of apiRulesByTable[tableId]) {
-    const rawValue = Reflect.get(row, rule.key);
-
-    if (typeof rawValue !== 'string') {
-      continue;
-    }
-
-    if (rule.required && rawValue.trim().length === 0) {
-      issues.push({
-        path: rule.key,
-        message: 'String value cannot be empty or whitespace only.',
-      });
-      continue;
-    }
-
-    if (typeof rule.size === 'number' && rawValue.length > rule.size) {
-      issues.push({
-        path: rule.key,
-        message: `String exceeds max size ${rule.size}.`,
-      });
-    }
-
-    if (rule.type === 'email') {
-      const parsedEmail = emailSchema.safeParse(rawValue);
-
-      if (!parsedEmail.success) {
-        issues.push({
-          path: rule.key,
-          message: 'Invalid email format.',
-        });
-      }
-    }
-  }
-
-  return issues;
 }
 
 function validateTableRows<K extends SeedTableId>(input: {
@@ -247,7 +156,10 @@ function validateTableRows<K extends SeedTableId>(input: {
 
 export class SeederValidator {
   validateRows(input: unknown): ValidatedSeedPayload {
-    const shaped = seedShapeSchema.parse(input);
+    const shaped = seedShapeSchema.parse(input) as Record<
+      SeedTableId,
+      unknown[]
+    >;
     const failures: SeedValidationFailure[] = [];
 
     const validated: ValidatedSeedPayload = {
@@ -264,71 +176,13 @@ export class SeederValidator {
       metric_sources: [],
     };
 
-    validateTableRows({
-      tableId: asTableId('about') as SeedTableId,
-      rows: shaped.about,
-      validated,
-      failures,
-    });
-    validateTableRows({
-      tableId: asTableId('home') as SeedTableId,
-      rows: shaped.home,
-      validated,
-      failures,
-    });
-    validateTableRows({
-      tableId: asTableId('contact_info') as SeedTableId,
-      rows: shaped.contact_info,
-      validated,
-      failures,
-    });
-    validateTableRows({
-      tableId: asTableId('socials') as SeedTableId,
-      rows: shaped.socials,
-      validated,
-      failures,
-    });
-    validateTableRows({
-      tableId: asTableId('platforms') as SeedTableId,
-      rows: shaped.platforms,
-      validated,
-      failures,
-    });
-    validateTableRows({
-      tableId: asTableId('solutions') as SeedTableId,
-      rows: shaped.solutions,
-      validated,
-      failures,
-    });
-    validateTableRows({
-      tableId: asTableId('skills') as SeedTableId,
-      rows: shaped.skills,
-      validated,
-      failures,
-    });
-    validateTableRows({
-      tableId: asTableId('educations') as SeedTableId,
-      rows: shaped.educations,
-      validated,
-      failures,
-    });
-    validateTableRows({
-      tableId: asTableId('experiences') as SeedTableId,
-      rows: shaped.experiences,
-      validated,
-      failures,
-    });
-    validateTableRows({
-      tableId: asTableId('impact_metrics') as SeedTableId,
-      rows: shaped.impact_metrics,
-      validated,
-      failures,
-    });
-    validateTableRows({
-      tableId: asTableId('metric_sources') as SeedTableId,
-      rows: shaped.metric_sources,
-      validated,
-      failures,
+    SEED_TABLE_IDS.forEach((tableId) => {
+      validateTableRows({
+        tableId,
+        rows: shaped[tableId],
+        validated,
+        failures,
+      });
     });
 
     if (failures.length > 0) {

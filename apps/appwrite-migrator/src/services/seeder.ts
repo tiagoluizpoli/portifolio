@@ -18,15 +18,10 @@ export type {
 } from '@/services/seeder/seeder-validator';
 export { SeedValidationError } from '@/services/seeder/seeder-validator';
 
-interface SeedTemplateTableLayer {
-  uniqueLogicKeys: Record<string, string[]>;
-  rows: Array<Record<string, unknown>>;
-}
-
 export interface SeedTemplate {
   version: 1;
   generatedAt: string;
-  tables: Record<SeedTableId, SeedTemplateTableLayer>;
+  tables: Record<SeedTableId, Array<Record<string, unknown>>>;
 }
 
 export interface SeedTemplateArtifacts {

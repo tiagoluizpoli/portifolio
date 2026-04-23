@@ -64,14 +64,14 @@ describe('SeederValidator', () => {
     ).toThrow(SeedValidationError);
   });
 
-  it('rejects whitespace-only strings by API-level constraints', () => {
+  it('rejects missing required fields by schema constraints', () => {
     const validator = new SeederValidator();
 
     expect(() =>
       validator.validateRows({
         about: [
           {
-            name: '   ',
+            // name missing
             title: 'Engineer',
             bio: 'Building clean systems',
             locale: 'en',
@@ -117,7 +117,7 @@ describe('SeederValidator', () => {
       validator.validateRows({
         about: [
           {
-            name: '   ',
+            // name missing
             title: 'Engineer',
             bio: 'Building clean systems',
             locale: 'en',

@@ -8,14 +8,6 @@ type BlueprintColumn = BlueprintTable['columns'][number];
 
 const blueprintById = new Map(blueprints.map((table) => [table.id, table]));
 
-function cloneUniqueLogicKeys(
-  source: Record<string, string[]>,
-): Record<string, string[]> {
-  return Object.fromEntries(
-    Object.entries(source).map(([key, values]) => [key, [...values]]),
-  );
-}
-
 function resolveSampleScalarValue(
   tableId: SeedTableId,
   column: BlueprintColumn,
@@ -79,7 +71,7 @@ function buildMarkdownSpec(template: SeedTemplate): string {
 
     lines.push(`## Table \`${tableId}\``);
     lines.push('');
-    lines.push('### Unique Logic Keys');
+    lines.push('### Unique Logic Keys (from Blueprint)');
 
     for (const [key, values] of Object.entries(
       tableBlueprint.uniqueLogicKeys,
@@ -108,7 +100,7 @@ function buildMarkdownSpec(template: SeedTemplate): string {
     lines.push('### Example Row');
     lines.push('');
     lines.push('```json');
-    lines.push(JSON.stringify(template.tables[tableId].rows[0], null, 2));
+    lines.push(JSON.stringify(template.tables[tableId][0], null, 2));
     lines.push('```');
     lines.push('');
   }
@@ -127,17 +119,11 @@ export class TemplateGenerator {
       const tableBlueprint = blueprintById.get(asTableId(tableId));
 
       if (!tableBlueprint) {
-        tables[tableId] = {
-          uniqueLogicKeys: {},
-          rows: [{}],
-        };
+        tables[tableId] = [{}];
         continue;
       }
 
-      tables[tableId] = {
-        uniqueLogicKeys: cloneUniqueLogicKeys(tableBlueprint.uniqueLogicKeys),
-        rows: [buildTemplateRow(tableId, tableBlueprint.columns)],
-      };
+      tables[tableId] = [buildTemplateRow(tableId, tableBlueprint.columns)];
     }
 
     const template: SeedTemplate = {
