@@ -33,6 +33,7 @@ Before enhancing ANY prompt, you must internalize these non-negotiable standards
 | **4px Grid Spacing** | All spatial values must be multiples of 4px |
 | **HSL/OKLCH Colors Only** | No arbitrary hex. Use calibrated color tokens |
 | **Spring Physics Motion** | No linear easing. Spring configs for all animations |
+| **Coding Standard** | Think before coding, surgical simplicity, goal-driven execution |
 
 ---
 
@@ -110,6 +111,7 @@ Every enhanced prompt MUST include these governance blocks:
 - Exports: Named only. No `export default`.
 - Types: Full type safety. No `any`, no `as` casts without justification.
 - Quality Gate: `pnpm guard` must pass with zero warnings.
+- **Protocol**: Follow the `coding-standard` skill for all implementation work.
 ```
 
 #### B. UI Scope Enforcement (for any UI-touching task)
