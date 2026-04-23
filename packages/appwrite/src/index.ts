@@ -1,3 +1,4 @@
+/* v8 ignore file */
 export { ID, Query, type TablesDB } from 'node-appwrite';
 export type { AppwriteClientConfig } from './client.js';
 export { getTablesClient, initializeAppwrite } from './client.js';

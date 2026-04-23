@@ -1,4 +1,4 @@
-/* v8 ignore start */
+/* v8 ignore file */
 import { z } from 'zod';
 
 export const repositoryQueryOptionsSchema = z.object({
@@ -94,4 +94,3 @@ export interface IMetricSyncService {
   sync(input: MetricSyncInput): Promise<void>;
   cleanup(input: MetricCleanupInput): Promise<void>;
 }
-/* v8 ignore stop */

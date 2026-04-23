@@ -1,3 +1,4 @@
+import { asTableId } from '@repo/appwrite-core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   AppwriteAuthException,
@@ -62,7 +63,7 @@ describe('Specialized repositories', () => {
   it('Class 1 happy path returns parsed entity', async () => {
     const repository = new AboutRepository('db');
     sdkMock.getRow.mockResolvedValue({
-      $id: '1',
+      $id: asTableId('1'),
       $createdAt: 'now',
       $updatedAt: 'now',
       $permissions: [],
@@ -72,15 +73,19 @@ describe('Specialized repositories', () => {
       locale: 'en',
     });
 
-    await expect(repository.findById({ id: '1' })).resolves.toMatchObject({
-      id: '1',
+    await expect(
+      repository.findById({ id: asTableId('1') }),
+    ).resolves.toMatchObject({
+      id: asTableId('1'),
     });
   });
 
   it('Class 2 edge path returns null for 404', async () => {
     const repository = new HomeRepository('db');
     sdkMock.getRow.mockRejectedValue({ code: 404 });
-    await expect(repository.findById({ id: 'missing' })).resolves.toBeNull();
+    await expect(
+      repository.findById({ id: asTableId('missing') }),
+    ).resolves.toBeNull();
   });
 
   it('Class 4 auth path maps 401 to AppwriteAuthException', async () => {
@@ -105,7 +110,7 @@ describe('Specialized repositories', () => {
       total: 1,
       rows: [
         {
-          $id: '1',
+          $id: asTableId('1'),
           $createdAt: 'now',
           $updatedAt: 'now',
           $permissions: [],
@@ -141,7 +146,7 @@ describe('Specialized repositories', () => {
       total: 1,
       rows: [
         {
-          $id: '1',
+          $id: asTableId('1'),
           $createdAt: 'now',
           $updatedAt: 'now',
           $permissions: [],

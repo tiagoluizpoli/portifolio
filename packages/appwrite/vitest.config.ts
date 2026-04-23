@@ -5,6 +5,8 @@ export default defineConfig({
     include: ['src/**/*.spec.ts'],
     coverage: {
       enabled: true,
+      include: ['src/**/*.ts'],
+      exclude: ['**/node_modules/**', '**/appwrite-core/**'],
       reporter: ['text', 'lcov'],
       thresholds: {
         lines: 100,

@@ -33,17 +33,17 @@ export class RepositoryFactory {
           this.databaseId,
         ) as IRepository<RepositoryEntity>;
         break;
-      case 'contact-info':
+      case 'contact_info':
         repo = new ContactInfoRepository(
           this.databaseId,
         ) as IRepository<RepositoryEntity>;
         break;
-      case 'education':
+      case 'educations':
         repo = new EducationRepository(
           this.databaseId,
         ) as IRepository<RepositoryEntity>;
         break;
-      case 'experience':
+      case 'experiences':
         repo = new ExperienceRepository(
           this.databaseId,
         ) as IRepository<RepositoryEntity>;
@@ -53,32 +53,32 @@ export class RepositoryFactory {
           this.databaseId,
         ) as IRepository<RepositoryEntity>;
         break;
-      case 'impact-metric':
+      case 'impact_metrics':
         repo = new ImpactMetricRepository(
           this.databaseId,
         ) as IRepository<RepositoryEntity>;
         break;
-      case 'metric-source':
+      case 'metric_sources':
         repo = new MetricSourceRepository(
           this.databaseId,
         ) as IRepository<RepositoryEntity>;
         break;
-      case 'platform':
+      case 'platforms':
         repo = new PlatformRepository(
           this.databaseId,
         ) as IRepository<RepositoryEntity>;
         break;
-      case 'skill':
+      case 'skills':
         repo = new SkillRepository(
           this.databaseId,
         ) as IRepository<RepositoryEntity>;
         break;
-      case 'social':
+      case 'socials':
         repo = new SocialRepository(
           this.databaseId,
         ) as IRepository<RepositoryEntity>;
         break;
-      case 'solution':
+      case 'solutions':
         repo = new SolutionRepository(
           this.databaseId,
         ) as IRepository<RepositoryEntity>;

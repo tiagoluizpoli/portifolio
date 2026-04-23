@@ -1,3 +1,4 @@
+import { asTableId } from '@repo/appwrite-core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   AppwriteCatastrophicConfigError,
@@ -33,7 +34,7 @@ describe('StorageService', () => {
   });
 
   it('uploads picture to configured bucket', async () => {
-    storageMock.createFile.mockResolvedValue({ $id: 'f1' });
+    storageMock.createFile.mockResolvedValue({ $id: asTableId('f1') });
     const service = new StorageService();
 
     await expect(
@@ -43,19 +44,23 @@ describe('StorageService', () => {
         kind: 'picture',
       }),
     ).resolves.toEqual({
-      id: 'f1',
+      id: asTableId('f1'),
       bucketId: 'bucket-pictures',
       name: 'avatar',
     });
   });
 
   it('uploads pdf to configured bucket', async () => {
-    storageMock.createFile.mockResolvedValue({ $id: 'f2' });
+    storageMock.createFile.mockResolvedValue({ $id: asTableId('f2') });
     const service = new StorageService();
 
     await expect(
       service.upload({ name: 'resume', file: Buffer.from('b'), kind: 'pdf' }),
-    ).resolves.toEqual({ id: 'f2', bucketId: 'bucket-pdfs', name: 'resume' });
+    ).resolves.toEqual({
+      id: asTableId('f2'),
+      bucketId: 'bucket-pdfs',
+      name: 'resume',
+    });
   });
 
   it('throws catastrophic error if bucket env is missing', async () => {
@@ -115,13 +120,16 @@ describe('StorageService', () => {
   });
 
   it('returns file info and maps errors', async () => {
-    storageMock.getFile.mockResolvedValue({ $id: 'f1', name: 'resume.pdf' });
+    storageMock.getFile.mockResolvedValue({
+      $id: asTableId('f1'),
+      name: 'resume.pdf',
+    });
     const service = new StorageService();
 
     await expect(
       service.getFileInfo({ fileId: 'f1', bucketId: 'bucket-pdfs' }),
     ).resolves.toEqual({
-      id: 'f1',
+      id: asTableId('f1'),
       bucketId: 'bucket-pdfs',
       name: 'resume.pdf',
     });
@@ -146,8 +154,8 @@ describe('StorageService', () => {
     storageMock.listFiles.mockResolvedValue({
       total: 2,
       files: [
-        { $id: 'first', name: 'other.json' },
-        { $id: 'target', name: 'seed-data.json' },
+        { $id: asTableId('first'), name: 'other.json' },
+        { $id: asTableId('target'), name: 'seed-data.json' },
       ],
     });
 
@@ -163,7 +171,7 @@ describe('StorageService', () => {
     const service = new StorageService();
     storageMock.listFiles.mockResolvedValue({
       total: 1,
-      files: [{ $id: 'first', name: 'other.json' }],
+      files: [{ $id: asTableId('first'), name: 'other.json' }],
     });
 
     await expect(
@@ -188,7 +196,9 @@ describe('StorageService', () => {
       })
       .mockResolvedValueOnce({
         total: 101,
-        files: [{ $id: 'target-second-page', name: 'seed-data.json' }],
+        files: [
+          { $id: asTableId('target-second-page'), name: 'seed-data.json' },
+        ],
       });
 
     await expect(
@@ -204,8 +214,8 @@ describe('StorageService', () => {
     storageMock.listFiles.mockResolvedValue({
       total: 2,
       files: [
-        { $id: 'a', name: 'seed-data.json' },
-        { $id: 'b', name: 'seed-data.json' },
+        { $id: asTableId('a'), name: 'seed-data.json' },
+        { $id: asTableId('b'), name: 'seed-data.json' },
       ],
     });
 

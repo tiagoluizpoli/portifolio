@@ -84,7 +84,7 @@ export class ContactInfoRepository
   implements IContactInfoRepository
 {
   constructor(databaseId: string, logger?: InternalLogger) {
-    super(databaseId, 'contact-info', ContactInfoFullSchema, logger);
+    super(databaseId, 'contact_info', ContactInfoFullSchema, logger);
   }
 }
 
@@ -93,7 +93,7 @@ export class SocialRepository
   implements ISocialRepository
 {
   constructor(databaseId: string, logger?: InternalLogger) {
-    super(databaseId, 'social', SocialFullSchema, logger);
+    super(databaseId, 'socials', SocialFullSchema, logger);
   }
 }
 
@@ -102,7 +102,7 @@ export class PlatformRepository
   implements IPlatformRepository
 {
   constructor(databaseId: string, logger?: InternalLogger) {
-    super(databaseId, 'platform', PlatformFullSchema, logger);
+    super(databaseId, 'platforms', PlatformFullSchema, logger);
   }
 }
 
@@ -111,7 +111,7 @@ export class SolutionRepository
   implements ISolutionRepository
 {
   constructor(databaseId: string, logger?: InternalLogger) {
-    super(databaseId, 'solution', SolutionFullSchema, logger);
+    super(databaseId, 'solutions', SolutionFullSchema, logger);
   }
 }
 
@@ -120,7 +120,7 @@ export class SkillRepository
   implements ISkillRepository
 {
   constructor(databaseId: string, logger?: InternalLogger) {
-    super(databaseId, 'skill', SkillFullSchema, logger);
+    super(databaseId, 'skills', SkillFullSchema, logger);
   }
 }
 
@@ -129,7 +129,7 @@ export class EducationRepository
   implements IEducationRepository
 {
   constructor(databaseId: string, logger?: InternalLogger) {
-    super(databaseId, 'education', EducationFullSchema, logger);
+    super(databaseId, 'educations', EducationFullSchema, logger);
   }
 }
 
@@ -138,7 +138,7 @@ export class ExperienceRepository
   implements IExperienceRepository
 {
   constructor(databaseId: string, logger?: InternalLogger) {
-    super(databaseId, 'experience', ExperienceFullSchema, logger);
+    super(databaseId, 'experiences', ExperienceFullSchema, logger);
   }
 }
 
@@ -147,7 +147,7 @@ export class ImpactMetricRepository
   implements IImpactMetricRepository
 {
   constructor(databaseId: string, logger?: InternalLogger) {
-    super(databaseId, 'impact-metric', ImpactMetricFullSchema, logger);
+    super(databaseId, 'impact_metrics', ImpactMetricFullSchema, logger);
   }
 
   async findByInternalCode(
@@ -176,6 +176,6 @@ export class MetricSourceRepository
   implements IMetricSourceRepository
 {
   constructor(databaseId: string, logger?: InternalLogger) {
-    super(databaseId, 'metric-source', MetricSourceFullSchema, logger);
+    super(databaseId, 'metric_sources', MetricSourceFullSchema, logger);
   }
 }

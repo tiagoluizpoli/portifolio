@@ -1,3 +1,4 @@
+import { asTableId } from '@repo/appwrite-core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ZodError } from 'zod';
 import {
@@ -28,7 +29,7 @@ describe('AuthService', () => {
 
   it('creates a session for valid credentials', async () => {
     accountMock.createEmailPasswordSession.mockResolvedValue({
-      $id: 'session-1',
+      $id: asTableId('session-1'),
       userId: 'user-1',
       expire: '2030-01-01T00:00:00.000Z',
     });
@@ -41,7 +42,7 @@ describe('AuthService', () => {
         password: 'strong-pass',
       }),
     ).resolves.toEqual({
-      id: 'session-1',
+      id: asTableId('session-1'),
       userId: 'user-1',
       expiresAt: '2030-01-01T00:00:00.000Z',
     });
@@ -79,13 +80,13 @@ describe('AuthService', () => {
 
   it('returns current user from account client', async () => {
     accountMock.get.mockResolvedValue({
-      $id: 'user-1',
+      $id: asTableId('user-1'),
       email: 'user@example.com',
     });
     const service = new AuthService();
 
     await expect(service.getCurrentUser()).resolves.toEqual({
-      $id: 'user-1',
+      $id: asTableId('user-1'),
       email: 'user@example.com',
     });
   });

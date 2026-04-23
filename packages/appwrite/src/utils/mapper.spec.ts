@@ -1,10 +1,11 @@
+import { asTableId } from '@repo/appwrite-core';
 import { describe, expect, it } from 'vitest';
 import { DocumentMapper } from './mapper';
 
 describe('DocumentMapper', () => {
   it('maps appwrite system fields to domain fields', () => {
     const mapped = DocumentMapper.toDomain<{ id: string; label: string }>({
-      $id: 'doc_1',
+      $id: asTableId('doc_1'),
       $createdAt: '2026-04-16T00:00:00.000Z',
       $updatedAt: '2026-04-16T01:00:00.000Z',
       $permissions: ['read("*")'],
@@ -12,7 +13,7 @@ describe('DocumentMapper', () => {
     });
 
     expect(mapped).toEqual({
-      id: 'doc_1',
+      id: asTableId('doc_1'),
       createdAt: '2026-04-16T00:00:00.000Z',
       updatedAt: '2026-04-16T01:00:00.000Z',
       permissions: ['read("*")'],
@@ -22,7 +23,7 @@ describe('DocumentMapper', () => {
 
   it('removes domain system fields for appwrite writes', () => {
     const mapped = DocumentMapper.toAppwrite({
-      id: 'doc_1',
+      id: asTableId('doc_1'),
       createdAt: 'x',
       updatedAt: 'y',
       permissions: ['*'],

@@ -1,10 +1,11 @@
+import { asTableId } from '@repo/appwrite-core';
 import { describe, expect, it } from 'vitest';
 import { VerificationUtility } from './verification';
 
 describe('VerificationUtility', () => {
   it('returns parity match when only metadata fields differ', () => {
     const legacy = {
-      id: 'doc-1',
+      id: asTableId('doc-1'),
       title: 'Portfolio',
       nested: {
         active: true,
@@ -12,7 +13,7 @@ describe('VerificationUtility', () => {
     };
 
     const next = {
-      id: 'doc-1',
+      id: asTableId('doc-1'),
       title: 'Portfolio',
       createdAt: '2026-04-16T00:00:00.000Z',
       updatedAt: '2026-04-16T00:00:01.000Z',
@@ -33,12 +34,12 @@ describe('VerificationUtility', () => {
 
   it('supports custom ignored keys', () => {
     const legacy = {
-      id: 'doc-1',
+      id: asTableId('doc-1'),
       locale: 'en',
     };
 
     const next = {
-      id: 'doc-1',
+      id: asTableId('doc-1'),
       locale: 'pt',
     };
 
@@ -54,7 +55,7 @@ describe('VerificationUtility', () => {
 
   it('reports deterministic differences for missing keys and mismatched values', () => {
     const legacy = {
-      id: 'doc-1',
+      id: asTableId('doc-1'),
       title: 'Old',
       tags: ['cms'],
       nested: {
@@ -63,7 +64,7 @@ describe('VerificationUtility', () => {
     };
 
     const next = {
-      id: 'doc-1',
+      id: asTableId('doc-1'),
       title: 'New',
       tags: ['cms', 'appwrite'],
       nested: {
@@ -133,13 +134,13 @@ describe('VerificationUtility', () => {
   });
 
   it('reports root type mismatch', () => {
-    const result = VerificationUtility.compare({ id: 'x' }, ['x']);
+    const result = VerificationUtility.compare({ id: asTableId('x') }, ['x']);
 
     expect(result.matches).toBe(false);
     expect(result.differences).toEqual([
       {
         path: '$',
-        legacyValue: { id: 'x' },
+        legacyValue: { id: asTableId('x') },
         nextValue: ['x'],
         reason: 'type-mismatch',
       },
@@ -170,14 +171,14 @@ describe('VerificationUtility', () => {
   it('reports missing key in next object', () => {
     const result = VerificationUtility.compare(
       {
-        id: 'doc-1',
+        id: asTableId('doc-1'),
         nested: {
           keep: true,
           removed: 1,
         },
       },
       {
-        id: 'doc-1',
+        id: asTableId('doc-1'),
         nested: {
           keep: true,
         },
@@ -198,11 +199,11 @@ describe('VerificationUtility', () => {
   it('reports nested type mismatch between array and object', () => {
     const result = VerificationUtility.compare(
       {
-        id: 'doc-1',
+        id: asTableId('doc-1'),
         collection: ['a'],
       },
       {
-        id: 'doc-1',
+        id: asTableId('doc-1'),
         collection: { value: 'a' },
       },
     );
@@ -221,13 +222,13 @@ describe('VerificationUtility', () => {
   it('reports nested type mismatch between object and primitive', () => {
     const result = VerificationUtility.compare(
       {
-        id: 'doc-1',
+        id: asTableId('doc-1'),
         nested: {
           value: true,
         },
       },
       {
-        id: 'doc-1',
+        id: asTableId('doc-1'),
         nested: 1,
       },
     );

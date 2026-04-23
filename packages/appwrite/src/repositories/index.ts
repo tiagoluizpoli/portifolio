@@ -1,3 +1,4 @@
+/* v8 ignore file */
 export * from './base-repository.js';
 export * from './interfaces.js';
 export * from './repository-factory.js';

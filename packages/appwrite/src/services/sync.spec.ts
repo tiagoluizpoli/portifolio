@@ -1,3 +1,4 @@
+import { asTableId } from '@repo/appwrite-core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { initializeAppwrite } from '../client.js';
 import {
@@ -15,7 +16,7 @@ function makeSource(
   overrides: Partial<ImpactMetricEntity> = {},
 ): ImpactMetricEntity {
   return {
-    id: 'metric-en',
+    id: asTableId('metric-en'),
     aboutId: 'about-1',
     internalCode: 'clients-served',
     locale: 'en',
@@ -49,7 +50,9 @@ describe('MetricSyncService', () => {
     vi.mocked(repository.findByAboutAndInternalCode).mockResolvedValue([]);
     vi.mocked(repository.create)
       .mockResolvedValueOnce(makeSource())
-      .mockResolvedValueOnce(makeSource({ id: 'metric-pt', locale: 'pt' }));
+      .mockResolvedValueOnce(
+        makeSource({ id: asTableId('metric-pt'), locale: 'pt' }),
+      );
 
     const service = new MetricSyncService(repository);
     await service.sync({ aboutId: 'about-1', source: makeSource() });
@@ -72,7 +75,7 @@ describe('MetricSyncService', () => {
     vi.mocked(repository.findByAboutAndInternalCode).mockResolvedValue([
       makeSource(),
       makeSource({
-        id: 'metric-pt',
+        id: asTableId('metric-pt'),
         locale: 'pt',
         label: 'Clientes atendidos',
         value: '200+',
@@ -85,7 +88,7 @@ describe('MetricSyncService', () => {
 
     expect(repository.create).not.toHaveBeenCalled();
     expect(repository.update).toHaveBeenCalledWith({
-      id: 'metric-pt',
+      id: asTableId('metric-pt'),
       data: {
         sourceId: 'source-1',
         isPlaceholder: true,
@@ -98,7 +101,7 @@ describe('MetricSyncService', () => {
       makeSource(),
     ]);
     vi.mocked(repository.create).mockResolvedValue(
-      makeSource({ id: 'metric-pt', locale: 'pt' }),
+      makeSource({ id: asTableId('metric-pt'), locale: 'pt' }),
     );
 
     const service = new MetricSyncService(repository);
@@ -110,7 +113,11 @@ describe('MetricSyncService', () => {
   it('Class 7 cleanup removes placeholder rows only', async () => {
     vi.mocked(repository.findByAboutAndInternalCode).mockResolvedValue([
       makeSource(),
-      makeSource({ id: 'metric-pt', locale: 'pt', isPlaceholder: true }),
+      makeSource({
+        id: asTableId('metric-pt'),
+        locale: 'pt',
+        isPlaceholder: true,
+      }),
     ]);
 
     const service = new MetricSyncService(repository);
@@ -120,26 +127,28 @@ describe('MetricSyncService', () => {
     });
 
     expect(repository.delete).toHaveBeenCalledTimes(1);
-    expect(repository.delete).toHaveBeenCalledWith({ id: 'metric-pt' });
+    expect(repository.delete).toHaveBeenCalledWith({
+      id: asTableId('metric-pt'),
+    });
   });
 
   it('creates EN ghost row when source locale is PT', async () => {
     vi.mocked(repository.findByAboutAndInternalCode).mockResolvedValue([
       makeSource({
-        id: 'metric-pt-source',
+        id: asTableId('metric-pt-source'),
         locale: 'pt',
         label: 'Clientes atendidos',
       }),
     ]);
     vi.mocked(repository.create).mockResolvedValue(
-      makeSource({ id: 'metric-en', locale: 'en' }),
+      makeSource({ id: asTableId('metric-en'), locale: 'en' }),
     );
 
     const service = new MetricSyncService(repository);
     await service.sync({
       aboutId: 'about-1',
       source: makeSource({
-        id: 'metric-pt-source',
+        id: asTableId('metric-pt-source'),
         locale: 'pt',
         label: 'Clientes atendidos',
       }),
@@ -172,7 +181,7 @@ describe('MetricSyncService', () => {
   it('rolls back newly created source when counterpart creation fails', async () => {
     vi.mocked(repository.findByAboutAndInternalCode).mockResolvedValue([]);
     vi.mocked(repository.create)
-      .mockResolvedValueOnce(makeSource({ id: 'created-source' }))
+      .mockResolvedValueOnce(makeSource({ id: asTableId('created-source') }))
       .mockRejectedValueOnce({ code: 500 });
 
     const service = new MetricSyncService(repository);
@@ -180,13 +189,19 @@ describe('MetricSyncService', () => {
     await expect(
       service.sync({ aboutId: 'about-1', source: makeSource() }),
     ).rejects.toBeInstanceOf(AppwriteSystemException);
-    expect(repository.delete).toHaveBeenCalledWith({ id: 'created-source' });
+    expect(repository.delete).toHaveBeenCalledWith({
+      id: asTableId('created-source'),
+    });
   });
 
   it('does not rollback when source already existed and update fails', async () => {
     vi.mocked(repository.findByAboutAndInternalCode).mockResolvedValue([
       makeSource(),
-      makeSource({ id: 'metric-pt', locale: 'pt', isPlaceholder: true }),
+      makeSource({
+        id: asTableId('metric-pt'),
+        locale: 'pt',
+        isPlaceholder: true,
+      }),
     ]);
     vi.mocked(repository.update).mockRejectedValue({ code: 500 });
 
@@ -201,7 +216,7 @@ describe('MetricSyncService', () => {
   it('surfaces rollback failure mapping when compensating delete fails', async () => {
     vi.mocked(repository.findByAboutAndInternalCode).mockResolvedValue([]);
     vi.mocked(repository.create)
-      .mockResolvedValueOnce(makeSource({ id: 'created-source' }))
+      .mockResolvedValueOnce(makeSource({ id: asTableId('created-source') }))
       .mockRejectedValueOnce({ code: 500 });
     vi.mocked(repository.delete).mockRejectedValue({ code: 403 });
 

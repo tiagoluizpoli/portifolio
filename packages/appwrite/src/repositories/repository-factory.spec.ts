@@ -24,28 +24,28 @@ describe('RepositoryFactory', () => {
     const factory = new RepositoryFactory('db-123');
 
     expect(factory.getRepository('about')).toBeInstanceOf(AboutRepository);
-    expect(factory.getRepository('contact-info')).toBeInstanceOf(
+    expect(factory.getRepository('contact_info')).toBeInstanceOf(
       ContactInfoRepository,
     );
-    expect(factory.getRepository('education')).toBeInstanceOf(
+    expect(factory.getRepository('educations')).toBeInstanceOf(
       EducationRepository,
     );
-    expect(factory.getRepository('experience')).toBeInstanceOf(
+    expect(factory.getRepository('experiences')).toBeInstanceOf(
       ExperienceRepository,
     );
     expect(factory.getRepository('home')).toBeInstanceOf(HomeRepository);
-    expect(factory.getRepository('impact-metric')).toBeInstanceOf(
+    expect(factory.getRepository('impact_metrics')).toBeInstanceOf(
       ImpactMetricRepository,
     );
-    expect(factory.getRepository('metric-source')).toBeInstanceOf(
+    expect(factory.getRepository('metric_sources')).toBeInstanceOf(
       MetricSourceRepository,
     );
-    expect(factory.getRepository('platform')).toBeInstanceOf(
+    expect(factory.getRepository('platforms')).toBeInstanceOf(
       PlatformRepository,
     );
-    expect(factory.getRepository('skill')).toBeInstanceOf(SkillRepository);
-    expect(factory.getRepository('social')).toBeInstanceOf(SocialRepository);
-    expect(factory.getRepository('solution')).toBeInstanceOf(
+    expect(factory.getRepository('skills')).toBeInstanceOf(SkillRepository);
+    expect(factory.getRepository('socials')).toBeInstanceOf(SocialRepository);
+    expect(factory.getRepository('solutions')).toBeInstanceOf(
       SolutionRepository,
     );
   });

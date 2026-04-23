@@ -47,4 +47,22 @@ describe('mapAppwriteError', () => {
     expect(error).toBeInstanceOf(Error);
     expect(error.message).toBe('Unknown Appwrite error');
   });
+
+  it('maps null payload to generic Error', () => {
+    const error = mapAppwriteError(null);
+    expect(error).toBeInstanceOf(Error);
+    expect(error.message).toBe('Unknown Appwrite error');
+  });
+
+  it('ignores non-string message payloads', () => {
+    const error = mapAppwriteError({ code: 500, message: { text: 'oops' } });
+    expect(error).toBeInstanceOf(AppwriteSystemException);
+    expect(error.message).toBe('Appwrite system failure');
+  });
+
+  it('falls back to unknown error when code has unsupported type', () => {
+    const error = mapAppwriteError({ code: { value: 500 }, message: 'oops' });
+    expect(error).toBeInstanceOf(Error);
+    expect(error.message).toBe('Unknown Appwrite error');
+  });
 });

@@ -33,16 +33,51 @@ export class InvalidRepositoryQueryError extends Error {
   }
 }
 
+export function extractErrorMetadata(error: unknown): {
+  code: number;
+  message?: string;
+} {
+  if (error instanceof Error) {
+    return {
+      code: Number.NaN,
+      message: error.message,
+    };
+  }
+
+  if (typeof error !== 'object' || error === null) {
+    return {
+      code: Number.NaN,
+      message: undefined,
+    };
+  }
+
+  let code = Number.NaN;
+
+  if (Object.hasOwn(error, 'code')) {
+    const codeValue = Reflect.get(error, 'code');
+
+    if (typeof codeValue === 'number') {
+      code = codeValue;
+    } else if (typeof codeValue === 'string') {
+      code = Number.parseInt(codeValue, 10);
+    }
+  }
+
+  let message: string | undefined;
+
+  if (Object.hasOwn(error, 'message')) {
+    const messageValue = Reflect.get(error, 'message');
+    message = typeof messageValue === 'string' ? messageValue : undefined;
+  }
+
+  return {
+    code,
+    message,
+  };
+}
+
 export function mapAppwriteError(error: unknown): Error {
-  const candidate = error as { code?: unknown; message?: unknown };
-  const code =
-    typeof candidate.code === 'number'
-      ? candidate.code
-      : typeof candidate.code === 'string'
-        ? Number.parseInt(candidate.code, 10)
-        : Number.NaN;
-  const message =
-    typeof candidate.message === 'string' ? candidate.message : undefined;
+  const { code, message } = extractErrorMetadata(error);
 
   if (code === 401) {
     return new AppwriteAuthException(message);

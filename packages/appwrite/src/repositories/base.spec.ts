@@ -1,3 +1,4 @@
+import { asTableId } from '@repo/appwrite-core';
 import { Query } from 'node-appwrite';
 import { describe, expect, it, vi } from 'vitest';
 import { InvalidRepositoryQueryError } from '../errors/appwrite-errors';
@@ -42,7 +43,7 @@ describe('BaseRepository', () => {
   it('findById maps document to domain entity', async () => {
     const sdk = createSdk();
     const logger = new InternalLogger();
-    sdk.getRow.mockResolvedValue({ $id: '1', name: 'Ada' });
+    sdk.getRow.mockResolvedValue({ $id: asTableId('1'), name: 'Ada' });
 
     const repository = new FakeRepository(
       sdk as unknown as never,
@@ -51,8 +52,8 @@ describe('BaseRepository', () => {
       logger,
     );
 
-    await expect(repository.findById({ id: '1' })).resolves.toEqual({
-      id: '1',
+    await expect(repository.findById({ id: asTableId('1') })).resolves.toEqual({
+      id: asTableId('1'),
       name: 'Ada',
     });
   });
@@ -62,7 +63,9 @@ describe('BaseRepository', () => {
     sdk.getRow.mockRejectedValue({ code: 404 });
     const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
 
-    await expect(repository.findById({ id: '404' })).resolves.toBeNull();
+    await expect(
+      repository.findById({ id: asTableId('404') }),
+    ).resolves.toBeNull();
   });
 
   it('findById rethrows unknown errors', async () => {
@@ -71,30 +74,32 @@ describe('BaseRepository', () => {
     sdk.getRow.mockRejectedValue(error);
 
     const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
-    await expect(repository.findById({ id: '1' })).rejects.toBe(error);
+    await expect(repository.findById({ id: asTableId('1') })).rejects.toBe(
+      error,
+    );
   });
 
   it('findAll delegates to listRows with query limit', async () => {
     const sdk = createSdk();
     sdk.listRows.mockResolvedValue({
-      rows: [{ $id: '1', name: 'One' }],
+      rows: [{ $id: asTableId('1'), name: 'One' }],
     });
 
     const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
     const result = await repository.findAll();
 
-    expect(result).toEqual([{ id: '1', name: 'One' }]);
+    expect(result).toEqual([{ id: asTableId('1'), name: 'One' }]);
     expect(sdk.listRows).toHaveBeenCalledTimes(1);
   });
 
   it('create maps payload and result', async () => {
     const sdk = createSdk();
-    sdk.createRow.mockResolvedValue({ $id: '1', name: 'New' });
+    sdk.createRow.mockResolvedValue({ $id: asTableId('1'), name: 'New' });
 
     const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
     const created = await repository.create({ data: { name: 'New' } });
 
-    expect(created).toEqual({ id: '1', name: 'New' });
+    expect(created).toEqual({ id: asTableId('1'), name: 'New' });
     expect(sdk.createRow).toHaveBeenCalledTimes(1);
   });
 
@@ -111,15 +116,15 @@ describe('BaseRepository', () => {
 
   it('update maps payload and result', async () => {
     const sdk = createSdk();
-    sdk.updateRow.mockResolvedValue({ $id: '1', name: 'Updated' });
+    sdk.updateRow.mockResolvedValue({ $id: asTableId('1'), name: 'Updated' });
 
     const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
     const updated = await repository.update({
-      id: '1',
+      id: asTableId('1'),
       data: { name: 'Updated' },
     });
 
-    expect(updated).toEqual({ id: '1', name: 'Updated' });
+    expect(updated).toEqual({ id: asTableId('1'), name: 'Updated' });
     expect(sdk.updateRow).toHaveBeenCalledTimes(1);
   });
 
@@ -130,7 +135,7 @@ describe('BaseRepository', () => {
 
     const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
     await expect(
-      repository.update({ id: '1', data: { name: 'x' } }),
+      repository.update({ id: asTableId('1'), data: { name: 'x' } }),
     ).rejects.toBe(error);
   });
 
@@ -139,11 +144,11 @@ describe('BaseRepository', () => {
     sdk.deleteRow.mockResolvedValue(undefined);
 
     const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
-    await repository.delete({ id: '1' });
+    await repository.delete({ id: asTableId('1') });
 
     expect(sdk.deleteRow).toHaveBeenCalledWith({
       databaseId: 'db',
-      tableId: 'col',
+      tableId: asTableId('col'),
       rowId: '1',
     });
   });
@@ -154,18 +159,18 @@ describe('BaseRepository', () => {
     sdk.deleteRow.mockRejectedValue(error);
 
     const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
-    await expect(repository.delete({ id: '1' })).rejects.toBe(error);
+    await expect(repository.delete({ id: asTableId('1') })).rejects.toBe(error);
   });
 
   it('runQuery returns parsed entities', async () => {
     const sdk = createSdk();
     sdk.listRows.mockResolvedValue({
-      rows: [{ $id: '2', name: 'Two' }],
+      rows: [{ $id: asTableId('2'), name: 'Two' }],
     });
 
     const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
     await expect(repository.runQueryPublic(['limit(10)'])).resolves.toEqual([
-      { id: '2', name: 'Two' },
+      { id: asTableId('2'), name: 'Two' },
     ]);
   });
 
@@ -181,13 +186,13 @@ describe('BaseRepository', () => {
   it('findMany maps limit and offset to sdk queries', async () => {
     const sdk = createSdk();
     sdk.listRows.mockResolvedValue({
-      rows: [{ $id: '2', name: 'Two' }],
+      rows: [{ $id: asTableId('2'), name: 'Two' }],
     });
 
     const repository = new FakeRepository(sdk as unknown as never, 'db', 'col');
     const result = await repository.findMany({ limit: 10, offset: 5 });
 
-    expect(result).toEqual([{ id: '2', name: 'Two' }]);
+    expect(result).toEqual([{ id: asTableId('2'), name: 'Two' }]);
     expect(sdk.listRows).toHaveBeenCalledWith(
       expect.objectContaining({
         queries: [Query.limit(10), Query.offset(5)],
@@ -227,9 +232,11 @@ describe('BaseRepository', () => {
     const sdk = createSdk();
     const repository = new RawRepository(sdk as unknown as never, 'db', 'col');
 
-    expect(repository.parsePublic({ id: '1', name: 'raw' })).toEqual({
-      id: '1',
-      name: 'raw',
-    });
+    expect(repository.parsePublic({ id: asTableId('1'), name: 'raw' })).toEqual(
+      {
+        id: asTableId('1'),
+        name: 'raw',
+      },
+    );
   });
 });

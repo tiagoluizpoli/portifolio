@@ -1,3 +1,4 @@
+import { asTableId } from '@repo/appwrite-core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { RepositoryFactory } from '../repositories/repository-factory.js';
 import { SeedEngine } from './seed-engine.js';
@@ -81,8 +82,8 @@ describe('SeedEngine', () => {
       expect(engine.listAllRows).toHaveBeenCalledWith('home', 100);
 
       expect(result).toEqual({
-        about: [{ id: 'about-123' }],
-        home: [{ id: 'home-123' }],
+        about: [{ id: asTableId('about-123') }],
+        home: [{ id: asTableId('home-123') }],
       });
     });
   });
@@ -90,8 +91,11 @@ describe('SeedEngine', () => {
   describe('listAllRows', () => {
     it('paginates correctly until exhaustion', async () => {
       mockRepository.findMany
-        .mockResolvedValueOnce([{ id: 'row1' }, { id: 'row2' }]) // page 1: full (2 items)
-        .mockResolvedValueOnce([{ id: 'row3' }]); // page 2: partial (1 item, stops here)
+        .mockResolvedValueOnce([
+          { id: asTableId('row1') },
+          { id: asTableId('row2') },
+        ]) // page 1: full (2 items)
+        .mockResolvedValueOnce([{ id: asTableId('row3') }]); // page 2: partial (1 item, stops here)
 
       const result = await engine.listAllRows('about', 2);
 
@@ -106,7 +110,11 @@ describe('SeedEngine', () => {
         offset: 2,
       });
 
-      expect(result).toEqual([{ id: 'row1' }, { id: 'row2' }, { id: 'row3' }]);
+      expect(result).toEqual([
+        { id: asTableId('row1') },
+        { id: asTableId('row2') },
+        { id: asTableId('row3') },
+      ]);
     });
 
     it('handles empty table', async () => {
@@ -129,7 +137,7 @@ describe('SeedEngine', () => {
         operations: [
           {
             action: 'create' as const,
-            tableId: 'about',
+            tableId: asTableId('about'),
             data: { key: 'value' },
             rowIndex: 0,
           },
@@ -151,7 +159,7 @@ describe('SeedEngine', () => {
         operations: [
           {
             action: 'update' as const,
-            tableId: 'about',
+            tableId: asTableId('about'),
             rowId: 'row-123',
             data: { key: 'value' },
             rowIndex: 0,
@@ -163,7 +171,7 @@ describe('SeedEngine', () => {
 
       expect(mockRepositoryFactory.getRepository).toHaveBeenCalledWith('about');
       expect(mockRepository.update).toHaveBeenCalledWith({
-        id: 'row-123',
+        id: asTableId('row-123'),
         data: { key: 'value' },
       });
       expect(mockRepository.create).not.toHaveBeenCalled();
@@ -175,7 +183,7 @@ describe('SeedEngine', () => {
         operations: [
           {
             action: 'ignore',
-            tableId: 'about',
+            tableId: asTableId('about'),
             data: { key: 'value' },
             rowIndex: 0,
           },
@@ -197,7 +205,7 @@ describe('SeedEngine', () => {
         operations: [
           {
             action: 'update' as const,
-            tableId: 'about',
+            tableId: asTableId('about'),
             data: { key: 'value' },
             rowIndex: 0,
           },
@@ -214,7 +222,7 @@ describe('SeedEngine', () => {
         operations: [
           {
             action: 'create' as const,
-            tableId: 'about',
+            tableId: asTableId('about'),
             data: { key: 'value' },
             rowIndex: 0,
           },

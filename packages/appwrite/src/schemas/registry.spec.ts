@@ -1,3 +1,4 @@
+import { asTableId } from '@repo/appwrite-core';
 import { describe, expect, it } from 'vitest';
 import {
   AboutFullSchema,
@@ -36,7 +37,7 @@ import {
 } from './registry';
 
 const systemFields = {
-  id: 'id_1',
+  id: asTableId('id_1'),
   createdAt: '2026-04-16T00:00:00.000Z',
   updatedAt: '2026-04-16T00:00:00.000Z',
   permissions: ['read("*")'],
