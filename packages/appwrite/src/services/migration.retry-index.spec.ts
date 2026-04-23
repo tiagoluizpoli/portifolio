@@ -1,5 +1,5 @@
 import { asTableId } from '@repo/appwrite-core';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import type { TableBlueprint } from '../migrations/blueprints.js';
 import { MigrationService } from './migration.js';
 import {
@@ -7,9 +7,12 @@ import {
   currentTablesClientMock,
   setupMigrationServiceTest,
 } from './migration.spec-setup.js';
+import { INDEX_CREATION_MAX_ATTEMPTS } from './migration-retry.js';
 
 describe('MigrationService retry/index behavior', () => {
   setupMigrationServiceTest();
+
+  const mockSleep = vi.fn(() => Promise.resolve());
 
   const customBlueprints: TableBlueprint[] = [
     {
@@ -31,6 +34,7 @@ describe('MigrationService retry/index behavior', () => {
     const service = new MigrationService({
       databaseId: 'db-override',
       tablesClient: asTablesClient(tablesClientMock),
+      sleep: mockSleep,
     });
 
     const result = await service.migrate({
@@ -54,6 +58,7 @@ describe('MigrationService retry/index behavior', () => {
     const service = new MigrationService({
       databaseId: 'db-override',
       tablesClient: asTablesClient(tablesClientMock),
+      sleep: mockSleep,
     });
 
     await expect(
@@ -74,6 +79,7 @@ describe('MigrationService retry/index behavior', () => {
     const service = new MigrationService({
       databaseId: 'db-override',
       tablesClient: asTablesClient(tablesClientMock),
+      sleep: mockSleep,
     });
 
     await expect(
@@ -94,6 +100,7 @@ describe('MigrationService retry/index behavior', () => {
     const service = new MigrationService({
       databaseId: 'db-override',
       tablesClient: asTablesClient(tablesClientMock),
+      sleep: mockSleep,
     });
 
     await expect(
@@ -116,6 +123,7 @@ describe('MigrationService retry/index behavior', () => {
     const service = new MigrationService({
       databaseId: 'db-override',
       tablesClient: asTablesClient(tablesClientMock),
+      sleep: mockSleep,
     });
 
     await expect(
@@ -125,6 +133,8 @@ describe('MigrationService retry/index behavior', () => {
       }),
     ).rejects.toThrow(/Column not available: locale/);
 
-    expect(tablesClientMock.createIndex).toHaveBeenCalledTimes(5);
+    expect(tablesClientMock.createIndex).toHaveBeenCalledTimes(
+      INDEX_CREATION_MAX_ATTEMPTS,
+    );
   });
 });

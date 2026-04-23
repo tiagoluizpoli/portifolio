@@ -19,6 +19,7 @@ export interface MigrationRemoteState {
 export interface MigrationServiceConfig {
   databaseId?: string;
   tablesClient?: TablesDB;
+  sleep?: (ms: number) => Promise<void>;
 }
 
 export interface MigrationMissingColumnsByTable {

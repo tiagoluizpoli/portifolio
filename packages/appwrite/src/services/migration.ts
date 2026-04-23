@@ -39,10 +39,12 @@ import {
 export class MigrationService implements IMigrationService {
   private readonly databaseId: string;
   private readonly sdk: TablesDB;
+  private readonly sleep?: (ms: number) => Promise<void>;
 
   constructor(config: MigrationServiceConfig = {}) {
     this.databaseId = resolveDatabaseId(config.databaseId);
     this.sdk = config.tablesClient ?? getTablesClient();
+    this.sleep = config.sleep;
   }
 
   async loadRemoteState(): Promise<MigrationRemoteState> {
@@ -224,6 +226,7 @@ export class MigrationService implements IMigrationService {
         maxAttempts: INDEX_CREATION_MAX_ATTEMPTS,
         retryDelayMs: INDEX_CREATION_RETRY_DELAY_MS,
         shouldRetry: isColumnNotAvailableError,
+        sleep: this.sleep,
       },
     );
   }

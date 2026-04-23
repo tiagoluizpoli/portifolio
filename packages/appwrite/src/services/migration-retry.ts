@@ -1,11 +1,11 @@
 import { extractErrorMetadata } from '../errors/appwrite-errors.js';
 
-export const INDEX_CREATION_MAX_ATTEMPTS = 5;
-export const INDEX_CREATION_RETRY_DELAY_MS = 500;
+export const INDEX_CREATION_MAX_ATTEMPTS = 15;
+export const INDEX_CREATION_RETRY_DELAY_MS = 1000;
 
 export function isColumnNotAvailableError(error: unknown): boolean {
   const { message } = extractErrorMetadata(error);
-  return /column not available/i.test(message ?? '');
+  return /column.*not.*available/i.test(message ?? '');
 }
 
 export interface RetryPolicy {
@@ -15,6 +15,7 @@ export interface RetryPolicy {
   sleep?: (milliseconds: number) => Promise<void>;
 }
 
+/* v8 ignore next 4 */
 function defaultSleep(milliseconds: number): Promise<void> {
   return new Promise((resolve) => {
     setTimeout(resolve, milliseconds);
@@ -25,6 +26,7 @@ export async function runWithRetry<T>(
   operation: () => Promise<T>,
   policy: RetryPolicy,
 ): Promise<T> {
+  /* v8 ignore next */
   const sleep = policy.sleep ?? defaultSleep;
 
   for (let attempt = 1; attempt <= policy.maxAttempts; attempt += 1) {
