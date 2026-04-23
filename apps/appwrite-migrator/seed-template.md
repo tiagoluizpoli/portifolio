@@ -1,6 +1,6 @@
 # Seed Template Specification
 
-Generated at: 2026-04-18T05:31:26.661Z
+Generated at: 2026-04-23T01:14:11.753Z
 
 ## Table `about`
 
