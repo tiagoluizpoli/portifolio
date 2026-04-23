@@ -12,10 +12,11 @@ export async function createColumnDefinition(input: {
   const defaultValue = resolveColumnDefault(column);
 
   if (column.type === 'string') {
-    await sdk.createTextColumn({
+    await sdk.createVarcharColumn({
       databaseId,
       tableId,
       key: column.key,
+      size: column.size ?? 255,
       required: column.required,
       xdefault: typeof defaultValue === 'string' ? defaultValue : undefined,
       array: column.array,

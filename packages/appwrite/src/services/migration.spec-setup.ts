@@ -7,6 +7,7 @@ export interface MigrationTablesClientMock {
   listIndexes: ReturnType<typeof vi.fn>;
   createTable: ReturnType<typeof vi.fn>;
   createStringColumn: ReturnType<typeof vi.fn>;
+  createVarcharColumn: ReturnType<typeof vi.fn>;
   createTextColumn: ReturnType<typeof vi.fn>;
   createIntegerColumn: ReturnType<typeof vi.fn>;
   createFloatColumn: ReturnType<typeof vi.fn>;
@@ -50,6 +51,7 @@ export function setupMigrationServiceTest(): void {
       listIndexes: vi.fn(),
       createTable: vi.fn(),
       createStringColumn: vi.fn(),
+      createVarcharColumn: vi.fn(),
       createTextColumn: vi.fn(),
       createIntegerColumn: vi.fn(),
       createFloatColumn: vi.fn(),

@@ -73,10 +73,11 @@ describe('MigrationService migrate core behavior', () => {
       name: 'Skills',
     });
 
-    expect(tablesClientMock.createTextColumn).toHaveBeenCalledWith({
+    expect(tablesClientMock.createVarcharColumn).toHaveBeenCalledWith({
       databaseId: 'db-override',
       tableId: asTableId('about'),
       key: 'name',
+      size: 128,
       required: true,
       xdefault: undefined,
       array: undefined,
@@ -124,7 +125,7 @@ describe('MigrationService migrate core behavior', () => {
     });
 
     expect(tablesClientMock.createTable).not.toHaveBeenCalled();
-    expect(tablesClientMock.createTextColumn).not.toHaveBeenCalled();
+    expect(tablesClientMock.createVarcharColumn).not.toHaveBeenCalled();
     expect(tablesClientMock.createIndex).not.toHaveBeenCalled();
   });
 

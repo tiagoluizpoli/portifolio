@@ -149,8 +149,8 @@ describe('MigrationService column type mapping behavior', () => {
       expect.objectContaining({ key: 'intNoDefault', xdefault: undefined }),
     );
 
-    expect(tablesClientMock.createTextColumn).toHaveBeenCalledWith(
-      expect.objectContaining({ key: 'stringFallbackSize' }),
+    expect(tablesClientMock.createVarcharColumn).toHaveBeenCalledWith(
+      expect.objectContaining({ key: 'stringFallbackSize', size: 255 }),
     );
 
     expect(tablesClientMock.createEnumColumn).toHaveBeenCalledWith(
@@ -250,11 +250,12 @@ describe('MigrationService column type mapping behavior', () => {
       remoteState: { tables: [] },
     });
 
-    expect(tablesClientMock.createTextColumn).toHaveBeenCalledWith(
+    expect(tablesClientMock.createVarcharColumn).toHaveBeenCalledWith(
       expect.objectContaining({
         key: 'name',
         required: true,
         xdefault: undefined,
+        size: 128,
       }),
     );
   });
