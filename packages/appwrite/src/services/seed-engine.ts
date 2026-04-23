@@ -77,7 +77,7 @@ export class SeedEngine {
 
       for (const domainRow of page) {
         rows.push({
-          ...(domainRow as unknown as Record<string, unknown>),
+          ...domainRow,
           id: domainRow.id,
         });
       }

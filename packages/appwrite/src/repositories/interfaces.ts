@@ -12,6 +12,7 @@ export type RepositoryQueryOptions = z.infer<
 
 export interface RepositoryEntity {
   id: string;
+  [key: string]: unknown;
 }
 
 export interface ImpactMetricEntity extends RepositoryEntity {

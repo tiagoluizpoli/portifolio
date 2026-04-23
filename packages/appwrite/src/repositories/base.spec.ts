@@ -8,6 +8,7 @@ import { BaseRepository } from './base-repository';
 interface FakeEntity {
   id: string;
   name: string;
+  [key: string]: unknown;
 }
 
 class FakeRepository extends BaseRepository<FakeEntity> {
