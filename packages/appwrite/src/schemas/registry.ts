@@ -117,7 +117,7 @@ export const EducationInsertSchema = z.object({
   organization: z.string().min(1),
   location: z.string().min(1),
   period: z.string().min(1),
-  description: z.string().min(1),
+  description: z.string(),
   current: z.boolean(),
   sort: z.number().int(),
 });
@@ -133,7 +133,7 @@ export const ExperienceInsertSchema = z.object({
   organization: z.string().min(1),
   location: z.string().min(1),
   period: z.string().min(1),
-  description: z.string().min(1),
+  description: z.string(),
   current: z.boolean(),
   sort: z.number().int(),
 });

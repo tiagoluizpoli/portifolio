@@ -28,16 +28,14 @@ describe('SeedService', () => {
         Buffer.from(
           JSON.stringify({
             tables: {
-              about: {
-                rows: [
-                  {
-                    name: 'Tiago',
-                    title: 'Engineer',
-                    bio: 'Building systems',
-                    locale: 'en',
-                  },
-                ],
-              },
+              about: [
+                {
+                  name: 'Tiago',
+                  title: 'Engineer',
+                  bio: 'Building systems',
+                  locale: 'en',
+                },
+              ],
             },
           }),
         ),

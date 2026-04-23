@@ -1,618 +1,555 @@
 {
   "version": 1,
-  "generatedAt": "2026-04-23T01:35:51.788Z",
+  "generatedAt": "2026-04-23T21:43:00.000Z",
   "tables": {
-    "about": {
-      "uniqueLogicKeys": {
-        "byLocale": ["locale"],
-        "byName": ["locale", "name"],
-        "byTitle": ["locale", "title"],
-        "byBio": ["locale", "bio"]
+    "about": [
+      {
+        "name": "Tiago Poli",
+        "title": "About me",
+        "bio": "I am a committed and dedicated professional who is always eager to learn new things and continuously improve my skills. Development is not only work for me, it's my passion.",
+        "locale": "en"
       },
-      "rows": [
-        {
-          "name": "Tiago Poli",
-          "title": "About me",
-          "bio": "I am a committed and dedicated professional who is always eager to learn new things and continuously improve my skills. Development is not only work for me, it's my passion.",
-          "locale": "en"
-        },
-        {
-          "name": "Tiago Poli",
-          "title": "Sobre mim",
-          "bio": "Sou um profissional comprometido e dedicado, sempre disposto a aprender coisas novas e aprimorar minhas habilidades continuamente. Desenvolvimento não é apenas trabalho pra mim, é a minha paixão.",
-          "locale": "pt"
-        }
-      ]
-    },
-    "home": {
-      "uniqueLogicKeys": {
-        "byLocaleHeroTitle": ["locale", "heroTitle"],
-        "byLocaleHeroSubtitle": ["locale", "heroSubtitle"],
-        "byLocaleCtaText": ["locale", "ctaText"],
-        "byLocaleCtaLink": ["locale", "ctaLink"]
+      {
+        "name": "Tiago Poli",
+        "title": "Sobre mim",
+        "bio": "Sou um profissional comprometido e dedicado, sempre disposto a aprender coisas novas e aprimorar minhas habilidades continuamente. Desenvolvimento não é apenas trabalho pra mim, é a minha paixão.",
+        "locale": "pt"
+      }
+    ],
+    "home": [
+      {
+        "heroTitle": "Tiago Poli",
+        "heroSubtitle": "Fullstack Developer",
+        "ctaText": "Contact Me",
+        "ctaLink": "https://wa.me/5511952066489",
+        "locale": "en"
+      }
+    ],
+    "contact_info": [
+      {
+        "email": "tiago.seuaciuc@gmail.com",
+        "phone": "+55 (11) 95206-6489",
+        "location": "Cotia - SP",
+        "locale": "en"
+      }
+    ],
+    "socials": [
+      {
+        "platformId": "whatsapp",
+        "username": "5511952066489",
+        "iconId": "fa-brands:whatsapp",
+        "active": true,
+        "sort": 1
       },
-      "rows": [
-        {
-          "heroTitle": "Tiago Poli",
-          "heroSubtitle": "Fullstack Developer",
-          "ctaText": "Contact Me",
-          "ctaLink": "https://wa.me/5511952066489",
-          "locale": "en"
-        }
-      ]
-    },
-    "contact_info": {
-      "uniqueLogicKeys": {
-        "byLocaleEmail": ["locale", "email"],
-        "byLocalePhone": ["locale", "phone"],
-        "byLocaleLocation": ["locale", "location"]
+      {
+        "platformId": "linkedin",
+        "username": "linkedin",
+        "iconId": "fa6-brands:linkedin-in",
+        "active": true,
+        "sort": 2
       },
-      "rows": [
-        {
-          "email": "tiago.seuaciuc@gmail.com",
-          "phone": "+55 (11) 95206-6489",
-          "location": "Cotia - SP",
-          "locale": "en"
-        }
-      ]
-    },
-    "socials": {
-      "uniqueLogicKeys": {
-        "byPlatformUsername": ["platformId", "username"]
+      {
+        "platformId": "github",
+        "username": "tiagoluizpoli",
+        "iconId": "fa6-brands:github",
+        "active": true,
+        "sort": 3
       },
-      "rows": [
-        {
-          "platformId": "whatsapp",
-          "username": "5511952066489",
-          "iconId": "fa-brands:whatsapp",
-          "active": true,
-          "sort": 1
-        },
-        {
-          "platformId": "linkedin",
-          "username": "linkedin",
-          "iconId": "fa6-brands:linkedin-in",
-          "active": true,
-          "sort": 2
-        },
-        {
-          "platformId": "github",
-          "username": "tiagoluizpoli",
-          "iconId": "fa6-brands:github",
-          "active": true,
-          "sort": 3
-        },
-        {
-          "platformId": "twitter",
-          "username": "tiagoluizpoli",
-          "iconId": "fa6-brands:x-twitter",
-          "active": true,
-          "sort": 4
-        }
-      ]
-    },
-    "platforms": {
-      "uniqueLogicKeys": {
-        "byTitle": ["title"]
+      {
+        "platformId": "twitter",
+        "username": "tiagoluizpoli",
+        "iconId": "fa6-brands:x-twitter",
+        "active": true,
+        "sort": 4
+      }
+    ],
+    "platforms": [
+      {
+        "title": "Whatsapp",
+        "urlTemplate": "https://wa.me/{username}",
+        "iconCode": "fa-brands:whatsapp",
+        "status": "active",
+        "sort": 1
       },
-      "rows": [
-        {
-          "title": "Whatsapp",
-          "urlTemplate": "https://wa.me/{username}",
-          "iconCode": "fa-brands:whatsapp",
-          "status": "active",
-          "sort": 1
-        },
-        {
-          "title": "Linkedin",
-          "urlTemplate": "{username}https://www.linkedin.com/in/tiago-seuaciuc/",
-          "iconCode": "fa6-brands:linkedin-in",
-          "status": "active",
-          "sort": 2
-        },
-        {
-          "title": "Github",
-          "urlTemplate": "https://github.com/{username}",
-          "iconCode": "fa6-brands:github",
-          "status": "active",
-          "sort": 3
-        },
-        {
-          "title": "Twitter",
-          "urlTemplate": "https://twitter.com/{username}",
-          "iconCode": "fa6-brands:x-twitter",
-          "status": "active",
-          "sort": 4
-        }
-      ]
-    },
-    "solutions": {
-      "uniqueLogicKeys": {
-        "byLocaleTitle": ["title", "locale"]
+      {
+        "title": "Linkedin",
+        "urlTemplate": "{username}https://www.linkedin.com/in/tiago-seuaciuc/",
+        "iconCode": "fa6-brands:linkedin-in",
+        "status": "active",
+        "sort": 2
       },
-      "rows": [
-        {
-          "title": "Frontend Development",
-          "description": "Stunning and responsive interfaces.",
-          "iconCode": "pepicons-pop:code",
-          "sort": 1,
-          "locale": "en"
-        },
-        {
-          "title": "Desenvolvimento Frontend",
-          "description": "Interfaces elegantes e responsivas",
-          "iconCode": "pepicons-pop:code",
-          "sort": 1,
-          "locale": "pt"
-        },
-        {
-          "title": "Backend Development",
-          "description": "Robust and scalable backend solutions tailored to elevate your projects.",
-          "iconCode": "grommet-icons:services",
-          "sort": 2,
-          "locale": "en"
-        },
-        {
-          "title": "Desenvolvimento Backend",
-          "description": "Criação de soluções backend escaláveis e confiáveis para impulsionar seus projetos.",
-          "iconCode": "grommet-icons:services",
-          "sort": 2,
-          "locale": "pt"
-        },
-        {
-          "title": "Integrations",
-          "description": "Seamless and effective integrations with other tools and platforms to enhance your workflows.",
-          "iconCode": "grommet-icons:connect",
-          "sort": 3,
-          "locale": "en"
-        },
-        {
-          "title": "Integrações",
-          "description": "Integrações eficazes e fluídas com outras ferramentas e plataformas para otimizar seus fluxos de trabalho.",
-          "iconCode": "grommet-icons:connect",
-          "sort": 3,
-          "locale": "pt"
-        },
-        {
-          "title": "Cloud Based Solutions",
-          "description": "Empower your projects with cloud solutions designed for scalability, reliability, and cost efficiency.",
-          "iconCode": "ic:outline-cloud-queue",
-          "sort": 4,
-          "locale": "en"
-        },
-        {
-          "title": "Soluções Baseadas em Nuvem",
-          "description": "Potencialize seus projetos com soluções na nuvem, garantindo escalabilidade, confiabilidade e eficiência de custos.",
-          "iconCode": "ic:outline-cloud-queue",
-          "sort": 4,
-          "locale": "pt"
-        }
-      ]
-    },
-    "skills": {
-      "uniqueLogicKeys": {
-        "byTypeTitle": ["title", "type"]
+      {
+        "title": "Github",
+        "urlTemplate": "https://github.com/{username}",
+        "iconCode": "fa6-brands:github",
+        "status": "active",
+        "sort": 3
       },
-      "rows": [
-        {
-          "title": "node.js",
-          "type": "backend",
-          "iconCode": "fa-brands:node-js",
-          "status": "active",
-          "sort": 1
-        },
-        {
-          "title": "express.js",
-          "type": "backend",
-          "iconCode": "simple-icons:express",
-          "status": "active",
-          "sort": 2
-        },
-        {
-          "title": "fastify.js",
-          "type": "backend",
-          "iconCode": "simple-icons:fastify",
-          "status": "active",
-          "sort": 3
-        },
-        {
-          "title": "nest.js",
-          "type": "backend",
-          "iconCode": "simple-icons:nestjs",
-          "status": "active",
-          "sort": 4
-        },
-        {
-          "title": ".net",
-          "type": "backend",
-          "iconCode": "ant-design:dot-net-outlined",
-          "status": "active",
-          "sort": 5
-        },
-        {
-          "title": "prisma",
-          "type": "backend",
-          "iconCode": "simple-icons:prisma",
-          "status": "active",
-          "sort": 6
-        },
-        {
-          "title": "drizzle.js",
-          "type": "backend",
-          "iconCode": "simple-icons:drizzle",
-          "status": "active",
-          "sort": 7
-        },
-        {
-          "title": "postgresql",
-          "type": "backend",
-          "iconCode": "bxl:postgresql",
-          "status": "active",
-          "sort": 8
-        },
-        {
-          "title": "Mysql",
-          "type": "backend",
-          "iconCode": "fontisto:mysql",
-          "status": "active",
-          "sort": 9
-        },
-        {
-          "title": "sql server",
-          "type": "backend",
-          "iconCode": "devicon-plain:microsoftsqlserver",
-          "status": "active",
-          "sort": 10
-        },
-        {
-          "title": "sqlite",
-          "type": "backend",
-          "iconCode": "arcticons:sqlite-editor",
-          "status": "active",
-          "sort": 11
-        },
-        {
-          "title": "amazon dynamodb",
-          "type": "backend",
-          "iconCode": "simple-icons:amazondynamodb",
-          "status": "active",
-          "sort": 12
-        },
-        {
-          "title": "aws",
-          "type": "fullstack",
-          "iconCode": "lineicons:aws",
-          "status": "active",
-          "sort": 13
-        },
-        {
-          "title": "digital ocean",
-          "type": "fullstack",
-          "iconCode": "simple-icons:digitalocean",
-          "status": "active",
-          "sort": 14
-        },
-        {
-          "title": "terraform",
-          "type": "fullstack",
-          "iconCode": "simple-icons:terraform",
-          "status": "active",
-          "sort": 15
-        },
-        {
-          "title": "typescript",
-          "type": "fullstack",
-          "iconCode": "simple-icons:typescript",
-          "status": "active",
-          "sort": 16
-        },
-        {
-          "title": "next.js",
-          "type": "fullstack",
-          "iconCode": "simple-icons:nextdotjs",
-          "status": "active",
-          "sort": 17
-        },
-        {
-          "title": "git",
-          "type": "fullstack",
-          "iconCode": "fa6-brands:git",
-          "status": "active",
-          "sort": 18
-        },
-        {
-          "title": "html 5",
-          "type": "frontend",
-          "iconCode": "fa-brands:html5",
-          "status": "active",
-          "sort": 19
-        },
-        {
-          "title": "css 3",
-          "type": "frontend",
-          "iconCode": "fa-brands:css3-alt",
-          "status": "active",
-          "sort": 20
-        },
-        {
-          "title": "javascript",
-          "type": "frontend",
-          "iconCode": "simple-icons:javascript",
-          "status": "active",
-          "sort": 21
-        },
-        {
-          "title": "react.js",
-          "type": "frontend",
-          "iconCode": "fa-brands:react",
-          "status": "active",
-          "sort": 22
-        },
-        {
-          "title": "vite.js",
-          "type": "frontend",
-          "iconCode": "simple-icons:vite",
-          "status": "active",
-          "sort": 23
-        },
-        {
-          "title": "tanstack query",
-          "type": "frontend",
-          "iconCode": "simple-icons:reactquery",
-          "status": "active",
-          "sort": 24
-        },
-        {
-          "title": "Material UI",
-          "type": "frontend",
-          "iconCode": "simple-icons:mui",
-          "status": "active",
-          "sort": 25
-        },
-        {
-          "title": "shadcn UI",
-          "type": "frontend",
-          "iconCode": "simple-icons:shadcnui",
-          "status": "active",
-          "sort": 26
-        },
-        {
-          "title": "tailwind.css",
-          "type": "frontend",
-          "iconCode": "simple-icons:tailwindcss",
-          "status": "active",
-          "sort": 27
-        },
-        {
-          "title": "gitlab",
-          "type": "fullstack",
-          "iconCode": "fa6-brands:gitlab",
-          "status": "active",
-          "sort": 28
-        },
-        {
-          "title": "github",
-          "type": "fullstack",
-          "iconCode": "fa-brands:github",
-          "status": "active",
-          "sort": 29
-        },
-        {
-          "title": "bitbucket",
-          "type": "fullstack",
-          "iconCode": "fa-brands:bitbucket",
-          "status": "active",
-          "sort": 30
-        },
-        {
-          "title": "firebase",
-          "type": "backend",
-          "iconCode": "ion:logo-firebase",
-          "status": "active",
-          "sort": 31
-        },
-        {
-          "title": "vitest",
-          "type": "fullstack",
-          "iconCode": "simple-icons:vitest",
-          "status": "active",
-          "sort": 32
-        },
-        {
-          "title": "axios.js",
-          "type": "fullstack",
-          "iconCode": "devicon-plain:axios",
-          "status": "active",
-          "sort": 33
-        },
-        {
-          "title": "s3 - storage",
-          "type": "backend",
-          "iconCode": "simple-icons:amazons3",
-          "status": "active",
-          "sort": 34
-        },
-        {
-          "title": "docker",
-          "type": "backend",
-          "iconCode": "fa-brands:docker",
-          "status": "active",
-          "sort": 35
-        },
-        {
-          "title": "ec2",
-          "type": "backend",
-          "iconCode": "simple-icons:amazonec2",
-          "status": "active",
-          "sort": 36
-        },
-        {
-          "title": "lambda",
-          "type": "backend",
-          "iconCode": "simple-icons:awslambda",
-          "status": "active",
-          "sort": 37
-        },
-        {
-          "title": "Zod",
-          "type": "fullstack",
-          "iconCode": "simple-icons:zod",
-          "status": "active",
-          "sort": 38
-        }
-      ]
-    },
-    "educations": {
-      "uniqueLogicKeys": {
-        "byLocaleTitleOrganization": ["title", "organization", "locale"]
+      {
+        "title": "Twitter",
+        "urlTemplate": "https://twitter.com/{username}",
+        "iconCode": "fa6-brands:x-twitter",
+        "status": "active",
+        "sort": 4
+      }
+    ],
+    "solutions": [
+      {
+        "title": "Frontend Development",
+        "description": "Stunning and responsive interfaces.",
+        "iconCode": "pepicons-pop:code",
+        "sort": 1,
+        "locale": "en"
       },
-      "rows": [
-        {
-          "title": "System development and analysis",
-          "organization": "Uniasselvi",
-          "location": "Online",
-          "period": "2024 - Present",
-          "description": "",
-          "current": true,
-          "sort": 1,
-          "locale": "en"
-        },
-        {
-          "title": "Análise e desenvolvimento de sistemas",
-          "organization": "Uniasselvi",
-          "location": "Online",
-          "period": "2024 - Atualmente",
-          "description": "",
-          "current": true,
-          "sort": 1,
-          "locale": "pt"
-        }
-      ]
-    },
-    "experiences": {
-      "uniqueLogicKeys": {
-        "byLocaleTitleOrganization": ["title", "organization", "locale"]
+      {
+        "title": "Desenvolvimento Frontend",
+        "description": "Interfaces elegantes e responsivas",
+        "iconCode": "pepicons-pop:code",
+        "sort": 1,
+        "locale": "pt"
       },
-      "rows": [
-        {
-          "title": "Senior Fullstack Analyst",
-          "organization": "TIVIT",
-          "location": "Remoto",
-          "period": "2023 - Present",
-          "description": "",
-          "current": true,
-          "sort": 1,
-          "locale": "en"
-        },
-        {
-          "title": "Senior Fullstack Developer",
-          "organization": "Kronus (Freelance)",
-          "location": "Remoto",
-          "period": "2022 - 2024",
-          "description": "",
-          "current": false,
-          "sort": 1,
-          "locale": "en"
-        },
-        {
-          "title": "Fullstack Developer",
-          "organization": "Mobdec",
-          "location": "Remoto",
-          "period": "2022 - 2023",
-          "description": "",
-          "current": false,
-          "sort": 1,
-          "locale": "en"
-        },
-        {
-          "title": "Desktop Software Developer",
-          "organization": "Freelance Projects",
-          "location": "Remoto",
-          "period": "2016 - 2022",
-          "description": "",
-          "current": false,
-          "sort": 1,
-          "locale": "en"
-        },
-        {
-          "title": "Analista Fullstack Senior",
-          "organization": "TIVIT",
-          "location": "Remoto",
-          "period": "2023 - Atualmente",
-          "description": "",
-          "current": true,
-          "sort": 1,
-          "locale": "pt"
-        },
-        {
-          "title": "Desenvolvedor Fullstack",
-          "organization": "Mobdec",
-          "location": "Remoto",
-          "period": "2022 - 2023",
-          "description": "",
-          "current": false,
-          "sort": 1,
-          "locale": "pt"
-        },
-        {
-          "title": "Desenvolvedor Fullsack Senior",
-          "organization": "Kronus (Freelance)",
-          "location": "Remoto",
-          "period": "2022 - 2024",
-          "description": "",
-          "current": false,
-          "sort": 1,
-          "locale": "pt"
-        },
-        {
-          "title": "Desenvolvedor de aplicações Desktop",
-          "organization": "Porjetos Freelance",
-          "location": "Remoto",
-          "period": "2016 - 2022",
-          "description": "",
-          "current": false,
-          "sort": 1,
-          "locale": "pt"
-        }
-      ]
-    },
-    "impact_metrics": {
-      "uniqueLogicKeys": {
-        "byAboutCodeLocale": ["aboutId", "internalCode", "locale"]
+      {
+        "title": "Backend Development",
+        "description": "Robust and scalable backend solutions tailored to elevate your projects.",
+        "iconCode": "grommet-icons:services",
+        "sort": 2,
+        "locale": "en"
       },
-      "rows": [
-        {
-          "aboutId": "about_id",
-          "internalCode": "commits",
-          "label": "Total Commits",
-          "value": "1590",
-          "sourceId": "github",
-          "isPlaceholder": false,
-          "locale": "en"
-        },
-        {
-          "aboutId": "about_id",
-          "internalCode": "repos",
-          "label": "Repositories",
-          "value": "89",
-          "sourceId": "github",
-          "isPlaceholder": false,
-          "locale": "en"
-        }
-      ]
-    },
-    "metric_sources": {
-      "uniqueLogicKeys": {
-        "byName": ["name"]
+      {
+        "title": "Desenvolvimento Backend",
+        "description": "Criação de soluções backend escaláveis e confiáveis para impulsionar seus projetos.",
+        "iconCode": "grommet-icons:services",
+        "sort": 2,
+        "locale": "pt"
       },
-      "rows": [
-        {
-          "name": "github",
-          "type": "vcs",
-          "iconCode": "fa-brands:github",
-          "status": "active"
-        }
-      ]
-    }
+      {
+        "title": "Integrations",
+        "description": "Seamless and effective integrations with other tools and platforms to enhance your workflows.",
+        "iconCode": "grommet-icons:connect",
+        "sort": 3,
+        "locale": "en"
+      },
+      {
+        "title": "Integrações",
+        "description": "Integrações eficazes e fluídas com outras ferramentas e plataformas para otimizar seus fluxos de trabalho.",
+        "iconCode": "grommet-icons:connect",
+        "sort": 3,
+        "locale": "pt"
+      },
+      {
+        "title": "Cloud Based Solutions",
+        "description": "Empower your projects with cloud solutions designed for scalability, reliability, and cost efficiency.",
+        "iconCode": "ic:outline-cloud-queue",
+        "sort": 4,
+        "locale": "en"
+      },
+      {
+        "title": "Soluções Baseadas em Nuvem",
+        "description": "Potencialize seus projetos com soluções na nuvem, garantindo escalabilidade, confiabilidade e eficiência de custos.",
+        "iconCode": "ic:outline-cloud-queue",
+        "sort": 4,
+        "locale": "pt"
+      }
+    ],
+    "skills": [
+      {
+        "title": "node.js",
+        "type": "backend",
+        "iconCode": "fa-brands:node-js",
+        "status": "active",
+        "sort": 1
+      },
+      {
+        "title": "express.js",
+        "type": "backend",
+        "iconCode": "simple-icons:express",
+        "status": "active",
+        "sort": 2
+      },
+      {
+        "title": "fastify.js",
+        "type": "backend",
+        "iconCode": "simple-icons:fastify",
+        "status": "active",
+        "sort": 3
+      },
+      {
+        "title": "nest.js",
+        "type": "backend",
+        "iconCode": "simple-icons:nestjs",
+        "status": "active",
+        "sort": 4
+      },
+      {
+        "title": ".net",
+        "type": "backend",
+        "iconCode": "ant-design:dot-net-outlined",
+        "status": "active",
+        "sort": 5
+      },
+      {
+        "title": "prisma",
+        "type": "backend",
+        "iconCode": "simple-icons:prisma",
+        "status": "active",
+        "sort": 6
+      },
+      {
+        "title": "drizzle.js",
+        "type": "backend",
+        "iconCode": "simple-icons:drizzle",
+        "status": "active",
+        "sort": 7
+      },
+      {
+        "title": "postgresql",
+        "type": "backend",
+        "iconCode": "bxl:postgresql",
+        "status": "active",
+        "sort": 8
+      },
+      {
+        "title": "Mysql",
+        "type": "backend",
+        "iconCode": "fontisto:mysql",
+        "status": "active",
+        "sort": 9
+      },
+      {
+        "title": "sql server",
+        "type": "backend",
+        "iconCode": "devicon-plain:microsoftsqlserver",
+        "status": "active",
+        "sort": 10
+      },
+      {
+        "title": "sqlite",
+        "type": "backend",
+        "iconCode": "arcticons:sqlite-editor",
+        "status": "active",
+        "sort": 11
+      },
+      {
+        "title": "amazon dynamodb",
+        "type": "backend",
+        "iconCode": "simple-icons:amazondynamodb",
+        "status": "active",
+        "sort": 12
+      },
+      {
+        "title": "aws",
+        "type": "fullstack",
+        "iconCode": "lineicons:aws",
+        "status": "active",
+        "sort": 13
+      },
+      {
+        "title": "digital ocean",
+        "type": "fullstack",
+        "iconCode": "simple-icons:digitalocean",
+        "status": "active",
+        "sort": 14
+      },
+      {
+        "title": "terraform",
+        "type": "fullstack",
+        "iconCode": "simple-icons:terraform",
+        "status": "active",
+        "sort": 15
+      },
+      {
+        "title": "typescript",
+        "type": "fullstack",
+        "iconCode": "simple-icons:typescript",
+        "status": "active",
+        "sort": 16
+      },
+      {
+        "title": "next.js",
+        "type": "fullstack",
+        "iconCode": "simple-icons:nextdotjs",
+        "status": "active",
+        "sort": 17
+      },
+      {
+        "title": "git",
+        "type": "fullstack",
+        "iconCode": "fa6-brands:git",
+        "status": "active",
+        "sort": 18
+      },
+      {
+        "title": "html 5",
+        "type": "frontend",
+        "iconCode": "fa-brands:html5",
+        "status": "active",
+        "sort": 19
+      },
+      {
+        "title": "css 3",
+        "type": "frontend",
+        "iconCode": "fa-brands:css3-alt",
+        "status": "active",
+        "sort": 20
+      },
+      {
+        "title": "javascript",
+        "type": "frontend",
+        "iconCode": "simple-icons:javascript",
+        "status": "active",
+        "sort": 21
+      },
+      {
+        "title": "react.js",
+        "type": "frontend",
+        "iconCode": "fa-brands:react",
+        "status": "active",
+        "sort": 22
+      },
+      {
+        "title": "vite.js",
+        "type": "frontend",
+        "iconCode": "simple-icons:vite",
+        "status": "active",
+        "sort": 23
+      },
+      {
+        "title": "tanstack query",
+        "type": "frontend",
+        "iconCode": "simple-icons:reactquery",
+        "status": "active",
+        "sort": 24
+      },
+      {
+        "title": "Material UI",
+        "type": "frontend",
+        "iconCode": "simple-icons:mui",
+        "status": "active",
+        "sort": 25
+      },
+      {
+        "title": "shadcn UI",
+        "type": "frontend",
+        "iconCode": "simple-icons:shadcnui",
+        "status": "active",
+        "sort": 26
+      },
+      {
+        "title": "tailwind.css",
+        "type": "frontend",
+        "iconCode": "simple-icons:tailwindcss",
+        "status": "active",
+        "sort": 27
+      },
+      {
+        "title": "gitlab",
+        "type": "fullstack",
+        "iconCode": "fa6-brands:gitlab",
+        "status": "active",
+        "sort": 28
+      },
+      {
+        "title": "github",
+        "type": "fullstack",
+        "iconCode": "fa-brands:github",
+        "status": "active",
+        "sort": 29
+      },
+      {
+        "title": "bitbucket",
+        "type": "fullstack",
+        "iconCode": "fa-brands:bitbucket",
+        "status": "active",
+        "sort": 30
+      },
+      {
+        "title": "firebase",
+        "type": "backend",
+        "iconCode": "ion:logo-firebase",
+        "status": "active",
+        "sort": 31
+      },
+      {
+        "title": "vitest",
+        "type": "fullstack",
+        "iconCode": "simple-icons:vitest",
+        "status": "active",
+        "sort": 32
+      },
+      {
+        "title": "axios.js",
+        "type": "fullstack",
+        "iconCode": "devicon-plain:axios",
+        "status": "active",
+        "sort": 33
+      },
+      {
+        "title": "s3 - storage",
+        "type": "backend",
+        "iconCode": "simple-icons:amazons3",
+        "status": "active",
+        "sort": 34
+      },
+      {
+        "title": "docker",
+        "type": "backend",
+        "iconCode": "fa-brands:docker",
+        "status": "active",
+        "sort": 35
+      },
+      {
+        "title": "ec2",
+        "type": "backend",
+        "iconCode": "simple-icons:amazonec2",
+        "status": "active",
+        "sort": 36
+      },
+      {
+        "title": "lambda",
+        "type": "backend",
+        "iconCode": "simple-icons:awslambda",
+        "status": "active",
+        "sort": 37
+      },
+      {
+        "title": "Zod",
+        "type": "fullstack",
+        "iconCode": "simple-icons:zod",
+        "status": "active",
+        "sort": 38
+      }
+    ],
+    "educations": [
+      {
+        "title": "System development and analysis",
+        "organization": "Uniasselvi",
+        "location": "Online",
+        "period": "2024 - Present",
+        "description": "",
+        "current": true,
+        "sort": 1,
+        "locale": "en"
+      },
+      {
+        "title": "Análise e desenvolvimento de sistemas",
+        "organization": "Uniasselvi",
+        "location": "Online",
+        "period": "2024 - Atualmente",
+        "description": "",
+        "current": true,
+        "sort": 1,
+        "locale": "pt"
+      }
+    ],
+    "experiences": [
+      {
+        "title": "Senior Fullstack Analyst",
+        "organization": "TIVIT",
+        "location": "Remoto",
+        "period": "2023 - Present",
+        "description": "",
+        "current": true,
+        "sort": 1,
+        "locale": "en"
+      },
+      {
+        "title": "Senior Fullstack Developer",
+        "organization": "Kronus (Freelance)",
+        "location": "Remoto",
+        "period": "2022 - 2024",
+        "description": "",
+        "current": false,
+        "sort": 1,
+        "locale": "en"
+      },
+      {
+        "title": "Fullstack Developer",
+        "organization": "Mobdec",
+        "location": "Remoto",
+        "period": "2022 - 2023",
+        "description": "",
+        "current": false,
+        "sort": 1,
+        "locale": "en"
+      },
+      {
+        "title": "Desktop Software Developer",
+        "organization": "Freelance Projects",
+        "location": "Remoto",
+        "period": "2016 - 2022",
+        "description": "",
+        "current": false,
+        "sort": 1,
+        "locale": "en"
+      },
+      {
+        "title": "Analista Fullstack Senior",
+        "organization": "TIVIT",
+        "location": "Remoto",
+        "period": "2023 - Atualmente",
+        "description": "",
+        "current": true,
+        "sort": 1,
+        "locale": "pt"
+      },
+      {
+        "title": "Desenvolvedor Fullstack",
+        "organization": "Mobdec",
+        "location": "Remoto",
+        "period": "2022 - 2023",
+        "description": "",
+        "current": false,
+        "sort": 1,
+        "locale": "pt"
+      },
+      {
+        "title": "Desenvolvedor Fullsack Senior",
+        "organization": "Kronus (Freelance)",
+        "location": "Remoto",
+        "period": "2022 - 2024",
+        "description": "",
+        "current": false,
+        "sort": 1,
+        "locale": "pt"
+      },
+      {
+        "title": "Desenvolvedor de aplicações Desktop",
+        "organization": "Porjetos Freelance",
+        "location": "Remoto",
+        "period": "2016 - 2022",
+        "description": "",
+        "current": false,
+        "sort": 1,
+        "locale": "pt"
+      }
+    ],
+    "impact_metrics": [
+      {
+        "aboutId": "about_id",
+        "internalCode": "commits",
+        "label": "Total Commits",
+        "value": "1590",
+        "sourceId": "github",
+        "isPlaceholder": false,
+        "locale": "en"
+      },
+      {
+        "aboutId": "about_id",
+        "internalCode": "repos",
+        "label": "Repositories",
+        "value": "89",
+        "sourceId": "github",
+        "isPlaceholder": false,
+        "locale": "en"
+      }
+    ],
+    "metric_sources": [
+      {
+        "name": "github",
+        "type": "vcs",
+        "iconCode": "fa-brands:github",
+        "status": "active"
+      }
+    ]
   }
 }

@@ -2,6 +2,7 @@
 
 import { MigratorCli } from '@/cli/migrator-cli';
 import { PendingStructuralChangesError } from '@/core/errors';
+import { SeedValidationError } from '@/services/seeder';
 
 function printPendingChanges(error: PendingStructuralChangesError): void {
   const { missingTables, missingColumns } = error.delta;
@@ -20,6 +21,19 @@ function printPendingChanges(error: PendingStructuralChangesError): void {
   }
 }
 
+function printSeedValidationFailures(error: SeedValidationError): void {
+  if (!Array.isArray(error.failures)) return;
+
+  for (const failure of error.failures) {
+    console.error(
+      `[seed] Invalid row in "${failure.tableId}" at index ${failure.rowIndex}:`,
+    );
+    for (const issue of failure.issues) {
+      console.error(`[seed]   - ${issue.path}: ${issue.message}`);
+    }
+  }
+}
+
 async function bootstrap() {
   const cli = new MigratorCli();
 
@@ -29,6 +43,12 @@ async function bootstrap() {
     if (error instanceof PendingStructuralChangesError) {
       console.error(`[error] ${error.message}`);
       printPendingChanges(error);
+      process.exit(1);
+    }
+
+    if (error instanceof SeedValidationError) {
+      console.error(`[error] ${error.message}`);
+      printSeedValidationFailures(error);
       process.exit(1);
     }
 

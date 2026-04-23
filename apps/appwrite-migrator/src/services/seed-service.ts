@@ -6,7 +6,6 @@ import {
   type ExistingSeedRow,
   type ExistingSeedState,
   SeederService as InternalSeeder,
-  type SeedTableId,
 } from '@/services/seeder';
 
 export class SeedService extends BaseService {
@@ -71,36 +70,33 @@ export class SeedService extends BaseService {
     );
   }
 
-  private normalizeSeedPayloadShape(input: unknown): unknown {
+  private normalizeSeedPayloadShape(input: unknown): Record<string, unknown[]> {
     if (!this.isRecord(input)) {
-      return input;
+      return {};
     }
 
     const templateTables = input.tables;
 
     if (!this.isRecord(templateTables)) {
-      return input;
+      return {};
     }
 
-    let hasTemplateRows = false;
-    const normalized: Partial<Record<SeedTableId, unknown[]>> = {};
+    const normalized: Record<string, unknown[]> = {};
 
     for (const tableId of SEED_TABLE_IDS) {
       const tableEntry = templateTables[tableId];
 
-      if (!this.isRecord(tableEntry)) {
+      if (Array.isArray(tableEntry)) {
+        normalized[tableId] = tableEntry;
         continue;
       }
 
-      if (!Array.isArray(tableEntry.rows)) {
-        continue;
+      if (this.isRecord(tableEntry) && Array.isArray(tableEntry.rows)) {
+        normalized[tableId] = tableEntry.rows;
       }
-
-      normalized[tableId as SeedTableId] = tableEntry.rows;
-      hasTemplateRows = true;
     }
 
-    return hasTemplateRows ? normalized : input;
+    return normalized;
   }
 
   private isRecord(value: unknown): value is Record<string, unknown> {

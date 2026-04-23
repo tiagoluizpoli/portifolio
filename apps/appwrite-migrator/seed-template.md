@@ -1,10 +1,10 @@
 # Seed Template Specification
 
-Generated at: 2026-04-23T01:14:11.753Z
+Generated at: 2026-04-23T21:41:06.051Z
 
 ## Table `about`
 
-### Unique Logic Keys
+### Unique Logic Keys (from Blueprint)
 - byLocale: locale
 - byName: locale, name
 - byTitle: locale, title
@@ -32,7 +32,7 @@ Generated at: 2026-04-23T01:14:11.753Z
 
 ## Table `home`
 
-### Unique Logic Keys
+### Unique Logic Keys (from Blueprint)
 - byLocaleHeroTitle: locale, heroTitle
 - byLocaleHeroSubtitle: locale, heroSubtitle
 - byLocaleCtaText: locale, ctaText
@@ -62,7 +62,7 @@ Generated at: 2026-04-23T01:14:11.753Z
 
 ## Table `contact_info`
 
-### Unique Logic Keys
+### Unique Logic Keys (from Blueprint)
 - byLocaleEmail: locale, email
 - byLocalePhone: locale, phone
 - byLocaleLocation: locale, location
@@ -89,7 +89,7 @@ Generated at: 2026-04-23T01:14:11.753Z
 
 ## Table `socials`
 
-### Unique Logic Keys
+### Unique Logic Keys (from Blueprint)
 - byPlatformUsername: platformId, username
 
 ### Columns
@@ -116,7 +116,7 @@ Generated at: 2026-04-23T01:14:11.753Z
 
 ## Table `platforms`
 
-### Unique Logic Keys
+### Unique Logic Keys (from Blueprint)
 - byTitle: title
 
 ### Columns
@@ -143,7 +143,7 @@ Generated at: 2026-04-23T01:14:11.753Z
 
 ## Table `solutions`
 
-### Unique Logic Keys
+### Unique Logic Keys (from Blueprint)
 - byLocaleTitle: title, locale
 
 ### Columns
@@ -170,7 +170,7 @@ Generated at: 2026-04-23T01:14:11.753Z
 
 ## Table `skills`
 
-### Unique Logic Keys
+### Unique Logic Keys (from Blueprint)
 - byTypeTitle: title, type
 
 ### Columns
@@ -197,7 +197,7 @@ Generated at: 2026-04-23T01:14:11.753Z
 
 ## Table `educations`
 
-### Unique Logic Keys
+### Unique Logic Keys (from Blueprint)
 - byLocaleTitleOrganization: title, organization, locale
 
 ### Columns
@@ -230,7 +230,7 @@ Generated at: 2026-04-23T01:14:11.753Z
 
 ## Table `experiences`
 
-### Unique Logic Keys
+### Unique Logic Keys (from Blueprint)
 - byLocaleTitleOrganization: title, organization, locale
 
 ### Columns
@@ -263,7 +263,7 @@ Generated at: 2026-04-23T01:14:11.753Z
 
 ## Table `impact_metrics`
 
-### Unique Logic Keys
+### Unique Logic Keys (from Blueprint)
 - byAboutCodeLocale: aboutId, internalCode, locale
 
 ### Columns
@@ -294,7 +294,7 @@ Generated at: 2026-04-23T01:14:11.753Z
 
 ## Table `metric_sources`
 
-### Unique Logic Keys
+### Unique Logic Keys (from Blueprint)
 - byName: name
 
 ### Columns
