@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROTOTYPE · Portfolio v2 · page languages</title>
+<!-- PROTOTYPE, throwaway. Three whole-page design languages via ?variant=behind|living|frame. Each option owns options/<id>/main.js + style.css. -->
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+<script src="content.js"></script>
+<script>
+  window.PROTOTYPE_VARIANTS = [["behind", "G · Behind the name"], ["living", "H · Living photo"], ["frame", "I · Out of the frame"]];
+  const v = new URLSearchParams(location.search).get("variant");
+  window.PROTOTYPE_VARIANT = window.PROTOTYPE_VARIANTS.some(x => x[0] === v) ? v : "behind";
+  window.PROTOTYPE_REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.write(`<link rel="stylesheet" href="options/${window.PROTOTYPE_VARIANT}/style.css">`);
+</script>
+</head>
+<body>
+<div id="app"></div>
+<script type="module">
+  import(`./options/${window.PROTOTYPE_VARIANT}/main.js`).catch(e => console.error("option failed", e));
+</script>
+<script src="switcher.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROTOTYPE · Portfolio v2 visual direction</title>
+<!-- PROTOTYPE, throwaway. Three visual directions switchable via ?variant=. Open this file directly in a browser. -->
+<script src="content.js"></script>
+</head>
+<body>
+<div id="app"></div>
+<script src="switcher.js"></script>
+<script>
+  const v = window.PROTOTYPE_VARIANT;
+  const css = document.createElement("link"); css.rel = "stylesheet"; css.href = `variants/${v}.css`; document.head.appendChild(css);
+  const js = document.createElement("script"); js.src = `variants/${v}.js`; document.body.appendChild(js);
+</script>
+</body>
+</html>
