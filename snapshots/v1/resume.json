@@ -1,0 +1,1159 @@
+{
+  "id": "ee89a3f9-e5ac-404e-98d1-e22a4da454a9",
+  "date_created": "2025-01-13T17:40:04.414Z",
+  "date_updated": "2025-01-17T16:49:08.209Z",
+  "translations": [
+    {
+      "id": 3,
+      "resume_id": "ee89a3f9-e5ac-404e-98d1-e22a4da454a9",
+      "about": [
+        {
+          "id": "2534385b-c6cd-421e-aa5a-a4ced65a710e",
+          "title": "About me",
+          "description": "I am a committed and dedicated professional who is always eager to learn new things and continuously improve my skills. Development is not only work for me, it's my passion.",
+          "traslationId": 3,
+          "info": [
+            {
+              "id": "66409347-5286-4028-af75-5624f512c131",
+              "status": "published",
+              "sort": null,
+              "resumeAboutId": "2534385b-c6cd-421e-aa5a-a4ced65a710e",
+              "fieldName": "Nationality",
+              "fieldValue": "Brazilian"
+            },
+            {
+              "id": "7864f399-2d4a-477d-9e3e-8ae3ce27c041",
+              "status": "published",
+              "sort": null,
+              "resumeAboutId": "2534385b-c6cd-421e-aa5a-a4ced65a710e",
+              "fieldName": "Languages",
+              "fieldValue": "Portuguese, English"
+            }
+          ]
+        }
+      ],
+      "experience": [
+        {
+          "id": "b7b2224b-60b6-4a1f-b490-22a8f4f22b9d",
+          "title": "My experience",
+          "description": "As a full-stack developer, I have worked on several projects where i have gained valuable experience in developing scalable and efficient software solutions.",
+          "translationId": 3,
+          "items": [
+            {
+              "id": "04823aeb-9340-4e6b-8e53-b61945bf2687",
+              "status": "published",
+              "sort": 1,
+              "company": "Encora",
+              "position": "Fullstack AI Engineer",
+              "duration": "2026 - Currently",
+              "resumeExperienceId": "b7b2224b-60b6-4a1f-b490-22a8f4f22b9d"
+            },
+            {
+              "id": "60533ccf-68a4-4acc-bcab-a390b675d2d5",
+              "status": "published",
+              "sort": 2,
+              "company": "TIVIT",
+              "position": "Senior Fullstack Analyst",
+              "duration": "2023 - 2026",
+              "resumeExperienceId": "b7b2224b-60b6-4a1f-b490-22a8f4f22b9d"
+            },
+            {
+              "id": "405ca44d-c508-45c4-b0f3-7d92f414d501",
+              "status": "published",
+              "sort": 3,
+              "company": "Kronus (Freelance)",
+              "position": "Senior Fullstack Developer",
+              "duration": "2022 - 2024",
+              "resumeExperienceId": "b7b2224b-60b6-4a1f-b490-22a8f4f22b9d"
+            },
+            {
+              "id": "4e7eb993-3c28-428d-9dce-a363cdc0c7c0",
+              "status": "published",
+              "sort": 4,
+              "company": "Mobdec",
+              "position": "Fullstack Developer",
+              "duration": "2022 - 2023",
+              "resumeExperienceId": "b7b2224b-60b6-4a1f-b490-22a8f4f22b9d"
+            },
+            {
+              "id": "dac216e2-3daa-40c3-8a9f-dd52d6d83e51",
+              "status": "published",
+              "sort": 5,
+              "company": "Freelance Projects",
+              "position": "Desktop Software Developer",
+              "duration": "2016 - 2022",
+              "resumeExperienceId": "b7b2224b-60b6-4a1f-b490-22a8f4f22b9d"
+            }
+          ]
+        }
+      ],
+      "education": [
+        {
+          "id": "b26c5307-5149-4c45-85ef-abdf5a2c9d70",
+          "title": "My education",
+          "description": "I'm aways eager to learn new things and continuously improve my skills. I have a strong passion for technology and I am dedicated to staying up-to-date with the latest advancements in the field.",
+          "translationId": 3,
+          "items": [
+            {
+              "id": "da81d577-81f8-45ec-a698-f7d873baed66",
+              "status": "published",
+              "sort": null,
+              "institution": "Uniasselvi",
+              "degree": "System development and analysis",
+              "duration": "2024 - Present",
+              "resumeEducationId": "b26c5307-5149-4c45-85ef-abdf5a2c9d70"
+            }
+          ]
+        }
+      ],
+      "skills": [
+        {
+          "id": "0fda64c2-844e-4693-916b-6be8362239fc",
+          "title": "My skills",
+          "description": "I'm very passionate about good, cool and trending technologies. I am constantly learning and improving my skills to stay ahead in the industry.",
+          "translationId": 3,
+          "items": [
+            {
+              "id": 1,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "1009b5c5-163a-453f-9c98-d1227afb0b97",
+                "status": "published",
+                "sort": 3,
+                "type": "backend",
+                "iconCode": "simple-icons:fastify",
+                "title": "fastify.js"
+              }
+            },
+            {
+              "id": 2,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "97849a07-8e01-4688-b54c-c368c9581688",
+                "status": "published",
+                "sort": 22,
+                "type": "frontend",
+                "iconCode": "fa-brands:react",
+                "title": "react.js"
+              }
+            },
+            {
+              "id": 3,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "00f8f973-962b-46d4-9c51-e3260b6b8ba9",
+                "status": "published",
+                "sort": 12,
+                "type": "backend",
+                "iconCode": "simple-icons:amazondynamodb",
+                "title": "amazon dynamodb"
+              }
+            },
+            {
+              "id": 4,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "78c22db9-3f03-47a5-9d8c-f51e23be8c33",
+                "status": "published",
+                "sort": 5,
+                "type": "backend",
+                "iconCode": "ant-design:dot-net-outlined",
+                "title": ".net"
+              }
+            },
+            {
+              "id": 5,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "b7ecfb0d-862b-4090-a03a-d72f77851c1b",
+                "status": "published",
+                "sort": 32,
+                "type": "fullstack",
+                "iconCode": "simple-icons:vitest",
+                "title": "vitest"
+              }
+            },
+            {
+              "id": 6,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "3d0a9334-b1a7-45c5-a1c4-64ecd26f643a",
+                "status": "published",
+                "sort": 2,
+                "type": "backend",
+                "iconCode": "simple-icons:express",
+                "title": "express.js"
+              }
+            },
+            {
+              "id": 7,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "038fd179-d81f-472c-a450-5e6573e1f09c",
+                "status": "published",
+                "sort": 27,
+                "type": "frontend",
+                "iconCode": "simple-icons:tailwindcss",
+                "title": "tailwind.css"
+              }
+            },
+            {
+              "id": 8,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "991c74eb-1eaf-4887-80b8-4b05d8a14112",
+                "status": "published",
+                "sort": 21,
+                "type": "frontend",
+                "iconCode": "simple-icons:javascript",
+                "title": "javascript"
+              }
+            },
+            {
+              "id": 9,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "1d7275e8-f7b5-4642-b120-5311f672b819",
+                "status": "published",
+                "sort": 19,
+                "type": "frontend",
+                "iconCode": "fa-brands:html5",
+                "title": "html 5"
+              }
+            },
+            {
+              "id": 10,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "550ffe47-0194-40b7-9d4b-d26254d4e5dc",
+                "status": "published",
+                "sort": 25,
+                "type": "frontend",
+                "iconCode": "simple-icons:mui",
+                "title": "Material UI"
+              }
+            },
+            {
+              "id": 11,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "08a2a7cb-121f-40f2-89a3-d098c53f12de",
+                "status": "published",
+                "sort": 31,
+                "type": "backend",
+                "iconCode": "ion:logo-firebase",
+                "title": "firebase"
+              }
+            },
+            {
+              "id": 12,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "49ed0b1d-8e76-47fd-bb9d-ef0c2da2a449",
+                "status": "published",
+                "sort": 1,
+                "type": "backend",
+                "iconCode": "fa-brands:node-js",
+                "title": "node.js"
+              }
+            },
+            {
+              "id": 13,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "6d4c2d79-c48c-4d3c-95cd-acc5d4e18f4a",
+                "status": "published",
+                "sort": 8,
+                "type": "backend",
+                "iconCode": "bxl:postgresql",
+                "title": "postgresql"
+              }
+            },
+            {
+              "id": 14,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "d84b01b4-ab0f-45b4-a6fa-dd18c185b04c",
+                "status": "published",
+                "sort": 7,
+                "type": "backend",
+                "iconCode": "simple-icons:drizzle",
+                "title": "drizzle.js"
+              }
+            },
+            {
+              "id": 15,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "a73363a2-7507-4f88-8e89-b9298e7d7036",
+                "status": "published",
+                "sort": 20,
+                "type": "frontend",
+                "iconCode": "fa-brands:css3-alt",
+                "title": "css 3"
+              }
+            },
+            {
+              "id": 16,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "33cfc8dc-d2c5-449c-a079-2dcbdbf13f65",
+                "status": "published",
+                "sort": 13,
+                "type": "fullstack",
+                "iconCode": "lineicons:aws",
+                "title": "aws"
+              }
+            },
+            {
+              "id": 17,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "bc29de78-d120-4bb1-8750-76eb0a32c0ef",
+                "status": "published",
+                "sort": 35,
+                "type": "backend",
+                "iconCode": "fa-brands:docker",
+                "title": "docker"
+              }
+            },
+            {
+              "id": 18,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "f4ced0b6-3280-42a0-a808-66181717bf53",
+                "status": "published",
+                "sort": 4,
+                "type": "backend",
+                "iconCode": "simple-icons:nestjs",
+                "title": "nest.js"
+              }
+            },
+            {
+              "id": 19,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "13fe9ece-42e6-4b77-bcc2-f229a419ff73",
+                "status": "published",
+                "sort": 26,
+                "type": "frontend",
+                "iconCode": "simple-icons:shadcnui",
+                "title": "shadcn UI"
+              }
+            },
+            {
+              "id": 20,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "87a23e22-e148-4a63-a0ec-a5b954a670fc",
+                "status": "published",
+                "sort": 17,
+                "type": "fullstack",
+                "iconCode": "simple-icons:nextdotjs",
+                "title": "next.js"
+              }
+            },
+            {
+              "id": 21,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "e101ef36-1d78-4e6f-ab5c-cec5a9ff94e9",
+                "status": "published",
+                "sort": 6,
+                "type": "backend",
+                "iconCode": "simple-icons:prisma",
+                "title": "prisma"
+              }
+            },
+            {
+              "id": 22,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "524bf767-1f0b-474c-8d5e-d96ce4c74334",
+                "status": "published",
+                "sort": 16,
+                "type": "fullstack",
+                "iconCode": "simple-icons:typescript",
+                "title": "typescript"
+              }
+            },
+            {
+              "id": 23,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "b8beb02e-dd91-4137-9fc4-22516051fd95",
+                "status": "published",
+                "sort": 14,
+                "type": "fullstack",
+                "iconCode": "simple-icons:digitalocean",
+                "title": "digital ocean"
+              }
+            },
+            {
+              "id": 24,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "64f7c591-8bee-4079-ade3-2295db7bd557",
+                "status": "published",
+                "sort": 18,
+                "type": "fullstack",
+                "iconCode": "fa6-brands:git",
+                "title": "git"
+              }
+            },
+            {
+              "id": 25,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "aaad8147-1a55-4205-9f2e-92c87c5e1faa",
+                "status": "published",
+                "sort": 23,
+                "type": "frontend",
+                "iconCode": "simple-icons:vite",
+                "title": "vite.js"
+              }
+            },
+            {
+              "id": 51,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "5a8037e0-0028-4624-997b-99513ae50751",
+                "status": "published",
+                "sort": 33,
+                "type": "fullstack",
+                "iconCode": "devicon-plain:axios",
+                "title": "axios.js"
+              }
+            },
+            {
+              "id": 53,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "2d7827fc-4b9a-4e52-bfa2-be2746159bfc",
+                "status": "published",
+                "sort": 24,
+                "type": "frontend",
+                "iconCode": "simple-icons:reactquery",
+                "title": "tanstack query"
+              }
+            },
+            {
+              "id": 55,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "507d1f15-ad9a-4357-884d-916e65dab8e3",
+                "status": "published",
+                "sort": 30,
+                "type": "fullstack",
+                "iconCode": "fa-brands:bitbucket",
+                "title": "bitbucket"
+              }
+            },
+            {
+              "id": 56,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "364f5c8f-f18d-4244-b8a9-9624bbf7909d",
+                "status": "published",
+                "sort": 28,
+                "type": "fullstack",
+                "iconCode": "fa6-brands:gitlab",
+                "title": "gitlab"
+              }
+            },
+            {
+              "id": 57,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "703467a2-430f-4d5d-ac53-2877b14cbba9",
+                "status": "published",
+                "sort": 29,
+                "type": "fullstack",
+                "iconCode": "fa-brands:github",
+                "title": "github"
+              }
+            },
+            {
+              "id": 63,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "ed075eb2-c27f-4b62-afbf-02474e124748",
+                "status": "published",
+                "sort": 9,
+                "type": "backend",
+                "iconCode": "fontisto:mysql",
+                "title": "Mysql"
+              }
+            },
+            {
+              "id": 64,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "a575dc46-d4e0-480a-a240-3a8e468c2c4e",
+                "status": "published",
+                "sort": 10,
+                "type": "backend",
+                "iconCode": "devicon-plain:microsoftsqlserver",
+                "title": "sql server"
+              }
+            },
+            {
+              "id": 65,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "812d991a-d66f-4e43-a2db-b66a09a2443e",
+                "status": "published",
+                "sort": 11,
+                "type": "backend",
+                "iconCode": "arcticons:sqlite-editor",
+                "title": "sqlite"
+              }
+            },
+            {
+              "id": 66,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "502217f9-9e20-42a9-b0a2-93a14b897268",
+                "status": "published",
+                "sort": 34,
+                "type": "backend",
+                "iconCode": "simple-icons:amazons3",
+                "title": "s3 - storage"
+              }
+            },
+            {
+              "id": 67,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "d505db4c-b687-4c38-a441-f8c8551e0d76",
+                "status": "published",
+                "sort": 36,
+                "type": "backend",
+                "iconCode": "simple-icons:amazonec2",
+                "title": "ec2"
+              }
+            },
+            {
+              "id": 68,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "329e3b20-ce51-443f-8535-b481c67a99b9",
+                "status": "published",
+                "sort": 37,
+                "type": "backend",
+                "iconCode": "simple-icons:awslambda",
+                "title": "lambda"
+              }
+            },
+            {
+              "id": 75,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "fa03d4a0-2ac7-4286-ab43-efcdf68be613",
+                "status": "published",
+                "sort": 38,
+                "type": "fullstack",
+                "iconCode": "simple-icons:zod",
+                "title": "Zod"
+              }
+            },
+            {
+              "id": 76,
+              "resume_skills_id": "0fda64c2-844e-4693-916b-6be8362239fc",
+              "resume_skills_items_id": {
+                "id": "48cafdff-7e88-40f9-a225-60cc2e623ec4",
+                "status": "published",
+                "sort": 15,
+                "type": "fullstack",
+                "iconCode": "simple-icons:terraform",
+                "title": "terraform"
+              }
+            }
+          ]
+        }
+      ],
+      "directus_translations_id": {
+        "id": "b28c1f36-8d37-486f-822a-797d14390d2d",
+        "language": "en-US",
+        "key": "English",
+        "value": "English translation"
+      }
+    },
+    {
+      "id": 4,
+      "resume_id": "ee89a3f9-e5ac-404e-98d1-e22a4da454a9",
+      "about": [
+        {
+          "id": "f86010d9-ad70-4e78-9ddd-5f556c4f01cf",
+          "title": "Sobre mim",
+          "description": "Sou um profissional comprometido e dedicado, sempre disposto a aprender coisas novas e aprimorar minhas habilidades continuamente. Desenvolvimento não é apenas trabalho pra mim, é a minha paixão.",
+          "traslationId": 4,
+          "info": [
+            {
+              "id": "dedac3e6-7b90-4e18-82df-f6c9e9889b40",
+              "status": "published",
+              "sort": null,
+              "resumeAboutId": "f86010d9-ad70-4e78-9ddd-5f556c4f01cf",
+              "fieldName": "Nacionalidade",
+              "fieldValue": "Brasileiro"
+            },
+            {
+              "id": "f9d22ebb-f73e-43f1-96a0-da1d6d9cefd9",
+              "status": "published",
+              "sort": null,
+              "resumeAboutId": "f86010d9-ad70-4e78-9ddd-5f556c4f01cf",
+              "fieldName": "Idiomas",
+              "fieldValue": "Português, Inglês"
+            }
+          ]
+        }
+      ],
+      "experience": [
+        {
+          "id": "e40147ea-9770-4392-9085-a1a2ac74043f",
+          "title": "Experiência",
+          "description": "Como desenvolvedor full-stack, trabalhei em diversos projetos que me proporcionaram uma experiência valiosa no desenvolvimento de soluções de software escaláveis e eficientes.",
+          "translationId": 4,
+          "items": [
+            {
+              "id": "3ec88db0-3e9f-46ac-af44-806d13b41b9e",
+              "status": "published",
+              "sort": 6,
+              "company": "Encora",
+              "position": "Fullstack AI Engineer",
+              "duration": "2026 - Atualmente",
+              "resumeExperienceId": "e40147ea-9770-4392-9085-a1a2ac74043f"
+            },
+            {
+              "id": "f35e7623-9531-429c-859a-fe9a671d8e7f",
+              "status": "published",
+              "sort": 7,
+              "company": "TIVIT",
+              "position": "Analista Fullstack Senior",
+              "duration": "2023 - 2026",
+              "resumeExperienceId": "e40147ea-9770-4392-9085-a1a2ac74043f"
+            },
+            {
+              "id": "96aaaff6-08d2-4ffd-88e9-0528dfd1d6c8",
+              "status": "published",
+              "sort": 8,
+              "company": "Kronus (Freelance)",
+              "position": "Desenvolvedor Fullsack Senior",
+              "duration": "2022 - 2024",
+              "resumeExperienceId": "e40147ea-9770-4392-9085-a1a2ac74043f"
+            },
+            {
+              "id": "da93f8e9-aa23-43ef-a302-abf5c8714938",
+              "status": "published",
+              "sort": 9,
+              "company": "Mobdec",
+              "position": "Desenvolvedor Fullstack",
+              "duration": "2022 - 2023",
+              "resumeExperienceId": "e40147ea-9770-4392-9085-a1a2ac74043f"
+            },
+            {
+              "id": "c68d2e83-3020-4583-9952-e8a90653a7d7",
+              "status": "published",
+              "sort": 10,
+              "company": "Porjetos Freelance",
+              "position": "Desenvolvedor de aplicações Desktop",
+              "duration": "2016 - 2022",
+              "resumeExperienceId": "e40147ea-9770-4392-9085-a1a2ac74043f"
+            }
+          ]
+        }
+      ],
+      "education": [
+        {
+          "id": "54e02864-a5e8-4449-9fbe-6a88b83f0d10",
+          "title": "Educação",
+          "description": "Estou sempre disposto a aprender coisas novas e a aprimorar continuamente minhas habilidades. Tenho uma grande paixão por tecnologia e me dedico a me manter atualizado com os avanços mais recentes na área.",
+          "translationId": 4,
+          "items": [
+            {
+              "id": "a63a36eb-cd39-40bc-81c9-f928606bfe90",
+              "status": "published",
+              "sort": null,
+              "institution": "Uniasselvi",
+              "degree": "Análise e desenvolvimento de sistemas",
+              "duration": "2024 - Atualmente",
+              "resumeEducationId": "54e02864-a5e8-4449-9fbe-6a88b83f0d10"
+            }
+          ]
+        }
+      ],
+      "skills": [
+        {
+          "id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+          "title": "Habilidades",
+          "description": "Sou apaixonado por tecnologias modernas, inovadoras e de ponta. Estou constantemente aprendendo e aprimorando minhas habilidades para me manter à frente no mercado.",
+          "translationId": 4,
+          "items": [
+            {
+              "id": 26,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "1009b5c5-163a-453f-9c98-d1227afb0b97",
+                "status": "published",
+                "sort": 3,
+                "type": "backend",
+                "iconCode": "simple-icons:fastify",
+                "title": "fastify.js"
+              }
+            },
+            {
+              "id": 27,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "97849a07-8e01-4688-b54c-c368c9581688",
+                "status": "published",
+                "sort": 22,
+                "type": "frontend",
+                "iconCode": "fa-brands:react",
+                "title": "react.js"
+              }
+            },
+            {
+              "id": 28,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "00f8f973-962b-46d4-9c51-e3260b6b8ba9",
+                "status": "published",
+                "sort": 12,
+                "type": "backend",
+                "iconCode": "simple-icons:amazondynamodb",
+                "title": "amazon dynamodb"
+              }
+            },
+            {
+              "id": 29,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "b7ecfb0d-862b-4090-a03a-d72f77851c1b",
+                "status": "published",
+                "sort": 32,
+                "type": "fullstack",
+                "iconCode": "simple-icons:vitest",
+                "title": "vitest"
+              }
+            },
+            {
+              "id": 30,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "78c22db9-3f03-47a5-9d8c-f51e23be8c33",
+                "status": "published",
+                "sort": 5,
+                "type": "backend",
+                "iconCode": "ant-design:dot-net-outlined",
+                "title": ".net"
+              }
+            },
+            {
+              "id": 31,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "3d0a9334-b1a7-45c5-a1c4-64ecd26f643a",
+                "status": "published",
+                "sort": 2,
+                "type": "backend",
+                "iconCode": "simple-icons:express",
+                "title": "express.js"
+              }
+            },
+            {
+              "id": 32,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "038fd179-d81f-472c-a450-5e6573e1f09c",
+                "status": "published",
+                "sort": 27,
+                "type": "frontend",
+                "iconCode": "simple-icons:tailwindcss",
+                "title": "tailwind.css"
+              }
+            },
+            {
+              "id": 33,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "1d7275e8-f7b5-4642-b120-5311f672b819",
+                "status": "published",
+                "sort": 19,
+                "type": "frontend",
+                "iconCode": "fa-brands:html5",
+                "title": "html 5"
+              }
+            },
+            {
+              "id": 34,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "991c74eb-1eaf-4887-80b8-4b05d8a14112",
+                "status": "published",
+                "sort": 21,
+                "type": "frontend",
+                "iconCode": "simple-icons:javascript",
+                "title": "javascript"
+              }
+            },
+            {
+              "id": 35,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "6d4c2d79-c48c-4d3c-95cd-acc5d4e18f4a",
+                "status": "published",
+                "sort": 8,
+                "type": "backend",
+                "iconCode": "bxl:postgresql",
+                "title": "postgresql"
+              }
+            },
+            {
+              "id": 36,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "49ed0b1d-8e76-47fd-bb9d-ef0c2da2a449",
+                "status": "published",
+                "sort": 1,
+                "type": "backend",
+                "iconCode": "fa-brands:node-js",
+                "title": "node.js"
+              }
+            },
+            {
+              "id": 37,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "08a2a7cb-121f-40f2-89a3-d098c53f12de",
+                "status": "published",
+                "sort": 31,
+                "type": "backend",
+                "iconCode": "ion:logo-firebase",
+                "title": "firebase"
+              }
+            },
+            {
+              "id": 38,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "550ffe47-0194-40b7-9d4b-d26254d4e5dc",
+                "status": "published",
+                "sort": 25,
+                "type": "frontend",
+                "iconCode": "simple-icons:mui",
+                "title": "Material UI"
+              }
+            },
+            {
+              "id": 39,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "a73363a2-7507-4f88-8e89-b9298e7d7036",
+                "status": "published",
+                "sort": 20,
+                "type": "frontend",
+                "iconCode": "fa-brands:css3-alt",
+                "title": "css 3"
+              }
+            },
+            {
+              "id": 40,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "d84b01b4-ab0f-45b4-a6fa-dd18c185b04c",
+                "status": "published",
+                "sort": 7,
+                "type": "backend",
+                "iconCode": "simple-icons:drizzle",
+                "title": "drizzle.js"
+              }
+            },
+            {
+              "id": 41,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "33cfc8dc-d2c5-449c-a079-2dcbdbf13f65",
+                "status": "published",
+                "sort": 13,
+                "type": "fullstack",
+                "iconCode": "lineicons:aws",
+                "title": "aws"
+              }
+            },
+            {
+              "id": 42,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "bc29de78-d120-4bb1-8750-76eb0a32c0ef",
+                "status": "published",
+                "sort": 35,
+                "type": "backend",
+                "iconCode": "fa-brands:docker",
+                "title": "docker"
+              }
+            },
+            {
+              "id": 43,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "f4ced0b6-3280-42a0-a808-66181717bf53",
+                "status": "published",
+                "sort": 4,
+                "type": "backend",
+                "iconCode": "simple-icons:nestjs",
+                "title": "nest.js"
+              }
+            },
+            {
+              "id": 44,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "13fe9ece-42e6-4b77-bcc2-f229a419ff73",
+                "status": "published",
+                "sort": 26,
+                "type": "frontend",
+                "iconCode": "simple-icons:shadcnui",
+                "title": "shadcn UI"
+              }
+            },
+            {
+              "id": 45,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "87a23e22-e148-4a63-a0ec-a5b954a670fc",
+                "status": "published",
+                "sort": 17,
+                "type": "fullstack",
+                "iconCode": "simple-icons:nextdotjs",
+                "title": "next.js"
+              }
+            },
+            {
+              "id": 46,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "524bf767-1f0b-474c-8d5e-d96ce4c74334",
+                "status": "published",
+                "sort": 16,
+                "type": "fullstack",
+                "iconCode": "simple-icons:typescript",
+                "title": "typescript"
+              }
+            },
+            {
+              "id": 47,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "e101ef36-1d78-4e6f-ab5c-cec5a9ff94e9",
+                "status": "published",
+                "sort": 6,
+                "type": "backend",
+                "iconCode": "simple-icons:prisma",
+                "title": "prisma"
+              }
+            },
+            {
+              "id": 48,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "b8beb02e-dd91-4137-9fc4-22516051fd95",
+                "status": "published",
+                "sort": 14,
+                "type": "fullstack",
+                "iconCode": "simple-icons:digitalocean",
+                "title": "digital ocean"
+              }
+            },
+            {
+              "id": 49,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "aaad8147-1a55-4205-9f2e-92c87c5e1faa",
+                "status": "published",
+                "sort": 23,
+                "type": "frontend",
+                "iconCode": "simple-icons:vite",
+                "title": "vite.js"
+              }
+            },
+            {
+              "id": 50,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "64f7c591-8bee-4079-ade3-2295db7bd557",
+                "status": "published",
+                "sort": 18,
+                "type": "fullstack",
+                "iconCode": "fa6-brands:git",
+                "title": "git"
+              }
+            },
+            {
+              "id": 52,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "5a8037e0-0028-4624-997b-99513ae50751",
+                "status": "published",
+                "sort": 33,
+                "type": "fullstack",
+                "iconCode": "devicon-plain:axios",
+                "title": "axios.js"
+              }
+            },
+            {
+              "id": 54,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "2d7827fc-4b9a-4e52-bfa2-be2746159bfc",
+                "status": "published",
+                "sort": 24,
+                "type": "frontend",
+                "iconCode": "simple-icons:reactquery",
+                "title": "tanstack query"
+              }
+            },
+            {
+              "id": 58,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "507d1f15-ad9a-4357-884d-916e65dab8e3",
+                "status": "published",
+                "sort": 30,
+                "type": "fullstack",
+                "iconCode": "fa-brands:bitbucket",
+                "title": "bitbucket"
+              }
+            },
+            {
+              "id": 59,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "364f5c8f-f18d-4244-b8a9-9624bbf7909d",
+                "status": "published",
+                "sort": 28,
+                "type": "fullstack",
+                "iconCode": "fa6-brands:gitlab",
+                "title": "gitlab"
+              }
+            },
+            {
+              "id": 60,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "703467a2-430f-4d5d-ac53-2877b14cbba9",
+                "status": "published",
+                "sort": 29,
+                "type": "fullstack",
+                "iconCode": "fa-brands:github",
+                "title": "github"
+              }
+            },
+            {
+              "id": 69,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "ed075eb2-c27f-4b62-afbf-02474e124748",
+                "status": "published",
+                "sort": 9,
+                "type": "backend",
+                "iconCode": "fontisto:mysql",
+                "title": "Mysql"
+              }
+            },
+            {
+              "id": 70,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "a575dc46-d4e0-480a-a240-3a8e468c2c4e",
+                "status": "published",
+                "sort": 10,
+                "type": "backend",
+                "iconCode": "devicon-plain:microsoftsqlserver",
+                "title": "sql server"
+              }
+            },
+            {
+              "id": 71,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "812d991a-d66f-4e43-a2db-b66a09a2443e",
+                "status": "published",
+                "sort": 11,
+                "type": "backend",
+                "iconCode": "arcticons:sqlite-editor",
+                "title": "sqlite"
+              }
+            },
+            {
+              "id": 72,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "502217f9-9e20-42a9-b0a2-93a14b897268",
+                "status": "published",
+                "sort": 34,
+                "type": "backend",
+                "iconCode": "simple-icons:amazons3",
+                "title": "s3 - storage"
+              }
+            },
+            {
+              "id": 73,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "d505db4c-b687-4c38-a441-f8c8551e0d76",
+                "status": "published",
+                "sort": 36,
+                "type": "backend",
+                "iconCode": "simple-icons:amazonec2",
+                "title": "ec2"
+              }
+            },
+            {
+              "id": 74,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "329e3b20-ce51-443f-8535-b481c67a99b9",
+                "status": "published",
+                "sort": 37,
+                "type": "backend",
+                "iconCode": "simple-icons:awslambda",
+                "title": "lambda"
+              }
+            },
+            {
+              "id": 77,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "48cafdff-7e88-40f9-a225-60cc2e623ec4",
+                "status": "published",
+                "sort": 15,
+                "type": "fullstack",
+                "iconCode": "simple-icons:terraform",
+                "title": "terraform"
+              }
+            },
+            {
+              "id": 78,
+              "resume_skills_id": "920cfb2a-540b-495e-80e7-678479c7fe1f",
+              "resume_skills_items_id": {
+                "id": "fa03d4a0-2ac7-4286-ab43-efcdf68be613",
+                "status": "published",
+                "sort": 38,
+                "type": "fullstack",
+                "iconCode": "simple-icons:zod",
+                "title": "Zod"
+              }
+            }
+          ]
+        }
+      ],
+      "directus_translations_id": {
+        "id": "956fbf15-a90c-4da8-8be9-81915d22d25b",
+        "language": "pt-BR",
+        "key": "Portuguese",
+        "value": "Portuguese translation"
+      }
+    }
+  ]
+}

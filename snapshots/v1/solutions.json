@@ -1,0 +1,146 @@
+[
+  {
+    "id": "12baa196-10de-40a7-917f-52c2ad1727f2",
+    "status": "published",
+    "sort": 1,
+    "date_created": "2025-01-13T17:39:15.622Z",
+    "date_updated": "2025-01-25T06:54:12.017Z",
+    "title": "Frontend Development",
+    "description": "Stunning and responsive interfaces.",
+    "iconCode": "pepicons-pop:code",
+    "translations": [
+      {
+        "id": 1,
+        "solutions_id": "12baa196-10de-40a7-917f-52c2ad1727f2",
+        "title": "Frontend Development",
+        "description": "Stunning and responsive interfaces.",
+        "directus_translations_id": {
+          "id": "b28c1f36-8d37-486f-822a-797d14390d2d",
+          "language": "en-US",
+          "key": "English",
+          "value": "English translation"
+        }
+      },
+      {
+        "id": 2,
+        "solutions_id": "12baa196-10de-40a7-917f-52c2ad1727f2",
+        "title": "Desenvolvimento Frontend",
+        "description": "Interfaces elegantes e responsivas",
+        "directus_translations_id": {
+          "id": "956fbf15-a90c-4da8-8be9-81915d22d25b",
+          "language": "pt-BR",
+          "key": "Portuguese",
+          "value": "Portuguese translation"
+        }
+      }
+    ]
+  },
+  {
+    "id": "fd525297-60d4-44ce-97e6-16d2333bb50c",
+    "status": "published",
+    "sort": 2,
+    "date_created": "2025-01-13T17:39:15.614Z",
+    "date_updated": "2025-01-25T06:54:26.408Z",
+    "title": "Backend Development",
+    "description": "Scalable and reliable backend solutions for your projects.",
+    "iconCode": "grommet-icons:services",
+    "translations": [
+      {
+        "id": 3,
+        "solutions_id": "fd525297-60d4-44ce-97e6-16d2333bb50c",
+        "title": "Backend Development",
+        "description": "Robust and scalable backend solutions tailored to elevate your projects.",
+        "directus_translations_id": {
+          "id": "b28c1f36-8d37-486f-822a-797d14390d2d",
+          "language": "en-US",
+          "key": "English",
+          "value": "English translation"
+        }
+      },
+      {
+        "id": 4,
+        "solutions_id": "fd525297-60d4-44ce-97e6-16d2333bb50c",
+        "title": "Desenvolvimento Backend",
+        "description": "Criação de soluções backend escaláveis e confiáveis para impulsionar seus projetos.",
+        "directus_translations_id": {
+          "id": "956fbf15-a90c-4da8-8be9-81915d22d25b",
+          "language": "pt-BR",
+          "key": "Portuguese",
+          "value": "Portuguese translation"
+        }
+      }
+    ]
+  },
+  {
+    "id": "5714777c-2e4e-44b6-aa94-b7559b6cd6d8",
+    "status": "published",
+    "sort": 3,
+    "date_created": "2025-01-13T17:39:15.626Z",
+    "date_updated": "2025-01-25T06:54:49.879Z",
+    "title": "Integrations",
+    "description": "Seamless and effective integrations with other tools and platforms for smooth workflows.",
+    "iconCode": "grommet-icons:connect",
+    "translations": [
+      {
+        "id": 5,
+        "solutions_id": "5714777c-2e4e-44b6-aa94-b7559b6cd6d8",
+        "title": "Integrations",
+        "description": "Seamless and effective integrations with other tools and platforms to enhance your workflows.",
+        "directus_translations_id": {
+          "id": "b28c1f36-8d37-486f-822a-797d14390d2d",
+          "language": "en-US",
+          "key": "English",
+          "value": "English translation"
+        }
+      },
+      {
+        "id": 6,
+        "solutions_id": "5714777c-2e4e-44b6-aa94-b7559b6cd6d8",
+        "title": "Integrações",
+        "description": "Integrações eficazes e fluídas com outras ferramentas e plataformas para otimizar seus fluxos de trabalho.",
+        "directus_translations_id": {
+          "id": "956fbf15-a90c-4da8-8be9-81915d22d25b",
+          "language": "pt-BR",
+          "key": "Portuguese",
+          "value": "Portuguese translation"
+        }
+      }
+    ]
+  },
+  {
+    "id": "5d1f5bbe-88b1-4ad6-8d90-8c3da9d67371",
+    "status": "published",
+    "sort": 4,
+    "date_created": "2025-01-13T17:39:15.598Z",
+    "date_updated": "2025-01-25T06:55:36.547Z",
+    "title": "Cloud Based Solutions",
+    "description": "Power your projects with cloud-based solutions, enabling scalability, reliability, and cost-effectiveness.",
+    "iconCode": "ic:outline-cloud-queue",
+    "translations": [
+      {
+        "id": 7,
+        "solutions_id": "5d1f5bbe-88b1-4ad6-8d90-8c3da9d67371",
+        "title": "Cloud Based Solutions",
+        "description": "Empower your projects with cloud solutions designed for scalability, reliability, and cost efficiency.",
+        "directus_translations_id": {
+          "id": "b28c1f36-8d37-486f-822a-797d14390d2d",
+          "language": "en-US",
+          "key": "English",
+          "value": "English translation"
+        }
+      },
+      {
+        "id": 8,
+        "solutions_id": "5d1f5bbe-88b1-4ad6-8d90-8c3da9d67371",
+        "title": "Soluções Baseadas em Nuvem",
+        "description": "Potencialize seus projetos com soluções na nuvem, garantindo escalabilidade, confiabilidade e eficiência de custos.",
+        "directus_translations_id": {
+          "id": "956fbf15-a90c-4da8-8be9-81915d22d25b",
+          "language": "pt-BR",
+          "key": "Portuguese",
+          "value": "Portuguese translation"
+        }
+      }
+    ]
+  }
+]

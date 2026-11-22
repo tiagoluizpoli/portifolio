@@ -1,0 +1,95 @@
+[
+  {
+    "id": "3442c84e-2203-430f-ac2a-cc4058872d5c",
+    "status": "published",
+    "type": "whatsapp",
+    "value": "+55 (11) 95206-6489",
+    "iconCode": "fa:whatsapp",
+    "translations": [
+      {
+        "id": 1,
+        "contactInfo_id": "3442c84e-2203-430f-ac2a-cc4058872d5c",
+        "type": "whatsapp",
+        "directus_translations_id": {
+          "id": "b28c1f36-8d37-486f-822a-797d14390d2d",
+          "language": "en-US",
+          "key": "English",
+          "value": "English translation"
+        }
+      },
+      {
+        "id": 2,
+        "contactInfo_id": "3442c84e-2203-430f-ac2a-cc4058872d5c",
+        "type": "whatsapp",
+        "directus_translations_id": {
+          "id": "956fbf15-a90c-4da8-8be9-81915d22d25b",
+          "language": "pt-BR",
+          "key": "Portuguese",
+          "value": "Portuguese translation"
+        }
+      }
+    ]
+  },
+  {
+    "id": "8d02467d-1ece-498c-96e7-47fa6aa954b8",
+    "status": "published",
+    "type": "email",
+    "value": "tiago.seuaciuc@gmail.com",
+    "iconCode": "fa-solid:envelope",
+    "translations": [
+      {
+        "id": 3,
+        "contactInfo_id": "8d02467d-1ece-498c-96e7-47fa6aa954b8",
+        "type": "email",
+        "directus_translations_id": {
+          "id": "b28c1f36-8d37-486f-822a-797d14390d2d",
+          "language": "en-US",
+          "key": "English",
+          "value": "English translation"
+        }
+      },
+      {
+        "id": 4,
+        "contactInfo_id": "8d02467d-1ece-498c-96e7-47fa6aa954b8",
+        "type": "email",
+        "directus_translations_id": {
+          "id": "956fbf15-a90c-4da8-8be9-81915d22d25b",
+          "language": "pt-BR",
+          "key": "Portuguese",
+          "value": "Portuguese translation"
+        }
+      }
+    ]
+  },
+  {
+    "id": "902a86f2-0db4-4294-b18f-94e2a179b854",
+    "status": "published",
+    "type": "location",
+    "value": "Cotia - SP",
+    "iconCode": "fa-solid:map-marker-alt",
+    "translations": [
+      {
+        "id": 5,
+        "contactInfo_id": "902a86f2-0db4-4294-b18f-94e2a179b854",
+        "type": "location",
+        "directus_translations_id": {
+          "id": "b28c1f36-8d37-486f-822a-797d14390d2d",
+          "language": "en-US",
+          "key": "English",
+          "value": "English translation"
+        }
+      },
+      {
+        "id": 6,
+        "contactInfo_id": "902a86f2-0db4-4294-b18f-94e2a179b854",
+        "type": "localização",
+        "directus_translations_id": {
+          "id": "956fbf15-a90c-4da8-8be9-81915d22d25b",
+          "language": "pt-BR",
+          "key": "Portuguese",
+          "value": "Portuguese translation"
+        }
+      }
+    ]
+  }
+]

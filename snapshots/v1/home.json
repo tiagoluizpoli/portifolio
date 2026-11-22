@@ -1,0 +1,105 @@
+{
+  "id": "655b1534-524b-4c38-8b2d-cf9882b2b58b",
+  "user_updated": "1d01e1a2-8c30-4b8a-a78a-aeedc941d1ca",
+  "date_updated": "2026-04-30T17:47:19.677Z",
+  "firstName": "Tiago",
+  "lastName": "Poli",
+  "picture": "2f321335-4ab2-49a5-a0a4-c731f1e3b08b",
+  "title": "Fullstack Developer",
+  "description": "I could be your next great developer — hit the button above, and let's create something amazing together!",
+  "JourneyStartedIn": 2016,
+  "github": [
+    {
+      "id": "654487e3-82ca-45dc-a1c3-161aa8c6350e",
+      "homeId": "655b1534-524b-4c38-8b2d-cf9882b2b58b",
+      "totalCommits": 4121,
+      "totalRepositories": 31
+    }
+  ],
+  "translations": [
+    {
+      "id": 1,
+      "home_id": "655b1534-524b-4c38-8b2d-cf9882b2b58b",
+      "title": "Fullstack Developer",
+      "description": "I could be your next great developer — hit the button above, and let's create something amazing together!",
+      "namePresentation": "Hello I'm",
+      "downloadButtonText": "Download CV",
+      "cv": "e10fe6c3-2162-4b84-9d05-84f3a0207138",
+      "directus_translations_id": {
+        "id": "b28c1f36-8d37-486f-822a-797d14390d2d",
+        "language": "en-US",
+        "key": "English",
+        "value": "English translation"
+      }
+    },
+    {
+      "id": 2,
+      "home_id": "655b1534-524b-4c38-8b2d-cf9882b2b58b",
+      "title": "Desenvolvedor Fullstack",
+      "description": "Eu posso ser o próximo grande desenvolvedor do seu time — clique no botão acima e vamos criar algo incrível juntos!",
+      "namePresentation": "Olá, sou o",
+      "downloadButtonText": "Baixar CV",
+      "cv": "c0a70270-c0a7-4e66-861c-11b65c04deef",
+      "directus_translations_id": {
+        "id": "956fbf15-a90c-4da8-8be9-81915d22d25b",
+        "language": "pt-BR",
+        "key": "Portuguese",
+        "value": "Portuguese translation"
+      }
+    }
+  ],
+  "socials": [
+    {
+      "id": "74c8edb0-78ea-46ae-bd02-eb634b2857fc",
+      "homeId": "655b1534-524b-4c38-8b2d-cf9882b2b58b",
+      "status": "published",
+      "sort": 1,
+      "user_created": "1d01e1a2-8c30-4b8a-a78a-aeedc941d1ca",
+      "date_created": "2025-01-13T17:16:00.864Z",
+      "user_updated": "1d01e1a2-8c30-4b8a-a78a-aeedc941d1ca",
+      "date_updated": "2025-01-28T02:08:57.107Z",
+      "type": "whatsapp",
+      "iconCode": "fa-brands:whatsapp",
+      "url": "https://wa.me/5511952066489"
+    },
+    {
+      "id": "7d7ab40e-fc7d-42d3-8cb0-cc91b3d678c3",
+      "homeId": "655b1534-524b-4c38-8b2d-cf9882b2b58b",
+      "status": "published",
+      "sort": 2,
+      "user_created": "1d01e1a2-8c30-4b8a-a78a-aeedc941d1ca",
+      "date_created": "2025-01-13T17:16:00.913Z",
+      "user_updated": "1d01e1a2-8c30-4b8a-a78a-aeedc941d1ca",
+      "date_updated": "2025-10-08T01:44:29.133Z",
+      "type": "linkedin",
+      "iconCode": "fa6-brands:linkedin-in",
+      "url": "https://www.linkedin.com/in/tiago-seuaciuc/"
+    },
+    {
+      "id": "bdae46d1-84f5-4bbc-9322-a47682d98206",
+      "homeId": "655b1534-524b-4c38-8b2d-cf9882b2b58b",
+      "status": "published",
+      "sort": 3,
+      "user_created": "1d01e1a2-8c30-4b8a-a78a-aeedc941d1ca",
+      "date_created": "2025-01-13T17:16:00.905Z",
+      "user_updated": "1d01e1a2-8c30-4b8a-a78a-aeedc941d1ca",
+      "date_updated": "2025-01-28T02:09:24.414Z",
+      "type": "github",
+      "iconCode": "fa6-brands:github",
+      "url": "https://github.com/tiagoluizpoli"
+    },
+    {
+      "id": "d4fc4bd2-a33e-4c9b-8c82-b7cb0c41228a",
+      "homeId": "655b1534-524b-4c38-8b2d-cf9882b2b58b",
+      "status": "published",
+      "sort": 4,
+      "user_created": "1d01e1a2-8c30-4b8a-a78a-aeedc941d1ca",
+      "date_created": "2025-01-13T17:16:00.921Z",
+      "user_updated": "1d01e1a2-8c30-4b8a-a78a-aeedc941d1ca",
+      "date_updated": "2025-01-28T02:09:36.746Z",
+      "type": "twitter",
+      "iconCode": "fa6-brands:x-twitter",
+      "url": "https://twitter.com/tiagoluizpoli"
+    }
+  ]
+}
