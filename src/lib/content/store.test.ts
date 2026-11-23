@@ -1,4 +1,5 @@
 import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
+import { eq } from 'drizzle-orm';
 import { afterAll, beforeAll, beforeEach, expect, test, vi } from 'vitest';
 import seed from '../../../scripts/seed-dev-content.json';
 import { type Database, migrateDatabase, openDatabase } from './db';
@@ -179,4 +180,52 @@ test('a stats failure does not fail a content revalidate', async () => {
   const log = { warn: vi.fn(), error: vi.fn() };
   const store = await createContentStore({ db, log, fetchStats: () => Promise.reject(new Error('boom')) });
   await expect(store.revalidate()).resolves.toBeUndefined();
+});
+
+test('saveSection writes a valid Section and serves it immediately', async () => {
+  await putAll();
+  const store = await createContentStore({ db });
+  await store.saveSection('hero', { ...validHero, name: 'Saved' });
+  expect(store.read().hero.name).toBe('Saved');
+  const [row] = await db.select().from(content).where(eq(content.key, 'hero'));
+  expect((row.data as { name: string }).name).toBe('Saved');
+});
+
+test('saveSection rejects an invalid Section with the Zod path and changes nothing', async () => {
+  await putAll();
+  const store = await createContentStore({ db });
+  await expect(store.saveSection('hero', { ...validHero, title: { en: 'only en' } })).rejects.toMatchObject({
+    path: 'hero.title.pt',
+  });
+  expect(store.read().hero.name).toBe(validHero.name);
+  const [row] = await db.select().from(content).where(eq(content.key, 'hero'));
+  expect(row.data).toEqual(validHero);
+});
+
+test('export returns Section rows only, never github_stats', async () => {
+  await putAll();
+  await put('github_stats' as SectionKey, { stars: 1 });
+  const store = await createContentStore({ db });
+  expect(Object.keys(await store.exportSections()).sort()).toEqual([...sectionKeys].sort());
+});
+
+test('invalid import changes nothing', async () => {
+  await putAll();
+  const store = await createContentStore({ db });
+  const before = await db.select().from(content);
+  const bad = { ...seed, hero: { ...seed.hero, title: { en: 'x' } } };
+  await expect(store.importSections(bad)).rejects.toMatchObject({ path: 'hero.title.pt' });
+  const { hero: _, ...missing } = seed;
+  await expect(store.importSections(missing)).rejects.toMatchObject({ path: 'hero' });
+  expect(await db.select().from(content)).toEqual(before);
+});
+
+test('valid import replaces all Section rows and leaves other rows alone', async () => {
+  await putAll();
+  await put('github_stats' as SectionKey, { stars: 1 });
+  const store = await createContentStore({ db });
+  await store.importSections({ ...seed, hero: { ...seed.hero, name: 'Imported' } });
+  expect(store.read().hero.name).toBe('Imported');
+  const [stats] = await db.select().from(content).where(eq(content.key, 'github_stats'));
+  expect(stats.data).toEqual({ stars: 1 });
 });

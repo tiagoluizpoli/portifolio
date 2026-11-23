@@ -1,0 +1,92 @@
+---
+import { contentStore } from '../lib/content/instance';
+import { ContentError } from '../lib/content/store';
+import { type SectionKey, sectionSchemas } from '../lib/content/schemas';
+import { bucketFromEnv, callRemote, copyMissingAssets, remoteFromEnv } from '../lib/sync';
+import { uploadAsset } from '../lib/upload';
+
+// Development-only; Tailscale is the guard, there is no login.
+if (process.env.ADMIN_ENABLED !== 'true') return new Response(null, { status: 404 });
+
+const keys = Object.keys(sectionSchemas) as SectionKey[];
+let error: string | undefined;
+let uploaded: string | undefined;
+let saved: string | undefined;
+let synced: string | undefined;
+const drafts: Partial<Record<SectionKey, string>> = {};
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  try {
+    const file = form.get('file');
+    const sync = form.get('sync');
+    if (sync === 'send' || sync === 'bring') {
+      const local = bucketFromEnv('ASSET_S3');
+      const prod = bucketFromEnv('PROD_ASSET_S3');
+      const remote = remoteFromEnv();
+      // Assets first (union, never deleted), then rows.
+      if (sync === 'send') {
+        const copied = await copyMissingAssets(local, prod);
+        await callRemote(remote, {
+          method: 'PUT',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(await contentStore.exportSections()),
+        });
+        synced = `Sent to production (${copied.length} assets copied).`;
+      } else {
+        const snapshot = await (await callRemote(remote, { method: 'GET' })).json();
+        const copied = await copyMissingAssets(prod, local);
+        await contentStore.importSections(snapshot);
+        synced = `Brought from production (${copied.length} assets copied).`;
+      }
+    } else if (file instanceof File) {
+      uploaded = await uploadAsset(new Uint8Array(await file.arrayBuffer()), file.name);
+    } else {
+      const key = String(form.get('section')) as SectionKey;
+      if (!keys.includes(key)) throw new Error(`unknown section ${key}`);
+      const json = String(form.get('json'));
+      drafts[key] = json;
+      let data: unknown;
+      try {
+        data = JSON.parse(json);
+      } catch (e) {
+        throw new ContentError(key, `invalid JSON (${(e as Error).message})`);
+      }
+      await contentStore.saveSection(key, data);
+      delete drafts[key];
+      saved = key;
+    }
+  } catch (e) {
+    error = e instanceof ContentError ? e.message : `${(e as Error).message}`;
+  }
+}
+
+const content = contentStore.read();
+---
+<html lang="en">
+  <head><meta charset="utf-8" /><title>Admin</title><meta name="robots" content="noindex" /></head>
+  <body style="font-family: monospace; max-width: 60rem; margin: 2rem auto; padding: 0 1rem">
+    <h1>Admin</h1>
+    {error && <p role="alert" style="color: #b00">{error}</p>}
+    {saved && <p>Saved <b>{saved}</b>.</p>}
+    {synced && <p>{synced}</p>}
+    <h2>Sync</h2>
+    <form method="post">
+      <button name="sync" value="send">Send to production</button>
+      <button name="sync" value="bring">Bring from production</button>
+    </form>
+    <h2>Upload asset</h2>
+    <form method="post" enctype="multipart/form-data">
+      <input type="file" name="file" required /> <button>Upload</button>
+    </form>
+    {uploaded && <p>Path: <code>{uploaded}</code></p>}
+    {keys.map((key) => (
+      <form method="post">
+        <h2>{key}</h2>
+        <input type="hidden" name="section" value={key} />
+        <textarea name="json" rows="14" style="width: 100%">{drafts[key] ?? JSON.stringify(content[key], null, 2)}</textarea>
+        <button>Save {key}</button>
+      </form>
+    ))}
+  </body>
+</html>

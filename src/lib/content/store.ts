@@ -30,6 +30,12 @@ export interface ContentStore {
   isHealthy(): Promise<boolean>;
   /** Reloads and validates all Sections now, then refreshes stats. Rejects (keeping the last good copy) when content is invalid; a stats failure is only logged. */
   revalidate(): Promise<void>;
+  /** Validates `data` against the Section's schema, writes the row and reloads. Rejects with ContentError (nothing written) when invalid. */
+  saveSection(key: SectionKey, data: unknown): Promise<void>;
+  /** Raw data of every Section row (never github_stats). */
+  exportSections(): Promise<Record<SectionKey, unknown>>;
+  /** Validates the whole snapshot, then replaces every Section row in one transaction. Rejects with ContentError (nothing changed) when any Section is missing or invalid. */
+  importSections(snapshot: unknown): Promise<void>;
 }
 
 /** Invalid or missing content. `path` is the exact JSON path, e.g. `hero.title.pt`. */
@@ -106,6 +112,29 @@ export async function createContentStore({
       return current;
     },
     isHealthy: () => isReachable(db),
+    async saveSection(key, data) {
+      validate(key, data);
+      await db.insert(content).values({ key, data }).onConflictDoUpdate({ target: content.key, set: { data } });
+      current = await loadContent(db, log);
+      loadedAt = clock();
+    },
+    async exportSections() {
+      const rows = await db.select().from(content).where(inArray(content.key, sectionKeys));
+      return Object.fromEntries(rows.map((row) => [row.key, row.data])) as Record<SectionKey, unknown>;
+    },
+    async importSections(snapshot) {
+      const source = isObject(snapshot) ? snapshot : {};
+      for (const key of sectionKeys) {
+        if (!(key in source)) throw new ContentError(key, 'missing from snapshot');
+        validate(key, source[key]);
+      }
+      await db.transaction(async (tx) => {
+        await tx.delete(content).where(inArray(content.key, sectionKeys));
+        await tx.insert(content).values(sectionKeys.map((key) => ({ key, data: source[key] })));
+      });
+      current = await loadContent(db, log);
+      loadedAt = clock();
+    },
     async revalidate() {
       try {
         current = await loadContent(db, log);
@@ -121,6 +150,14 @@ export async function createContentStore({
       await refreshStats();
     },
   };
+}
+
+function validate(key: SectionKey, data: unknown) {
+  const parsed = sectionSchemas[key].safeParse(data);
+  if (!parsed.success) {
+    const [issue] = parsed.error.issues;
+    throw new ContentError([key, ...issue.path].join('.'), issue.message);
+  }
 }
 
 async function loadContent(db: Database, log: Logger): Promise<Content> {
