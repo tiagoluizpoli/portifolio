@@ -6,6 +6,7 @@ export type Locale = (typeof locales)[number];
 const en = {
   whatsapp: 'WhatsApp',
   downloadCv: 'Download CV',
+  stats: '{contributions} contributions in the last year · {repos} public repositories · mostly {languages}',
   learnMore: 'Learn more',
   now: 'Now:',
   present: 'Present',
@@ -28,6 +29,7 @@ export const ui: Record<Locale, Dictionary> = {
   pt: {
     whatsapp: 'WhatsApp',
     downloadCv: 'Baixar CV',
+    stats: '{contributions} contribuições no último ano · {repos} repositórios públicos · principalmente {languages}',
     learnMore: 'Saiba mais',
     now: 'Agora:',
     present: 'Atual',
