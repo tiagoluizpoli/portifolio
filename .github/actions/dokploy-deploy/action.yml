@@ -40,12 +40,12 @@ runs:
       env:
         URL: ${{ inputs.url }}
       run: |
-        # /api/health is not on spec/v2 yet; add it here once it exists.
         for i in $(seq 1 40); do
-          code=$(curl -s -o /dev/null -w '%{http_code}' "$URL/" || true)
-          echo "attempt $i: / -> $code"
-          [ "$code" = 200 ] && exit 0
+          page=$(curl -s -o /dev/null -w '%{http_code}' "$URL/" || true)
+          health=$(curl -s -o /dev/null -w '%{http_code}' "$URL/api/health" || true)
+          echo "attempt $i: / -> $page, /api/health -> $health"
+          [ "$page" = 200 ] && [ "$health" = 200 ] && exit 0
           sleep 15
         done
-        echo "::error::$URL/ did not return 200 (no auto-rollback)"
+        echo "::error::$URL/ and $URL/api/health did not both return 200 (no auto-rollback)"
         exit 1
