@@ -1,4 +1,5 @@
 ---
+import { assetUrl } from '../lib/assets';
 import { contentStore } from '../lib/content/instance';
 import { type Locale, ui } from '../lib/locale';
 import { nameLines } from '../lib/name-lines';
@@ -10,12 +11,17 @@ interface Props {
 const { lang } = Astro.props;
 const { hero } = contentStore.read();
 const labels = ui[lang];
-const assetBaseUrl = process.env.ASSET_BASE_URL ?? '';
-const asset = (path: string) => `${assetBaseUrl}/${path}`;
+const stats = contentStore.stats();
+const statsLine = stats
+  ? labels.stats
+      .replace('{contributions}', stats.contributions.toLocaleString(lang))
+      .replace('{repos}', stats.publicRepos.toLocaleString(lang))
+      .replace('{languages}', new Intl.ListFormat(lang, { type: 'conjunction' }).format(stats.languages))
+  : undefined;
 
 // shortcut: bundled placeholders until the owner uploads the real photo + cut-out and sets hero.photo.
-const card = hero.photo ? asset(hero.photo.card) : '/hero/placeholder-card.webp';
-const cutout = hero.photo ? asset(hero.photo.cutout) : '/hero/placeholder-cutout.webp';
+const card = hero.photo ? assetUrl(hero.photo.card) : '/hero/placeholder-card.webp';
+const cutout = hero.photo ? assetUrl(hero.photo.cutout) : '/hero/placeholder-cutout.webp';
 
 const lines = nameLines(hero.name);
 const longestLine = Math.max(...lines.map((line) => line.length));
@@ -57,13 +63,14 @@ const now = clock.format(new Date());
             </a>
           )}
           {hero.cv && (
-            <a class="btn soft" href={asset(hero.cv[lang])} download>
+            <a class="btn soft" href={assetUrl(hero.cv[lang])} download>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v12" /><path d="m6 11 6 6 6-6" /><path d="M5 20h14" /></svg>
               {labels.downloadCv}
             </a>
           )}
         </div>
       )}
+      {statsLine && <p class="stats">{statsLine}</p>}
     </div>
   </div>
 </section>
@@ -376,6 +383,16 @@ const now = clock.format(new Date());
   .soft:hover {
     background: color-mix(in srgb, var(--color-ink) 8%, transparent);
     transform: translateY(-2px);
+  }
+
+  .stats {
+    margin: 22px 0 0;
+    padding-top: 16px;
+    border-top: 1.5px solid var(--color-line);
+    max-width: 46ch;
+    font-size: 15px;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
   }
 
   /* Entrance (only once JS has opted in): the name rises, the card fades in while its springs drop it, text follows. */

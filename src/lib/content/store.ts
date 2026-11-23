@@ -1,24 +1,35 @@
 import { inArray } from 'drizzle-orm';
+import { type Logger as LogType, logger } from '../log';
 import { type Database, isReachable } from './db';
 import { type Content, type SectionKey, sectionSchemas } from './schemas';
+import { type GithubStats, readStatsSnapshot, writeStats } from './stats';
 import { content } from './table';
 
 export const CONTENT_TTL_MS = 3 * 60 * 60 * 1000;
 
+export const STATS_TTL_MS = 60 * 60 * 1000;
+const STATS_RETRY_MS = 60 * 1000;
+
 export type Clock = () => number;
-export type Logger = Pick<Console, 'warn' | 'error'>;
+export type Logger = Pick<LogType, 'warn' | 'error'> & Partial<Pick<LogType, 'info'>>;
 
 export interface ContentStoreDeps {
   db: Database;
   clock?: Clock;
   log?: Logger;
+  /** Fetches fresh GitHub stats (unvalidated). Absent = no token configured: only the stored snapshot is used. */
+  fetchStats?: () => Promise<unknown>;
 }
 
 export interface ContentStore {
   /** Validated content from memory; never waits on Postgres. Triggers a background refresh once the TTL has passed. */
   read(): Content;
   /** True when Postgres answers. */
+  /** Last good GitHub stats, or undefined when there is no valid snapshot (the Hero hides the sentence). */
+  stats(): GithubStats | undefined;
   isHealthy(): Promise<boolean>;
+  /** Reloads and validates all Sections now, then refreshes stats. Rejects (keeping the last good copy) when content is invalid; a stats failure is only logged. */
+  revalidate(): Promise<void>;
 }
 
 /** Invalid or missing content. `path` is the exact JSON path, e.g. `hero.title.pt`. */
@@ -38,7 +49,8 @@ const sectionKeys = Object.keys(sectionSchemas) as SectionKey[];
 export async function createContentStore({
   db,
   clock = Date.now,
-  log = console,
+  log = logger,
+  fetchStats,
 }: ContentStoreDeps): Promise<ContentStore> {
   let current = await loadContent(db, log);
   let loadedAt = clock();
@@ -50,19 +62,64 @@ export async function createContentStore({
         current = next;
         loadedAt = clock();
       })
-      .catch((error: unknown) => log.error('content refresh failed; serving last good copy', error))
+      .catch((error: unknown) => log.error('content refresh failed; serving last good copy', { error }))
       .finally(() => {
         refreshing = undefined;
       });
   }
 
+  // Snapshot first, then a refresh; neither can fail boot.
+  let statsSnapshot = await readStatsSnapshot(db).catch((error: unknown) => {
+    log.error('github stats snapshot unreadable; treating as absent', { error });
+    return undefined;
+  });
+  let statsDueAt = clock();
+  let statsRefreshing: Promise<void> | undefined;
+
+  function refreshStats() {
+    if (!fetchStats) return;
+    statsRefreshing ??= fetchStats()
+      .then((raw) => writeStats(db, raw))
+      .then((written) => {
+        statsSnapshot = written;
+        statsDueAt = clock() + STATS_TTL_MS;
+      })
+      .catch((error: unknown) => {
+        statsDueAt = clock() + STATS_RETRY_MS;
+        log.error('github stats refresh failed; serving last snapshot', { error });
+      })
+      .finally(() => {
+        statsRefreshing = undefined;
+      });
+    return statsRefreshing;
+  }
+  await refreshStats();
+
   return {
+    stats() {
+      if (clock() >= statsDueAt) refreshStats();
+      return statsSnapshot;
+    },
     read() {
       const age = clock() - loadedAt;
       if (age >= CONTENT_TTL_MS) refresh();
       return current;
     },
     isHealthy: () => isReachable(db),
+    async revalidate() {
+      try {
+        current = await loadContent(db, log);
+        loadedAt = clock();
+        log.info?.('content reloaded');
+      } catch (error) {
+        log.error('revalidate rejected; serving last good copy', {
+          error,
+          path: error instanceof ContentError ? error.path : undefined,
+        });
+        throw error;
+      }
+      await refreshStats();
+    },
   };
 }
 
@@ -80,7 +137,7 @@ async function loadContent(db: Database, log: Logger): Promise<Content> {
       throw new ContentError(issuePath, issue.message);
     }
     for (const unknownPath of unknownKeys(data, result.data, key))
-      log.warn(`ignoring unknown content key ${unknownPath}`);
+      log.warn('ignoring unknown content key', { path: unknownPath });
     loaded[key] = result.data;
   }
   return loaded as Content;

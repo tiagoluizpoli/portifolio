@@ -1,0 +1,19 @@
+---
+import { assetUrl } from '../lib/assets';
+import { contentStore } from '../lib/content/instance';
+import { type Locale, ui } from '../lib/locale';
+
+const { lang } = Astro.props as { lang: Locale };
+const c = contentStore.read().contact;
+const t = ui[lang];
+---
+<footer id="contact">
+  <h2 class="text-2xl font-bold">{t.nav.contact}</h2>
+  <ul class="mt-2 flex flex-wrap gap-4">
+    {c.whatsappUrl && <li><a class="underline" href={c.whatsappUrl}>{t.whatsapp}</a></li>}
+    <li><a class="underline" href={c.linkedinUrl}>LinkedIn</a></li>
+    {c.email && <li><a class="underline" href={`mailto:${c.email}`}>{c.email}</a></li>}
+    <li><a class="underline" href={c.githubUrl}>GitHub</a></li>
+    {c.cv && <li><a class="underline" href={assetUrl(c.cv[lang])}>{t.downloadCv}</a></li>}
+  </ul>
+</footer>
