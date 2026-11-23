@@ -2,12 +2,13 @@
 import { contentStore } from '../lib/content/instance';
 import { ContentError } from '../lib/content/store';
 import { type SectionKey, sectionSchemas } from '../lib/content/schemas';
-import { bucketFromEnv, callRemote, copyMissingAssets, remoteFromEnv } from '../lib/sync';
+import { bringFromProduction, sendToProduction } from '../lib/sync';
 import { uploadAsset } from '../lib/upload';
 
 // Development-only; Tailscale is the guard, there is no login.
 if (process.env.ADMIN_ENABLED !== 'true') return new Response(null, { status: 404 });
 
+const errorMessage = (value: unknown) => (value instanceof Error ? value.message : String(value));
 const keys = Object.keys(sectionSchemas) as SectionKey[];
 let error: string | undefined;
 let uploaded: string | undefined;
@@ -19,45 +20,31 @@ if (Astro.request.method === 'POST') {
   const form = await Astro.request.formData();
   try {
     const file = form.get('file');
-    const sync = form.get('sync');
-    if (sync === 'send' || sync === 'bring') {
-      const local = bucketFromEnv('ASSET_S3');
-      const prod = bucketFromEnv('PROD_ASSET_S3');
-      const remote = remoteFromEnv();
-      // Assets first (union, never deleted), then rows.
-      if (sync === 'send') {
-        const copied = await copyMissingAssets(local, prod);
-        await callRemote(remote, {
-          method: 'PUT',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify(await contentStore.exportSections()),
-        });
-        synced = `Sent to production (${copied.length} assets copied).`;
-      } else {
-        const snapshot = await (await callRemote(remote, { method: 'GET' })).json();
-        const copied = await copyMissingAssets(prod, local);
-        await contentStore.importSections(snapshot);
-        synced = `Brought from production (${copied.length} assets copied).`;
-      }
+    const sync = form.get('sync'); // narrowed to a SyncDirection by the checks below
+    if (sync === 'send') {
+      synced = await sendToProduction(contentStore);
+    } else if (sync === 'bring') {
+      synced = await bringFromProduction(contentStore);
     } else if (file instanceof File) {
       uploaded = await uploadAsset(new Uint8Array(await file.arrayBuffer()), file.name);
     } else {
-      const key = String(form.get('section')) as SectionKey;
-      if (!keys.includes(key)) throw new Error(`unknown section ${key}`);
+      const section = String(form.get('section'));
+      const key = keys.find((candidate) => candidate === section);
+      if (!key) throw new Error(`unknown section ${section}`);
       const json = String(form.get('json'));
       drafts[key] = json;
       let data: unknown;
       try {
         data = JSON.parse(json);
-      } catch (e) {
-        throw new ContentError(key, `invalid JSON (${(e as Error).message})`);
+      } catch (parseError) {
+        throw new ContentError(key, `invalid JSON (${errorMessage(parseError)})`);
       }
       await contentStore.saveSection(key, data);
       delete drafts[key];
       saved = key;
     }
-  } catch (e) {
-    error = e instanceof ContentError ? e.message : `${(e as Error).message}`;
+  } catch (caught) {
+    error = errorMessage(caught);
   }
 }
 

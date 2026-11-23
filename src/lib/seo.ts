@@ -1,5 +1,5 @@
 import type { Content } from './content/schemas';
-import type { Locale } from './locale';
+import { type Locale, locales } from './locale';
 
 export const DEFAULT_SITE_URL = 'https://tiagoluizpoli.lunalabs.com.br';
 /** Placeholder asset; the owner replaces public/og.png with the real 1200x630 image. */
@@ -25,7 +25,7 @@ export function seo(lang: Locale, { hero, contact }: Pick<Content, 'hero' | 'con
     image,
     ogLocale: ogLocale[lang],
     alternates: [
-      ...(Object.keys(paths) as Locale[]).map((l) => ({ hreflang: hreflang[l], href: abs(paths[l]) })),
+      ...locales.map((l) => ({ hreflang: hreflang[l], href: abs(paths[l]) })),
       { hreflang: 'x-default', href: abs(paths.en) },
     ],
     jsonLd: {
@@ -41,13 +41,11 @@ export function seo(lang: Locale, { hero, contact }: Pick<Content, 'hero' | 'con
 }
 
 export function sitemap(site = siteUrl()): string {
-  const alternates = (Object.keys(paths) as Locale[])
+  const alternates = locales
     .map((l) => `<xhtml:link rel="alternate" hreflang="${hreflang[l]}" href="${site + paths[l]}"/>`)
     .concat(`<xhtml:link rel="alternate" hreflang="x-default" href="${site}/"/>`)
     .join('');
-  const urls = (Object.keys(paths) as Locale[])
-    .map((l) => `<url><loc>${site + paths[l]}</loc>${alternates}</url>`)
-    .join('');
+  const urls = locales.map((l) => `<url><loc>${site + paths[l]}</loc>${alternates}</url>`).join('');
   return `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${urls}</urlset>`;
 }
 

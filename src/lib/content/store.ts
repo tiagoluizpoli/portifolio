@@ -1,5 +1,5 @@
 import { inArray } from 'drizzle-orm';
-import { type Logger as LogType, logger } from '../log';
+import { type Logger as BaseLogger, logger } from '../log';
 import { type Database, isReachable } from './db';
 import { type Content, type SectionKey, sectionSchemas } from './schemas';
 import { type GithubStats, readStatsSnapshot, writeStats } from './stats';
@@ -11,7 +11,7 @@ export const STATS_TTL_MS = 60 * 60 * 1000;
 const STATS_RETRY_MS = 60 * 1000;
 
 export type Clock = () => number;
-export type Logger = Pick<LogType, 'warn' | 'error'> & Partial<Pick<LogType, 'info'>>;
+export type Logger = Pick<BaseLogger, 'warn' | 'error'> & Partial<Pick<BaseLogger, 'info'>>;
 
 export interface ContentStoreDeps {
   db: Database;
@@ -24,9 +24,9 @@ export interface ContentStoreDeps {
 export interface ContentStore {
   /** Validated content from memory; never waits on Postgres. Triggers a background refresh once the TTL has passed. */
   read(): Content;
-  /** True when Postgres answers. */
   /** Last good GitHub stats, or undefined when there is no valid snapshot (the Hero hides the sentence). */
   stats(): GithubStats | undefined;
+  /** True when Postgres answers. */
   isHealthy(): Promise<boolean>;
   /** Reloads and validates all Sections now, then refreshes stats. Rejects (keeping the last good copy) when content is invalid; a stats failure is only logged. */
   revalidate(): Promise<void>;
@@ -62,19 +62,20 @@ export async function createContentStore({
   let loadedAt = clock();
   let refreshing: Promise<void> | undefined;
 
+  async function reload() {
+    current = await loadContent(db, log);
+    loadedAt = clock();
+  }
+
   function refresh() {
-    refreshing ??= loadContent(db, log)
-      .then((next) => {
-        current = next;
-        loadedAt = clock();
-      })
+    refreshing ??= reload()
       .catch((error: unknown) => log.error('content refresh failed; serving last good copy', { error }))
       .finally(() => {
         refreshing = undefined;
       });
   }
 
-  // Snapshot first, then a refresh; neither can fail boot.
+  // Snapshot first, then a background refresh; neither can block or fail boot.
   let statsSnapshot = await readStatsSnapshot(db).catch((error: unknown) => {
     log.error('github stats snapshot unreadable; treating as absent', { error });
     return undefined;
@@ -99,7 +100,7 @@ export async function createContentStore({
       });
     return statsRefreshing;
   }
-  await refreshStats();
+  void refreshStats();
 
   return {
     stats() {
@@ -114,9 +115,11 @@ export async function createContentStore({
     isHealthy: () => isReachable(db),
     async saveSection(key, data) {
       validate(key, data);
-      await db.insert(content).values({ key, data }).onConflictDoUpdate({ target: content.key, set: { data } });
-      current = await loadContent(db, log);
-      loadedAt = clock();
+      await db
+        .insert(content)
+        .values({ key, data })
+        .onConflictDoUpdate({ target: content.key, set: { data, updatedAt: new Date() } });
+      await reload();
     },
     async exportSections() {
       const rows = await db.select().from(content).where(inArray(content.key, sectionKeys));
@@ -132,13 +135,11 @@ export async function createContentStore({
         await tx.delete(content).where(inArray(content.key, sectionKeys));
         await tx.insert(content).values(sectionKeys.map((key) => ({ key, data: source[key] })));
       });
-      current = await loadContent(db, log);
-      loadedAt = clock();
+      await reload();
     },
     async revalidate() {
       try {
-        current = await loadContent(db, log);
-        loadedAt = clock();
+        await reload();
         log.info?.('content reloaded');
       } catch (error) {
         log.error('revalidate rejected; serving last good copy', {
@@ -152,12 +153,14 @@ export async function createContentStore({
   };
 }
 
+/** Parses `data` with the Section's schema; throws ContentError with the exact JSON path. */
 function validate(key: SectionKey, data: unknown) {
-  const parsed = sectionSchemas[key].safeParse(data);
-  if (!parsed.success) {
-    const [issue] = parsed.error.issues;
+  const result = sectionSchemas[key].safeParse(data);
+  if (!result.success) {
+    const [issue] = result.error.issues;
     throw new ContentError([key, ...issue.path].join('.'), issue.message);
   }
+  return result.data;
 }
 
 async function loadContent(db: Database, log: Logger): Promise<Content> {
@@ -167,15 +170,10 @@ async function loadContent(db: Database, log: Logger): Promise<Content> {
   for (const key of sectionKeys) {
     if (!dataByKey.has(key)) throw new ContentError(key, 'missing content row');
     const data = dataByKey.get(key);
-    const result = sectionSchemas[key].safeParse(data);
-    if (!result.success) {
-      const [issue] = result.error.issues;
-      const issuePath = [key, ...issue.path].join('.');
-      throw new ContentError(issuePath, issue.message);
-    }
-    for (const unknownPath of unknownKeys(data, result.data, key))
+    const parsed = validate(key, data);
+    for (const unknownPath of unknownKeys(data, parsed, key))
       log.warn('ignoring unknown content key', { path: unknownPath });
-    loaded[key] = result.data;
+    loaded[key] = parsed;
   }
   return loaded as Content;
 }

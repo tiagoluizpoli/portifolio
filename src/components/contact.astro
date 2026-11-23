@@ -4,7 +4,7 @@ import { contentStore } from '../lib/content/instance';
 import { type Locale, ui } from '../lib/locale';
 
 const { lang } = Astro.props as { lang: Locale };
-const { contact: c, hero } = contentStore.read();
+const { contact, hero } = contentStore.read();
 const t = ui[lang];
 /** Last path segment of a profile URL: the handle shown next to LinkedIn and GitHub. */
 const handle = (url: string) => new URL(url).pathname.split('/').filter(Boolean).at(-1) ?? '';
@@ -18,11 +18,11 @@ interface Way {
   download?: boolean;
 }
 const ways: Way[] = [
-  ...(c.whatsappUrl ? [{ label: 'WhatsApp', href: c.whatsappUrl, event: 'whatsapp-click' }] : []),
-  { label: 'LinkedIn', hint: handle(c.linkedinUrl), href: c.linkedinUrl },
-  ...(c.email ? [{ label: 'Email', hint: c.email, href: `mailto:${c.email}` }] : []),
-  { label: 'GitHub', hint: handle(c.githubUrl), href: c.githubUrl },
-  ...(c.cv ? [{ label: t.downloadCv, hint: 'PDF', href: assetUrl(c.cv[lang]), event: 'cv-download', download: true }] : []),
+  ...(contact.whatsappUrl ? [{ label: 'WhatsApp', href: contact.whatsappUrl, event: 'whatsapp-click' }] : []),
+  { label: 'LinkedIn', hint: handle(contact.linkedinUrl), href: contact.linkedinUrl },
+  ...(contact.email ? [{ label: 'Email', hint: contact.email, href: `mailto:${contact.email}` }] : []),
+  { label: 'GitHub', hint: handle(contact.githubUrl), href: contact.githubUrl },
+  ...(contact.cv ? [{ label: t.downloadCv, hint: 'PDF', href: assetUrl(contact.cv[lang]), event: 'cv-download', download: true }] : []),
 ];
 ---
 <footer class="contact" id="contact" aria-labelledby="contact-h">

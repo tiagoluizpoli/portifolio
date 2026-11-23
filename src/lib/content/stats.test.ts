@@ -50,10 +50,17 @@ test('writeStats rejects invalid stats without writing', async () => {
   expect(await db.select().from(content).where(eq(content.key, 'github_stats'))).toEqual([]);
 });
 
-test('boot fetches, stores and serves stats', async () => {
+test('boot fetches in the background, then stores and serves stats', async () => {
   const store = await createContentStore({ db, log: quiet(), fetchStats: async () => stats(10) });
-  expect(store.stats()).toMatchObject({ contributions: 10 });
+  await vi.waitFor(() => expect(store.stats()).toMatchObject({ contributions: 10 }));
   expect(await readStatsSnapshot(db)).toMatchObject({ contributions: 10 });
+});
+
+test('boot does not wait for GitHub', async () => {
+  const fetchStats = vi.fn(() => new Promise<unknown>(() => {})); // never settles
+  const store = await createContentStore({ db, log: quiet(), fetchStats });
+  expect(fetchStats).toHaveBeenCalledTimes(1);
+  expect(store.stats()).toBeUndefined();
 });
 
 test('GitHub down at boot: the last snapshot is served', async () => {
@@ -61,7 +68,7 @@ test('GitHub down at boot: the last snapshot is served', async () => {
   const log = quiet();
   const store = await createContentStore({ db, log, fetchStats: async () => Promise.reject(new Error('down')) });
   expect(store.stats()).toMatchObject({ contributions: 7 });
-  expect(log.error).toHaveBeenCalled();
+  await vi.waitFor(() => expect(log.error).toHaveBeenCalled());
 });
 
 test('no snapshot and GitHub down: stats are absent', async () => {
@@ -78,12 +85,14 @@ test('an invalid snapshot is treated as absent and refetched', async () => {
   const offline = await createContentStore({ db, log: quiet() });
   expect(offline.stats()).toBeUndefined();
   const store = await createContentStore({ db, log: quiet(), fetchStats: async () => stats(11) });
-  expect(store.stats()).toMatchObject({ contributions: 11 });
+  await vi.waitFor(() => expect(store.stats()).toMatchObject({ contributions: 11 }));
 });
 
 test('an invalid fetch result is not stored and keeps the last snapshot', async () => {
   await writeStats(db, stats(7));
-  const store = await createContentStore({ db, log: quiet(), fetchStats: async () => ({ nope: true }) });
+  const log = quiet();
+  const store = await createContentStore({ db, log, fetchStats: async () => ({ nope: true }) });
+  await vi.waitFor(() => expect(log.error).toHaveBeenCalled());
   expect(store.stats()).toMatchObject({ contributions: 7 });
   expect(await readStatsSnapshot(db)).toMatchObject({ contributions: 7 });
 });
@@ -101,6 +110,7 @@ test('stale stats are served while one coalesced refresh runs after the TTL', as
     return stats(calls);
   });
   const store = await createContentStore({ db, clock: () => now, log: quiet(), fetchStats });
+  await vi.waitFor(() => expect(store.stats()).toMatchObject({ contributions: 1 }));
   expect(fetchStats).toHaveBeenCalledTimes(1);
 
   now = STATS_TTL_MS - 1;

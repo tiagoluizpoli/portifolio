@@ -94,6 +94,20 @@ const now = clock.format(new Date());
   const NAME_DRIFT_Y_PX = 12;
   const HEAD_LIFT_DELAY_MS = 650; // the head lifts once the card has landed
   const CLOCK_TICK_MS = 20_000;
+  // Entrance: the card starts tilted and sunk, then its springs settle it flat.
+  const ENTRY_TILT_X_DEG = 22;
+  const ENTRY_TILT_Y_DEG = -18;
+  const ENTRY_DROP_PX = 70;
+  const ENTRY_DROP_STIFFNESS = 0.06;
+  const SHEEN_PER_DEG = 3.2; // % the sheen moves per degree of tilt
+  const SHADOW_SHIFT_PER_DEG = 2.2;
+  const HEAD_SHADOW_SHIFT_PER_DEG = 0.9;
+  const SHADOW_FADE_TILT_DEG = 70;
+  const SHADOW_FADE_DROP_PX = 400;
+  const IDLE_SWAY_Y_PERIOD_MS = 2600;
+  const IDLE_SWAY_X_PERIOD_MS = 3400;
+  const IDLE_SWAY_Y_DEG = 4;
+  const IDLE_SWAY_X_DEG = 2.2;
 
   const hero = document.querySelector<HTMLElement>('[data-hero]');
   const card = document.querySelector<HTMLElement>('[data-card]');
@@ -112,7 +126,7 @@ const now = clock.format(new Date());
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (hero && card && shadow && name && head && !reduced) {
     const s = {
-      rx: spring(22), ry: spring(-18), y: spring(70, 0.06), pz: spring(0, 0.05, 0.78),
+      rx: spring(ENTRY_TILT_X_DEG), ry: spring(ENTRY_TILT_Y_DEG), y: spring(ENTRY_DROP_PX, ENTRY_DROP_STIFFNESS), pz: spring(0, 0.05, 0.78),
       nx: spring(0, 0.06, 0.82), ny: spring(0, 0.06, 0.82),
     };
     s.rx.t = s.ry.t = s.y.t = 0;
@@ -128,11 +142,11 @@ const now = clock.format(new Date());
       card.style.transform = `translateY(${y}px) rotateX(${rx}deg) rotateY(${ry}deg)`;
       card.style.setProperty('--pz', `${pz}px`);
       card.style.setProperty('--ps', ((PERSPECTIVE_PX - pz) / PERSPECTIVE_PX).toFixed(4));
-      card.style.setProperty('--sx', `${50 + ry * 3.2}%`);
-      card.style.setProperty('--sy', `${42 - rx * 3.2}%`);
-      card.style.setProperty('--dsx', `${(-ry * 0.9).toFixed(1)}px`);
-      shadow.style.setProperty('--shx', `${(-ry * 2.2).toFixed(1)}px`);
-      shadow.style.setProperty('--shs', (1 - Math.abs(rx) / 70 - y / 400).toFixed(3));
+      card.style.setProperty('--sx', `${50 + ry * SHEEN_PER_DEG}%`);
+      card.style.setProperty('--sy', `${42 - rx * SHEEN_PER_DEG}%`);
+      card.style.setProperty('--dsx', `${(-ry * HEAD_SHADOW_SHIFT_PER_DEG).toFixed(1)}px`);
+      shadow.style.setProperty('--shx', `${(-ry * SHADOW_SHIFT_PER_DEG).toFixed(1)}px`);
+      shadow.style.setProperty('--shs', (1 - Math.abs(rx) / SHADOW_FADE_TILT_DEG - y / SHADOW_FADE_DROP_PX).toFixed(3));
       // The name sits deeper than the card, so it drifts the other way.
       name.style.translate = `${(-s.nx.x * NAME_DRIFT_X_PX).toFixed(1)}px ${(-s.ny.x * NAME_DRIFT_Y_PX).toFixed(1)}px`;
     };
@@ -170,8 +184,8 @@ const now = clock.format(new Date());
       if (!visible) return;
       if (!hover) {
         // idle sway
-        s.ry.t = Math.sin(now / 2600) * 4;
-        s.rx.t = Math.cos(now / 3400) * 2.2;
+        s.ry.t = Math.sin(now / IDLE_SWAY_Y_PERIOD_MS) * IDLE_SWAY_Y_DEG;
+        s.rx.t = Math.cos(now / IDLE_SWAY_X_PERIOD_MS) * IDLE_SWAY_X_DEG;
       }
       for (const sp of springs) sp.step();
       paint();

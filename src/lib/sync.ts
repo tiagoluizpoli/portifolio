@@ -1,68 +1,42 @@
-import { AwsClient } from 'aws4fetch';
+import { type Bucket, bucketClient, bucketFromEnv } from './bucket';
+import type { ContentStore } from './content/store';
+import { logger } from './log';
 
-export interface Bucket {
-  endpoint: string;
-  bucket: string;
-  accessKey: string;
-  secretKey: string;
-  region?: string;
-}
+const S3_KEY_PATTERN = /<Key>([^<]+)<\/Key>/g;
+const TRUNCATED_PATTERN = /<IsTruncated>true<\/IsTruncated>/;
+const NEXT_TOKEN_PATTERN = /<NextContinuationToken>([^<]+)<\/NextContinuationToken>/;
 
-/** Bucket from `<prefix>_ENDPOINT|BUCKET|ACCESS_KEY|SECRET_KEY|REGION` env vars. */
-export function bucketFromEnv(prefix: string, env = process.env): Bucket {
-  const [endpoint, bucket, accessKey, secretKey] = ['ENDPOINT', 'BUCKET', 'ACCESS_KEY', 'SECRET_KEY'].map(
-    (k) => env[`${prefix}_${k}`],
-  );
-  if (!(endpoint && bucket && accessKey && secretKey)) throw new Error(`bucket is not configured (${prefix}_*)`);
-  return { endpoint, bucket, accessKey, secretKey, region: env[`${prefix}_REGION`] };
-}
-
-function client(b: Bucket) {
-  const aws = new AwsClient({
-    accessKeyId: b.accessKey,
-    secretAccessKey: b.secretKey,
-    service: 's3',
-    region: b.region ?? 'us-east-1',
-  });
-  const base = `${b.endpoint.replace(/\/+$/, '')}/${b.bucket}`; // path-style, like upload.ts
-  return {
-    async fetch(path: string, init?: RequestInit) {
-      const res = await aws.fetch(`${base}${path}`, init);
-      if (!res.ok) throw new Error(`bucket ${init?.method ?? 'GET'} ${path} failed: ${res.status}`);
-      return res;
-    },
-  };
-}
-
-async function listKeys(b: Bucket): Promise<string[]> {
-  const c = client(b);
+async function listKeys(bucket: Bucket): Promise<string[]> {
+  const client = bucketClient(bucket);
   const keys: string[] = [];
   let token: string | undefined;
   do {
     const query = `?list-type=2${token ? `&continuation-token=${encodeURIComponent(token)}` : ''}`;
-    const xml = await (await c.fetch(query)).text();
-    for (const m of xml.matchAll(/<Key>([^<]+)<\/Key>/g)) keys.push(m[1].replaceAll('&amp;', '&'));
-    token = /<IsTruncated>true<\/IsTruncated>/.test(xml)
-      ? xml.match(/<NextContinuationToken>([^<]+)<\/NextContinuationToken>/)?.[1]
-      : undefined;
+    const listing = await client.fetch(query);
+    const xml = await listing.text();
+    for (const [, key] of xml.matchAll(S3_KEY_PATTERN)) keys.push(key.replaceAll('&amp;', '&'));
+    token = TRUNCATED_PATTERN.test(xml) ? xml.match(NEXT_TOKEN_PATTERN)?.[1] : undefined;
   } while (token);
   return keys;
 }
 
 /** Copies objects missing in `to` from `from` (union; never deletes). Returns the copied keys. */
 export async function copyMissingAssets(from: Bucket, to: Bucket): Promise<string[]> {
-  const have = new Set(await listKeys(to));
-  const missing = (await listKeys(from)).filter((k) => !have.has(k));
-  const source = client(from);
-  const target = client(to);
+  const present = new Set(await listKeys(to));
+  const sourceKeys = await listKeys(from);
+  const missing = sourceKeys.filter((key) => !present.has(key));
+  const source = bucketClient(from);
+  const target = bucketClient(to);
   for (const key of missing) {
-    const obj = await source.fetch(`/${key}`);
+    const object = await source.fetch(`/${key}`);
+    const bytes = new Uint8Array(await object.arrayBuffer());
     await target.fetch(`/${key}`, {
       method: 'PUT',
-      body: new Uint8Array(await obj.arrayBuffer()),
-      headers: { 'content-type': obj.headers.get('content-type') ?? 'application/octet-stream' },
+      body: bytes,
+      headers: { 'content-type': object.headers.get('content-type') ?? 'application/octet-stream' },
     });
   }
+  logger.info('assets copied', { copied: missing.length, scanned: sourceKeys.length });
   return missing;
 }
 
@@ -77,11 +51,56 @@ export function remoteFromEnv(env = process.env): Remote {
   return { url: `${SYNC_PROD_URL.replace(/\/+$/, '')}/api/sync`, token: SYNC_PROD_TOKEN };
 }
 
-export async function callRemote(remote: Remote, init: RequestInit): Promise<Response> {
+async function callRemote(remote: Remote, init: RequestInit): Promise<Response> {
   const res = await fetch(remote.url, {
     ...init,
     headers: { ...init.headers, authorization: `Bearer ${remote.token}` },
   });
   if (!res.ok) throw new Error(`production sync failed: ${res.status} ${await res.text()}`);
   return res;
+}
+
+export type SyncDirection = 'send' | 'bring';
+
+/** Runs one sync direction; logs the outcome (never tokens) and rethrows failures. */
+async function logged(direction: SyncDirection, run: () => Promise<string[]>): Promise<string> {
+  try {
+    const copied = await run();
+    logger.info('content sync done', { direction, assetsCopied: copied.length });
+    return `${direction === 'send' ? 'Sent to production' : 'Brought from production'} (${copied.length} assets copied).`;
+  } catch (error) {
+    logger.error('content sync failed', { direction, error });
+    throw error;
+  }
+}
+
+/** Dev -> production: assets first (union, never deleted), then the content rows. */
+export function sendToProduction(store: ContentStore, env = process.env): Promise<string> {
+  return logged('send', async () => {
+    const local = bucketFromEnv('ASSET_S3', env);
+    const prod = bucketFromEnv('PROD_ASSET_S3', env);
+    const remote = remoteFromEnv(env);
+    const copied = await copyMissingAssets(local, prod);
+    const snapshot = await store.exportSections();
+    await callRemote(remote, {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(snapshot),
+    });
+    return copied;
+  });
+}
+
+/** Production -> dev: assets first (union, never deleted), then the content rows. */
+export function bringFromProduction(store: ContentStore, env = process.env): Promise<string> {
+  return logged('bring', async () => {
+    const local = bucketFromEnv('ASSET_S3', env);
+    const prod = bucketFromEnv('PROD_ASSET_S3', env);
+    const remote = remoteFromEnv(env);
+    const response = await callRemote(remote, { method: 'GET' });
+    const snapshot: unknown = await response.json();
+    const copied = await copyMissingAssets(prod, local);
+    await store.importSections(snapshot);
+    return copied;
+  });
 }

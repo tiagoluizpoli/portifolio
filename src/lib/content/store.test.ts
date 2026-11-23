@@ -191,6 +191,18 @@ test('saveSection writes a valid Section and serves it immediately', async () =>
   expect((row.data as { name: string }).name).toBe('Saved');
 });
 
+test('saveSection bumps updated_at', async () => {
+  await putAll();
+  await db
+    .update(content)
+    .set({ updatedAt: new Date(0) })
+    .where(eq(content.key, 'hero'));
+  const store = await createContentStore({ db });
+  await store.saveSection('hero', validHero);
+  const [row] = await db.select().from(content).where(eq(content.key, 'hero'));
+  expect(row.updatedAt.getTime()).toBeGreaterThan(0);
+});
+
 test('saveSection rejects an invalid Section with the Zod path and changes nothing', async () => {
   await putAll();
   const store = await createContentStore({ db });
