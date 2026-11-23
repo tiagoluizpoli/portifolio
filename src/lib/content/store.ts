@@ -1,4 +1,5 @@
 import { inArray } from 'drizzle-orm';
+import { type Logger as LogType, logger } from '../log';
 import { type Database, isReachable } from './db';
 import { type Content, type SectionKey, sectionSchemas } from './schemas';
 import { type GithubStats, readStatsSnapshot, writeStats } from './stats';
@@ -10,7 +11,7 @@ export const STATS_TTL_MS = 60 * 60 * 1000;
 const STATS_RETRY_MS = 60 * 1000;
 
 export type Clock = () => number;
-export type Logger = Pick<Console, 'warn' | 'error'>;
+export type Logger = Pick<LogType, 'warn' | 'error'> & Partial<Pick<LogType, 'info'>>;
 
 export interface ContentStoreDeps {
   db: Database;
@@ -48,7 +49,7 @@ const sectionKeys = Object.keys(sectionSchemas) as SectionKey[];
 export async function createContentStore({
   db,
   clock = Date.now,
-  log = console,
+  log = logger,
   fetchStats,
 }: ContentStoreDeps): Promise<ContentStore> {
   let current = await loadContent(db, log);
@@ -61,7 +62,7 @@ export async function createContentStore({
         current = next;
         loadedAt = clock();
       })
-      .catch((error: unknown) => log.error('content refresh failed; serving last good copy', error))
+      .catch((error: unknown) => log.error('content refresh failed; serving last good copy', { error }))
       .finally(() => {
         refreshing = undefined;
       });
@@ -69,7 +70,7 @@ export async function createContentStore({
 
   // Snapshot first, then a refresh; neither can fail boot.
   let statsSnapshot = await readStatsSnapshot(db).catch((error: unknown) => {
-    log.error('github stats snapshot unreadable; treating as absent', error);
+    log.error('github stats snapshot unreadable; treating as absent', { error });
     return undefined;
   });
   let statsDueAt = clock();
@@ -85,7 +86,7 @@ export async function createContentStore({
       })
       .catch((error: unknown) => {
         statsDueAt = clock() + STATS_RETRY_MS;
-        log.error('github stats refresh failed; serving last snapshot', error);
+        log.error('github stats refresh failed; serving last snapshot', { error });
       })
       .finally(() => {
         statsRefreshing = undefined;
@@ -109,8 +110,12 @@ export async function createContentStore({
       try {
         current = await loadContent(db, log);
         loadedAt = clock();
+        log.info?.('content reloaded');
       } catch (error) {
-        log.error('revalidate rejected; serving last good copy', error);
+        log.error('revalidate rejected; serving last good copy', {
+          error,
+          path: error instanceof ContentError ? error.path : undefined,
+        });
         throw error;
       }
       await refreshStats();
@@ -132,7 +137,7 @@ async function loadContent(db: Database, log: Logger): Promise<Content> {
       throw new ContentError(issuePath, issue.message);
     }
     for (const unknownPath of unknownKeys(data, result.data, key))
-      log.warn(`ignoring unknown content key ${unknownPath}`);
+      log.warn('ignoring unknown content key', { path: unknownPath });
     loaded[key] = result.data;
   }
   return loaded as Content;

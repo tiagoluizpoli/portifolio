@@ -1,3 +1,4 @@
+import { logger } from '../log';
 import { migrateDatabase, openDatabase } from './db';
 import { createGithubFetcher } from './stats';
 import { createContentStore } from './store';
@@ -13,3 +14,5 @@ export const contentStore = await createContentStore({
   db,
   fetchStats: process.env.GITHUB_TOKEN ? createGithubFetcher(process.env.GITHUB_TOKEN) : undefined,
 });
+
+logger.info('content store booted', { stats: Boolean(process.env.GITHUB_TOKEN) });
