@@ -28,6 +28,8 @@ export interface ContentStore {
   /** Last good GitHub stats, or undefined when there is no valid snapshot (the Hero hides the sentence). */
   stats(): GithubStats | undefined;
   isHealthy(): Promise<boolean>;
+  /** Reloads and validates all Sections now, then refreshes stats. Rejects (keeping the last good copy) when content is invalid; a stats failure is only logged. */
+  revalidate(): Promise<void>;
 }
 
 /** Invalid or missing content. `path` is the exact JSON path, e.g. `hero.title.pt`. */
@@ -104,6 +106,16 @@ export async function createContentStore({
       return current;
     },
     isHealthy: () => isReachable(db),
+    async revalidate() {
+      try {
+        current = await loadContent(db, log);
+        loadedAt = clock();
+      } catch (error) {
+        log.error('revalidate rejected; serving last good copy', error);
+        throw error;
+      }
+      await refreshStats();
+    },
   };
 }
 
