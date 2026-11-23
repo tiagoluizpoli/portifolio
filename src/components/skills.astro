@@ -7,19 +7,71 @@ const { lang } = Astro.props as { lang: Locale };
 const { groups } = contentStore.read().skills;
 const t = ui[lang];
 ---
-<section id="skills">
-  <h2 class="text-2xl font-bold">{t.nav.skills}</h2>
-  {groups.map((g) => (
-    <div class="mt-4">
-      <h3 class="font-semibold">{g.name[lang]}</h3>
-      <ul class="mt-1 flex flex-wrap gap-4">
-        {g.items.map((item) => (
-          <li class="inline-flex items-center gap-2">
-            {item.icon && <Fragment set:html={iconSvg(item.icon)} />}
-            {item.name}
-          </li>
-        ))}
-      </ul>
-    </div>
-  ))}
+<section class="sec" id="skills" aria-labelledby="skills-h">
+  <h2 class="sec-h" id="skills-h">{t.nav.skills}</h2>
+  <div>
+    {groups.map((g) => (
+      <div class="row">
+        <h3>{g.name[lang]}</h3>
+        <ul>
+          {g.items.map((item) => (
+            <li>
+              {item.icon && <Fragment set:html={iconSvg(item.icon)} />}
+              {item.name}
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
 </section>
+
+<style>
+  .row {
+    display: grid;
+    grid-template-columns: minmax(140px, 3fr) minmax(0, 9fr);
+    gap: clamp(16px, 4vw, 72px);
+    align-items: baseline;
+    padding: 22px 0;
+    border-top: 1px solid var(--color-line);
+  }
+  .row:last-child {
+    border-bottom: 1px solid var(--color-line);
+  }
+  h3 {
+    margin: 0;
+    color: var(--color-ink-2);
+    font-size: 15px;
+    font-weight: 600;
+  }
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2em 0.85em;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-weight: 700;
+    font-size: clamp(1.4rem, 2.5vw, 2.4rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    font-variation-settings: "opsz" 60;
+  }
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+  }
+  /* Brand marks stay small next to the big names, so the row still reads as type first. */
+  li :global(svg) {
+    width: auto;
+    height: 0.62em;
+  }
+
+  @media (max-width: 820px) {
+    .row {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+    }
+  }
+</style>

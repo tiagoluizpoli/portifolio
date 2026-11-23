@@ -8,13 +8,119 @@ const t = ui[lang];
 const month = new Intl.DateTimeFormat(lang === 'pt' ? 'pt-BR' : 'en', { month: 'short', year: 'numeric', timeZone: 'UTC' });
 const fmt = (ym: string) => month.format(new Date(`${ym}-01T00:00:00Z`));
 ---
-<section id="experience">
-  <h2 class="text-2xl font-bold">{t.nav.experience}</h2>
-  {roles.map((r) => (
-    <article class="mt-6">
-      <h3 class="text-xl font-semibold">{r.title[lang]} · {r.company}{r.kind && ` · ${r.kind[lang]}`}</h3>
-      <p>{fmt(r.start)} – {r.end ? fmt(r.end) : t.present} · {r.location[lang]}</p>
-      <ul class="mt-2 list-disc pl-5">{r.highlights.map((h) => <li>{h[lang]}</li>)}</ul>
-    </article>
-  ))}
+<section class="sec" id="experience" aria-labelledby="experience-h">
+  <h2 class="sec-h" id="experience-h">{t.nav.experience}</h2>
+  <ol>
+    {roles.map((r) => (
+      <li class="row">
+        <div class="head">
+          <h3>{r.company}</h3>
+          <p class="role">{r.title[lang]}{r.kind && ` · ${r.kind[lang]}`}</p>
+          <p class="when">
+            <time datetime={r.start}>{fmt(r.start)}</time> – {r.end ? <time datetime={r.end}>{fmt(r.end)}</time> : t.present}
+            · {r.location[lang]}
+          </p>
+        </div>
+        <ul class="what">{r.highlights.map((h) => <li>{h[lang]}</li>)}</ul>
+      </li>
+    ))}
+  </ol>
 </section>
+
+<style>
+  ol,
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  p {
+    margin: 0;
+  }
+  .row {
+    --pad: clamp(16px, 2vw, 28px);
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(20px, 4vw, 72px);
+    padding: 30px var(--pad);
+    border-radius: 28px;
+    transition: background-color 0.3s;
+  }
+  .row + .row::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: var(--pad);
+    right: var(--pad);
+    height: 1px;
+    background: var(--color-line);
+    transition: opacity 0.3s;
+  }
+  .row:hover {
+    background: var(--color-paper-2);
+  }
+  .row:hover::before,
+  .row:hover + .row::before {
+    opacity: 0;
+  }
+  h3 {
+    margin: 0;
+    font-weight: 800;
+    font-size: clamp(1.9rem, 3.2vw, 3rem);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    font-stretch: 88%;
+    font-variation-settings: "opsz" 72;
+  }
+  .role {
+    margin-top: 8px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .when {
+    margin-top: 2px;
+    color: var(--color-ink-2);
+    font-size: 16px;
+    font-variant-numeric: tabular-nums;
+  }
+  .what {
+    align-self: center;
+  }
+  .what li {
+    position: relative;
+    max-width: 62ch;
+    padding-left: 26px;
+    font-size: 1.12rem;
+    line-height: 1.5;
+    text-wrap: pretty;
+  }
+  .what li + li {
+    margin-top: 10px;
+  }
+  .what li::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 0.55em;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--color-accent);
+  }
+
+  @media (max-width: 820px) {
+    .row {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 16px;
+      padding-inline: 4px;
+    }
+    .row + .row::before {
+      left: 4px;
+      right: 4px;
+    }
+    .what li {
+      font-size: 1.02rem;
+    }
+  }
+</style>

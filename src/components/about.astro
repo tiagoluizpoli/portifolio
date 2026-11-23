@@ -5,20 +5,94 @@ import { type Locale, ui } from '../lib/locale';
 const { lang } = Astro.props as { lang: Locale };
 const about = contentStore.read().about;
 const t = ui[lang];
+const hasAside = about.education.length > 0 || about.languages.length > 0;
 ---
-<section id="about">
-  <h2 class="text-2xl font-bold">{t.nav.about}</h2>
-  <p class="mt-2 max-w-2xl">{about.summary[lang]}</p>
-  {about.education.length > 0 && (
-    <>
-      <h3 class="mt-4 font-semibold">{t.education}</h3>
-      <ul>{about.education.map((e) => <li>{e.institution} · {e.degree[lang]} · {e.period[lang]}</li>)}</ul>
-    </>
-  )}
-  {about.languages.length > 0 && (
-    <>
-      <h3 class="mt-4 font-semibold">{t.languages}</h3>
-      <ul>{about.languages.map((l) => <li>{l.name[lang]} ({l.level[lang]})</li>)}</ul>
-    </>
-  )}
+<section class="sec" id="about" aria-labelledby="about-h">
+  <h2 class="sec-h" id="about-h">{t.nav.about}</h2>
+  <div class="grid">
+    <p class="text">{about.summary[lang]}</p>
+    {hasAside && (
+      <aside>
+        {about.education.length > 0 && (
+          <>
+            <h3>{t.education}</h3>
+            <ul>
+              {about.education.map((e) => (
+                <li>
+                  <p class="school">{e.institution}</p>
+                  <p>{e.degree[lang]}</p>
+                  <p class="soft">{e.period[lang]}</p>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+        {about.languages.length > 0 && (
+          <>
+            <h3>{t.languages}</h3>
+            <ul>{about.languages.map((l) => <li>{l.name[lang]} <span class="soft">· {l.level[lang]}</span></li>)}</ul>
+          </>
+        )}
+      </aside>
+    )}
+  </div>
 </section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+    gap: clamp(28px, 5vw, 96px);
+    align-items: end;
+  }
+  p {
+    margin: 0;
+  }
+  .text {
+    max-width: 40ch;
+    font-weight: 500;
+    font-size: clamp(1.45rem, 2.5vw, 2.3rem);
+    line-height: 1.24;
+    letter-spacing: -0.015em;
+    font-variation-settings: "opsz" 48;
+    text-wrap: pretty;
+  }
+  aside {
+    padding: 26px 28px;
+    border-radius: 28px;
+    background: var(--color-paper-2);
+    font-size: 15px;
+  }
+  h3 {
+    margin: 0 0 12px;
+    color: var(--color-ink-2);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  ul {
+    display: grid;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  ul + h3 {
+    margin-top: 26px;
+  }
+  .school {
+    margin-bottom: 4px;
+    font-weight: 800;
+    font-size: 1.5rem;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .soft {
+    color: var(--color-ink-2);
+  }
+
+  @media (max-width: 820px) {
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

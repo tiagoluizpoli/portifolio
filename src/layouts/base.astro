@@ -1,13 +1,12 @@
 ---
 import '../styles/global.css';
 import { contentStore } from '../lib/content/instance';
-import { type Locale, locales, ui } from '../lib/locale';
-import { paths, seo } from '../lib/seo';
+import type { Locale } from '../lib/locale';
+import { seo } from '../lib/seo';
 
 const { lang } = Astro.props as { lang: Locale };
 const meta = seo(lang, contentStore.read());
 const { UMAMI_WEBSITE_ID, UMAMI_SCRIPT_URL } = process.env;
-const other = locales.find((l) => l !== lang) as Locale;
 ---
 <html lang={lang === 'pt' ? 'pt-BR' : 'en'}>
   <head>
@@ -32,7 +31,6 @@ const other = locales.find((l) => l !== lang) as Locale;
     {UMAMI_WEBSITE_ID && UMAMI_SCRIPT_URL && <script defer src={UMAMI_SCRIPT_URL} data-website-id={UMAMI_WEBSITE_ID}></script>}
   </head>
   <body>
-    <a class="inline-block px-8 pt-4" href={paths[other]} hreflang={other === 'pt' ? 'pt-BR' : 'en'} lang={other === 'pt' ? 'pt-BR' : 'en'}>{ui[lang].switchTo}</a>
     <slot />
   </body>
 </html>

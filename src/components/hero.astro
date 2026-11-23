@@ -437,10 +437,11 @@ const now = clock.format(new Date());
     .stage {
       position: relative;
       /* Tracks the name and card, which both scale with the viewport width, so the head keeps overlapping the name. */
-      height: min(96vw, 520px);
+      /* +52px clears the fixed header that sits over the field's top. */
+      height: calc(min(96vw, 520px) + 52px);
     }
     .bigname {
-      top: 32px;
+      top: 84px;
       left: 18px;
       line-height: 0.86;
     }
