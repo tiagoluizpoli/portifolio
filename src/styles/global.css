@@ -1,1 +1,42 @@
 @import "tailwindcss";
+@import "@fontsource-variable/bricolage-grotesque/standard.css";
+
+/* Palette: ink (warm neutral). Chosen over slate in #38: the grey-paper field lets the photo's skin tones carry the
+   warmth, while slate's blue cast fights them and reads corporate. */
+@theme {
+  --color-paper: #f2f1ee;
+  --color-paper-2: #e8e6e1;
+  --color-field: #e2e0da;
+  --color-ink: #1a1a19;
+  --color-ink-2: #5c5a55;
+  --color-accent: #3d5a57;
+  --color-on-ink: #f2f1ee;
+  --color-line: rgb(26 26 25 / 0.13);
+  --font-sans: "Bricolage Grotesque Variable", system-ui, sans-serif;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --radius-field: 36px;
+  --radius-card: 30px;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    scrollbar-color: var(--color-ink-2) var(--color-paper);
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font: 400 17px / 1.55 var(--font-sans);
+    font-variation-settings: "opsz" 14;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-on-ink);
+  }
+  :focus-visible {
+    outline: 2.5px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 12px;
+  }
+}

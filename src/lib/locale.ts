@@ -3,6 +3,16 @@ export type Locale = (typeof locales)[number];
 
 /** Fixed interface text; content lives in Postgres. */
 export const ui = {
-  en: { whatsapp: 'WhatsApp', downloadCv: 'Download CV' },
-  pt: { whatsapp: 'WhatsApp', downloadCv: 'Baixar CV' },
+  en: {
+    whatsapp: 'Message on WhatsApp',
+    downloadCv: 'Download CV',
+    localTime: 'local time',
+    photoAlt: 'Portrait of Tiago',
+  },
+  pt: {
+    whatsapp: 'Conversar no WhatsApp',
+    downloadCv: 'Baixar CV',
+    localTime: 'em São Paulo',
+    photoAlt: 'Retrato de Tiago',
+  },
 } satisfies Record<Locale, Record<string, string>>;
