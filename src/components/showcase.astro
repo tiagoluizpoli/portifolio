@@ -1,0 +1,173 @@
+---
+import { assetUrl } from '../lib/assets';
+import { contentStore } from '../lib/content/instance';
+import { type Locale, ui } from '../lib/locale';
+
+const { lang } = Astro.props as { lang: Locale };
+const { projects } = contentStore.read().showcase;
+const t = ui[lang];
+---
+<section class="sec" id="projects" aria-labelledby="projects-h">
+  <h2 class="sec-h" id="projects-h">{t.nav.projects}</h2>
+  <div class="list">
+    {projects.map((p) => (
+      <article class="proj" data-images={p.images.length}>
+        <div class="info">
+          <p class={`status ${p.status}`}><span class="dot" aria-hidden="true"></span>{t.status[p.status]}</p>
+          <h3 class="title">{p.name}</h3>
+          <p class="summary">{p.summary[lang]}</p>
+          {p.now && <p class="now"><b>{t.now}</b> {p.now[lang]}</p>}
+          <p class="meta">{p.role[lang]} · {p.stack.join(', ')}</p>
+          {p.learnMoreUrl && (
+            <a class="more" href={p.learnMoreUrl}>
+              {t.learnMore}<span class="sr-only">: {p.name}</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg>
+            </a>
+          )}
+        </div>
+        {p.images.length > 0 && (
+          <div class="strip">
+            {p.images.map((img) => <img src={assetUrl(img.path)} alt={img.alt[lang]} loading="lazy" decoding="async" />)}
+          </div>
+        )}
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .list {
+    display: grid;
+    gap: 12px;
+  }
+  .proj {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(20px, 3vw, 48px);
+    align-items: center;
+    min-height: 270px;
+    padding: clamp(16px, 1.6vw, 24px);
+    border-radius: var(--radius-card);
+    background: var(--color-paper-2);
+  }
+  /* No images yet: the text takes the row instead of leaving an empty strip. */
+  .proj[data-images="0"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .info {
+    padding: 8px clamp(4px, 1vw, 16px);
+  }
+  p {
+    margin: 0;
+  }
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--color-ok);
+  }
+  .production-active .dot {
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-ok) 22%, transparent);
+  }
+  .coming-soon .dot {
+    background: var(--color-wait);
+  }
+  .title {
+    margin: 12px 0 0;
+    font-weight: 800;
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    font-stretch: 85%;
+    font-variation-settings: "opsz" 72;
+  }
+  .summary {
+    margin-top: 10px;
+    max-width: 56ch;
+    font-size: 1.05rem;
+    line-height: 1.45;
+    text-wrap: pretty;
+  }
+  .now {
+    margin-top: 10px;
+    font-size: 0.95rem;
+  }
+  .now b {
+    margin-right: 4px;
+    padding: 1px 9px;
+    border-radius: 99px;
+    background: var(--color-accent);
+    color: var(--color-on-ink);
+    font-size: 0.82em;
+    font-weight: 700;
+  }
+  .meta {
+    margin-top: 12px;
+    max-width: 64ch;
+    color: var(--color-ink-2);
+    font-size: 14px;
+  }
+  .more {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    color: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+  }
+  .more svg {
+    width: 1.1em;
+    height: 1.1em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: translate 0.35s var(--ease-out-expo);
+  }
+  .more:hover svg {
+    translate: 2px -2px;
+  }
+  .strip {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 10px;
+    height: clamp(220px, 21vw, 310px);
+  }
+  .strip img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+    background: var(--color-field);
+  }
+
+  @media (max-width: 820px) {
+    .proj {
+      grid-template-columns: minmax(0, 1fr);
+      min-height: 0;
+    }
+    .strip {
+      grid-auto-columns: 72%;
+      height: 200px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      overscroll-behavior-x: contain;
+    }
+    .strip img {
+      scroll-snap-align: start;
+    }
+  }
+</style>

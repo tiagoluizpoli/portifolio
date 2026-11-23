@@ -1,50 +1,26 @@
-# React + TypeScript + Vite
+# Portfolio v2
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Astro SSR (Node standalone) landing page, EN at `/` and PT at `/pt/`, content from Postgres. Spec: #30.
 
-Currently, two official plugins are available:
+## Run locally
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Requires Node 24 (`mise exec node@24 -- …`), pnpm and Docker.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```sh
+pnpm install
+docker run -d --name portfolio-local-pg -e POSTGRES_PASSWORD=portfolio -e POSTGRES_DB=portfolio \
+  -p 127.0.0.1:54320:5432 postgres:17-alpine
+export DATABASE_URL=postgres://postgres:portfolio@127.0.0.1:54320/portfolio
+node scripts/seed-dev-content.mjs   # applies migrations, then writes every Section row
+pnpm dev                            # boot fails without valid content in every Section
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+Optional env: `GITHUB_TOKEN` (stats sentence), `ADMIN_ENABLED=true` (`/admin`), `ASSET_BASE_URL`, `REVALIDATE_TOKEN`.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## Dev notes
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+shortcut: Astro 6 because the dev host CPU lacks AVX2 (Astro 7 compiler-rs SIGILLs); upgrade when the dev host changes.
+
+## Analytics (Umami, cookieless)
+
+Set `UMAMI_WEBSITE_ID` and `UMAMI_SCRIPT_URL` at runtime to enable the tracker; unset = no script. Events: `cv-download`, `whatsapp-click` (with `locale`).

@@ -1,0 +1,249 @@
+---
+import { contentStore } from '../lib/content/instance';
+import { type Locale, locales, ui } from '../lib/locale';
+import { paths } from '../lib/seo';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const { name } = contentStore.read().hero;
+const { nav, menu, languageLabel, skipToContent } = ui[lang];
+const links = (Object.keys(nav) as (keyof typeof nav)[]).map((id) => ({ href: `#${id}`, label: nav[id] }));
+// Phones show first and last name only; the full name stays the link's accessible name.
+const words = name.split(' ');
+const [first, last] = [words[0], words.length > 1 ? words.at(-1) : ''];
+const middle = words.slice(1, -1).join(' ');
+const htmlLang = (l: Locale) => (l === 'pt' ? 'pt-BR' : 'en');
+---
+<a class="skip" href="#main">{skipToContent}</a>
+<!-- Sticky (fixed) on purpose: one long page, so the Section links, PT/EN switch and the route to Contact stay one tap
+     away. It is a transparent 60px strip over the Hero and only gains a surface once the page scrolls. -->
+<header class="hdr" data-hdr data-top>
+  <a class="name" href={paths[lang]} aria-label={name}>{first}{middle && <span class="mid"> {middle}</span>} {last}</a>
+  <nav class="wide" aria-label={menu}>
+    <ul>{links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
+  </nav>
+  <ul class="lang" aria-label={languageLabel}>
+    {locales.map((l) => (
+      <li>
+        <a href={paths[l]} hreflang={htmlLang(l)} lang={htmlLang(l)} aria-current={l === lang ? 'page' : undefined}>
+          {l.toUpperCase()}<span class="sr-only"> · {ui[l].languageName}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+  <details class="narrow" data-menu>
+    <summary aria-label={menu}>
+      <svg class="burger" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h16M4 15h16" /></svg>
+      <svg class="cross" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+    </summary>
+    <nav aria-label={menu}>
+      <ul>{links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
+    </nav>
+  </details>
+</header>
+
+<script>
+  // Header surface once the page leaves the top; the mobile menu closes on link tap, Escape or a tap outside.
+  const SCROLLED_PX = 8;
+  const header = document.querySelector<HTMLElement>('[data-hdr]');
+  const menu = document.querySelector<HTMLDetailsElement>('[data-menu]');
+  if (header && menu) {
+    const onScroll = () => header.toggleAttribute('data-top', scrollY < SCROLLED_PX);
+    onScroll();
+    addEventListener('scroll', onScroll, { passive: true });
+
+    const close = (refocus: boolean) => {
+      if (!menu.open) return;
+      menu.open = false;
+      if (refocus) menu.querySelector('summary')?.focus();
+    };
+    menu.addEventListener('click', (e) => {
+      if ((e.target as Element).closest('a')) close(false);
+    });
+    menu.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close(true);
+    });
+    document.addEventListener('click', (e) => {
+      if (!menu.contains(e.target as Node)) close(false);
+    });
+  }
+</script>
+
+<style>
+  .skip {
+    position: fixed;
+    z-index: 50;
+    top: 12px;
+    left: 12px;
+    padding: 12px 18px;
+    border-radius: 99px;
+    background: var(--color-ink);
+    color: var(--color-on-ink);
+    font-weight: 600;
+    text-decoration: none;
+    translate: 0 -200%;
+  }
+  .skip:focus-visible {
+    translate: none;
+  }
+
+  .hdr {
+    --inset: 18px;
+    position: fixed;
+    z-index: 40;
+    top: var(--inset);
+    left: var(--inset);
+    right: var(--inset);
+    height: 60px;
+    padding: 0 clamp(8px, 3.5vw - 8px, 48px);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-radius: 30px;
+    background: var(--color-paper);
+    box-shadow: 0 10px 30px -18px rgb(0 0 0 / 0.35), inset 0 0 0 1px var(--color-line);
+    transition: background-color 0.35s, box-shadow 0.35s;
+  }
+  .hdr[data-top]:not(:has([open])) {
+    background: transparent;
+    box-shadow: none;
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .name {
+    margin-right: auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+  }
+  .wide ul {
+    display: flex;
+    gap: 4px;
+  }
+  .wide a {
+    display: block;
+    padding: 8px 14px;
+    border-radius: 99px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+  .wide a:hover {
+    background: color-mix(in srgb, var(--color-ink) 8%, transparent);
+  }
+
+  .lang {
+    display: flex;
+    flex: none;
+    padding: 3px;
+    border-radius: 99px;
+    box-shadow: inset 0 0 0 1.5px var(--color-ink);
+  }
+  .lang a {
+    display: block;
+    padding: 6px 11px;
+    border-radius: 99px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .lang a:hover {
+    background: color-mix(in srgb, var(--color-ink) 8%, transparent);
+  }
+  .lang a[aria-current] {
+    background: var(--color-ink);
+    color: var(--color-on-ink);
+  }
+
+  .narrow {
+    display: none;
+  }
+  summary {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 99px;
+    box-shadow: inset 0 0 0 1.5px var(--color-ink);
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+  }
+  .cross,
+  [open] .burger {
+    display: none;
+  }
+  [open] .cross {
+    display: block;
+  }
+  [open] summary {
+    background: var(--color-ink);
+    color: var(--color-on-ink);
+  }
+  .narrow nav {
+    position: absolute;
+    top: 68px;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    border-radius: 26px;
+    background: var(--color-paper);
+    box-shadow: 0 20px 40px -20px rgb(0 0 0 / 0.4), inset 0 0 0 1px var(--color-line);
+  }
+  .narrow a {
+    display: block;
+    padding: 12px 16px;
+    border-radius: 18px;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .narrow a:hover {
+    background: var(--color-paper-2);
+  }
+
+  @media (max-width: 1100px) {
+    .wide {
+      display: none;
+    }
+    .narrow {
+      display: block;
+    }
+  }
+  @media (max-width: 820px) {
+    .hdr {
+      --inset: 12px;
+      gap: 10px;
+      padding: 0 8px 0 18px;
+    }
+    .name {
+      font-size: 16px;
+    }
+    .mid {
+      display: none;
+    }
+  }
+</style>

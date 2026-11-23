@@ -56,16 +56,7 @@
       "semicolons": "always"
     }
   },
-  "overrides": [
-    {
-      "include": ["apps/hub/src/pages/**"],
-      "linter": {
-        "rules": {
-          "style": {
-            "useFilenamingConvention": "off"
-          }
-        }
-      }
-    }
-  ]
+  "files": {
+    "ignore": ["**/*.astro"]
+  }
 }

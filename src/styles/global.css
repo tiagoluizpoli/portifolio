@@ -1,0 +1,70 @@
+@import "tailwindcss";
+@import "@fontsource-variable/bricolage-grotesque/standard.css";
+
+/* Palette: ink (warm neutral). Chosen over slate in #38: the grey-paper field lets the photo's skin tones carry the
+   warmth, while slate's blue cast fights them and reads corporate. */
+@theme {
+  --color-paper: #f2f1ee;
+  --color-paper-2: #e8e6e1;
+  --color-field: #e2e0da;
+  --color-ink: #1a1a19;
+  --color-ink-2: #5c5a55;
+  --color-accent: #3d5a57;
+  --color-on-ink: #f2f1ee;
+  --color-line: rgb(26 26 25 / 0.13);
+  --color-ok: #2e7d52;
+  --color-wait: #8a6a1f;
+  --font-sans: "Bricolage Grotesque Variable", system-ui, sans-serif;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --radius-field: 36px;
+  --radius-card: 30px;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    scroll-behavior: smooth;
+    scroll-padding-top: 96px;
+    scrollbar-color: var(--color-ink-2) var(--color-paper);
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font: 400 17px / 1.55 var(--font-sans);
+    font-variation-settings: "opsz" 14;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-on-ink);
+  }
+  :focus-visible {
+    outline: 2.5px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Shared Section frame: full-width gutter and the big condensed heading every Section opens with. */
+@layer components {
+  .sec {
+    --gut: clamp(16px, 3.5vw, 56px);
+    padding: clamp(96px, 14vh, 170px) var(--gut) 0;
+  }
+  .sec-h {
+    margin: 0 0 clamp(32px, 5vw, 64px);
+    font-weight: 800;
+    font-size: clamp(3rem, 7.2vw, 7.4rem);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    font-stretch: 82%;
+    font-variation-settings: "opsz" 96;
+    text-wrap: balance;
+  }
+}

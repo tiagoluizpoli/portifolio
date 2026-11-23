@@ -1,0 +1,8 @@
+allowBuilds:
+  '@biomejs/biome': true
+  esbuild: true
+  sharp: true
+  # Optional native speedups pulled in by testcontainers (tests only); not needed.
+  cpu-features: false
+  protobufjs: false
+  ssh2: false
