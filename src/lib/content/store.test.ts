@@ -201,3 +201,31 @@ test('saveSection rejects an invalid Section with the Zod path and changes nothi
   const [row] = await db.select().from(content).where(eq(content.key, 'hero'));
   expect(row.data).toEqual(validHero);
 });
+
+test('export returns Section rows only, never github_stats', async () => {
+  await putAll();
+  await put('github_stats' as SectionKey, { stars: 1 });
+  const store = await createContentStore({ db });
+  expect(Object.keys(await store.exportSections()).sort()).toEqual([...sectionKeys].sort());
+});
+
+test('invalid import changes nothing', async () => {
+  await putAll();
+  const store = await createContentStore({ db });
+  const before = await db.select().from(content);
+  const bad = { ...seed, hero: { ...seed.hero, title: { en: 'x' } } };
+  await expect(store.importSections(bad)).rejects.toMatchObject({ path: 'hero.title.pt' });
+  const { hero: _, ...missing } = seed;
+  await expect(store.importSections(missing)).rejects.toMatchObject({ path: 'hero' });
+  expect(await db.select().from(content)).toEqual(before);
+});
+
+test('valid import replaces all Section rows and leaves other rows alone', async () => {
+  await putAll();
+  await put('github_stats' as SectionKey, { stars: 1 });
+  const store = await createContentStore({ db });
+  await store.importSections({ ...seed, hero: { ...seed.hero, name: 'Imported' } });
+  expect(store.read().hero.name).toBe('Imported');
+  const [stats] = await db.select().from(content).where(eq(content.key, 'github_stats'));
+  expect(stats.data).toEqual({ stars: 1 });
+});

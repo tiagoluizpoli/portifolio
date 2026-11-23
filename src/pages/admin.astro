@@ -2,6 +2,7 @@
 import { contentStore } from '../lib/content/instance';
 import { ContentError } from '../lib/content/store';
 import { type SectionKey, sectionSchemas } from '../lib/content/schemas';
+import { bucketFromEnv, callRemote, copyMissingAssets, remoteFromEnv } from '../lib/sync';
 import { uploadAsset } from '../lib/upload';
 
 // Development-only; Tailscale is the guard, there is no login.
@@ -11,13 +12,34 @@ const keys = Object.keys(sectionSchemas) as SectionKey[];
 let error: string | undefined;
 let uploaded: string | undefined;
 let saved: string | undefined;
+let synced: string | undefined;
 const drafts: Partial<Record<SectionKey, string>> = {};
 
 if (Astro.request.method === 'POST') {
   const form = await Astro.request.formData();
   try {
     const file = form.get('file');
-    if (file instanceof File) {
+    const sync = form.get('sync');
+    if (sync === 'send' || sync === 'bring') {
+      const local = bucketFromEnv('ASSET_S3');
+      const prod = bucketFromEnv('PROD_ASSET_S3');
+      const remote = remoteFromEnv();
+      // Assets first (union, never deleted), then rows.
+      if (sync === 'send') {
+        const copied = await copyMissingAssets(local, prod);
+        await callRemote(remote, {
+          method: 'PUT',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(await contentStore.exportSections()),
+        });
+        synced = `Sent to production (${copied.length} assets copied).`;
+      } else {
+        const snapshot = await (await callRemote(remote, { method: 'GET' })).json();
+        const copied = await copyMissingAssets(prod, local);
+        await contentStore.importSections(snapshot);
+        synced = `Brought from production (${copied.length} assets copied).`;
+      }
+    } else if (file instanceof File) {
       uploaded = await uploadAsset(new Uint8Array(await file.arrayBuffer()), file.name);
     } else {
       const key = String(form.get('section')) as SectionKey;
@@ -47,6 +69,12 @@ const content = contentStore.read();
     <h1>Admin</h1>
     {error && <p role="alert" style="color: #b00">{error}</p>}
     {saved && <p>Saved <b>{saved}</b>.</p>}
+    {synced && <p>{synced}</p>}
+    <h2>Sync</h2>
+    <form method="post">
+      <button name="sync" value="send">Send to production</button>
+      <button name="sync" value="bring">Bring from production</button>
+    </form>
     <h2>Upload asset</h2>
     <form method="post" enctype="multipart/form-data">
       <input type="file" name="file" required /> <button>Upload</button>
