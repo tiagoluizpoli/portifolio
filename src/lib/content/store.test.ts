@@ -96,3 +96,28 @@ test('when Postgres is down after boot, the last good copy is still served', asy
   expect(store.read().hero.name).toBe(validHero.name);
   expect(await store.isHealthy()).toBe(false);
 });
+
+test('revalidate picks up changed content', async () => {
+  await putHero(validHero);
+  const store = await createContentStore({ db });
+  await putHero({ ...validHero, name: 'Changed' });
+  await store.revalidate();
+  expect(store.read().hero.name).toBe('Changed');
+});
+
+test('revalidate rejects invalid content with the Zod path and keeps the last good copy', async () => {
+  await putHero(validHero);
+  const log = { warn: vi.fn(), error: vi.fn() };
+  const store = await createContentStore({ db, log });
+  await putHero({ ...validHero, title: { en: 'only en' } });
+  await expect(store.revalidate()).rejects.toMatchObject({ path: 'hero.title.pt' });
+  expect(store.read().hero.title.pt).toBe('Engenheiro de Software Sênior');
+  expect(log.error).toHaveBeenCalled();
+});
+
+test('a stats failure does not fail a content revalidate', async () => {
+  await putHero(validHero);
+  const log = { warn: vi.fn(), error: vi.fn() };
+  const store = await createContentStore({ db, log, fetchStats: () => Promise.reject(new Error('boom')) });
+  await expect(store.revalidate()).resolves.toBeUndefined();
+});
