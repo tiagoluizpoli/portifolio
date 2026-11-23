@@ -1,17 +1,12 @@
 import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
 import { eq, ne } from 'drizzle-orm';
 import { afterAll, beforeAll, beforeEach, expect, test, vi } from 'vitest';
+import seed from '../../../scripts/seed-dev-content.json';
 import { type Database, migrateDatabase, openDatabase } from './db';
 import { createGithubFetcher, readStatsSnapshot, writeStats } from './stats';
 import { STATS_TTL_MS, createContentStore } from './store';
 import { content } from './table';
 
-const hero = {
-  name: 'Tiago',
-  title: { en: 'Engineer', pt: 'Engenheiro' },
-  pitch: { en: 'a', pt: 'a' },
-  location: { en: 'b', pt: 'b' },
-};
 const stats = (contributions: number) => ({
   contributions,
   publicRepos: 40,
@@ -36,7 +31,7 @@ afterAll(async () => {
 
 beforeEach(async () => {
   await db.delete(content);
-  await db.insert(content).values({ key: 'hero', data: hero });
+  await db.insert(content).values(Object.entries(seed).map(([key, data]) => ({ key, data })));
 });
 
 const quiet = () => ({ warn: vi.fn(), error: vi.fn() });
