@@ -7,10 +7,10 @@ on:
       environment:
         description: Environment to roll back
         type: choice
-        options: [development]
+        options: [development, production]
         required: true
       ref:
-        description: Full commit SHA (or vX.Y.Z tag, once releases exist) of an existing image
+        description: Full commit SHA (or vX.Y.Z tag) of an existing image
         type: string
         required: true
 
@@ -23,14 +23,18 @@ jobs:
       cancel-in-progress: false
     environment:
       name: ${{ inputs.environment }}
-      url: https://portfolio-dev.lunalabs.duckdns.org
+      url: ${{ inputs.environment == 'production' && vars.SITE_URL || 'https://portfolio-dev.lunalabs.duckdns.org' }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
       - id: image
         env:
           REF: ${{ inputs.ref }}
         run: |
           [[ "$REF" =~ ^([0-9a-f]{40}|v[0-9]+\.[0-9]+\.[0-9]+)$ ]] || { echo "ref must be a full SHA or vX.Y.Z"; exit 1; }
+          echo "sha=$(git rev-parse "$REF^{commit}")" >> "$GITHUB_OUTPUT"
           echo "image=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/portfolio:$REF" >> "$GITHUB_OUTPUT"
       - uses: docker/login-action@v3
         with:
@@ -42,7 +46,8 @@ jobs:
       - uses: ./.github/actions/dokploy-deploy
         with:
           image: ${{ steps.image.outputs.image }}
-          url: https://portfolio-dev.lunalabs.duckdns.org
+          sha: ${{ steps.image.outputs.sha }}
+          url: ${{ inputs.environment == 'production' && vars.SITE_URL || 'https://portfolio-dev.lunalabs.duckdns.org' }}
           dokploy-url: ${{ vars.DOKPLOY_URL }}
           dokploy-api-key: ${{ secrets.DOKPLOY_API_KEY }}
           application-id: ${{ vars.DOKPLOY_APPLICATION_ID }}
