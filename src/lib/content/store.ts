@@ -11,7 +11,7 @@ export const STATS_TTL_MS = 60 * 60 * 1000;
 const STATS_RETRY_MS = 60 * 1000;
 
 export type Clock = () => number;
-export type Logger = Pick<LogType, 'warn' | 'error'>;
+export type Logger = Pick<LogType, 'warn' | 'error'> & Partial<Pick<LogType, 'info'>>;
 
 export interface ContentStoreDeps {
   db: Database;
@@ -110,8 +110,12 @@ export async function createContentStore({
       try {
         current = await loadContent(db, log);
         loadedAt = clock();
+        log.info?.('content reloaded');
       } catch (error) {
-        log.error('revalidate rejected; serving last good copy', error);
+        log.error('revalidate rejected; serving last good copy', {
+          error,
+          path: error instanceof ContentError ? error.path : undefined,
+        });
         throw error;
       }
       await refreshStats();
