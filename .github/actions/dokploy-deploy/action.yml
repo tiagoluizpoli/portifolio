@@ -2,6 +2,7 @@ name: Deploy image to Dokploy
 description: Join the tailnet, point the Dokploy app at an image, deploy, and poll until healthy.
 inputs:
   image: {description: Full image reference to deploy, required: true}
+  sha: {description: Commit SHA the deployed image was built from; the poll waits for /api/health to report it, required: true}
   url: {description: Public URL polled after deploy, required: true}
   dokploy-url: {required: true}
   dokploy-api-key: {required: true}
@@ -39,13 +40,16 @@ runs:
       shell: bash
       env:
         URL: ${{ inputs.url }}
+        SHA: ${{ inputs.sha }}
       run: |
         for i in $(seq 1 40); do
           page=$(curl -s -o /dev/null -w '%{http_code}' "$URL/" || true)
           health=$(curl -s -o /dev/null -w '%{http_code}' "$URL/api/health" || true)
-          echo "attempt $i: / -> $page, /api/health -> $health"
-          [ "$page" = 200 ] && [ "$health" = 200 ] && exit 0
+          # The old container can still answer 200; only the new image reports $SHA.
+          live=$(curl -s "$URL/api/health" | jq -r .sha 2>/dev/null || true)
+          echo "attempt $i: / -> $page, /api/health -> $health, sha $live"
+          [ "$page" = 200 ] && [ "$health" = 200 ] && [ "$live" = "$SHA" ] && exit 0
           sleep 15
         done
-        echo "::error::$URL/ and $URL/api/health did not both return 200 (no auto-rollback)"
+        echo "::error::$URL/ and $URL/api/health did not both return 200 with sha $SHA (no auto-rollback)"
         exit 1
