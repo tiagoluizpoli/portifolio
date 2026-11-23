@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 const { lang, title } = Astro.props;
+const { UMAMI_WEBSITE_ID, UMAMI_SCRIPT_URL } = process.env;
 ---
 <html lang={lang}>
   <head>
@@ -8,6 +9,7 @@ const { lang, title } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" href="/favicon.svg" />
     <title>{title}</title>
+    {UMAMI_WEBSITE_ID && UMAMI_SCRIPT_URL && <script defer src={UMAMI_SCRIPT_URL} data-website-id={UMAMI_WEBSITE_ID}></script>}
   </head>
   <body class="p-8 font-sans">
     <slot />

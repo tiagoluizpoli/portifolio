@@ -10,10 +10,10 @@ const t = ui[lang];
 <footer id="contact">
   <h2 class="text-2xl font-bold">{t.nav.contact}</h2>
   <ul class="mt-2 flex flex-wrap gap-4">
-    {c.whatsappUrl && <li><a class="underline" href={c.whatsappUrl}>{t.whatsapp}</a></li>}
+    {c.whatsappUrl && <li><a class="underline" href={c.whatsappUrl} data-umami-event="whatsapp-click" data-umami-event-locale={lang}>{t.whatsapp}</a></li>}
     <li><a class="underline" href={c.linkedinUrl}>LinkedIn</a></li>
     {c.email && <li><a class="underline" href={`mailto:${c.email}`}>{c.email}</a></li>}
     <li><a class="underline" href={c.githubUrl}>GitHub</a></li>
-    {c.cv && <li><a class="underline" href={assetUrl(c.cv[lang])}>{t.downloadCv}</a></li>}
+    {c.cv && <li><a class="underline" href={assetUrl(c.cv[lang])} data-umami-event="cv-download" data-umami-event-locale={lang}>{t.downloadCv}</a></li>}
   </ul>
 </footer>
