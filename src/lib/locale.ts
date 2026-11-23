@@ -4,8 +4,11 @@ export const locales = ['en', 'pt'] as const;
 export type Locale = (typeof locales)[number];
 
 const en = {
-  whatsapp: 'WhatsApp',
+  whatsapp: 'Message on WhatsApp',
   downloadCv: 'Download CV',
+  localTime: 'local time',
+  photoAlt: 'Portrait of Tiago',
+  switchTo: 'Português',
   stats: '{contributions} contributions in the last year · {repos} public repositories · mostly {languages}',
   learnMore: 'Learn more',
   now: 'Now:',
@@ -27,8 +30,11 @@ type Dictionary = typeof en;
 export const ui: Record<Locale, Dictionary> = {
   en,
   pt: {
-    whatsapp: 'WhatsApp',
+    whatsapp: 'Conversar no WhatsApp',
     downloadCv: 'Baixar CV',
+    localTime: 'em São Paulo',
+    photoAlt: 'Retrato de Tiago',
+    switchTo: 'English',
     stats: '{contributions} contribuições no último ano · {repos} repositórios públicos · principalmente {languages}',
     learnMore: 'Saiba mais',
     now: 'Agora:',

@@ -1,7 +1,8 @@
 ---
-import { contentStore } from '../lib/content/instance';
 import { assetUrl } from '../lib/assets';
+import { contentStore } from '../lib/content/instance';
 import { type Locale, ui } from '../lib/locale';
+import { nameLines } from '../lib/name-lines';
 
 interface Props {
   lang: Locale;
@@ -17,15 +18,457 @@ const statsLine = stats
       .replace('{repos}', stats.publicRepos.toLocaleString(lang))
       .replace('{languages}', new Intl.ListFormat(lang, { type: 'conjunction' }).format(stats.languages))
   : undefined;
+
+// shortcut: bundled placeholders until the owner uploads the real photo + cut-out and sets hero.photo.
+const card = hero.photo ? assetUrl(hero.photo.card) : '/hero/placeholder-card.webp';
+const cutout = hero.photo ? assetUrl(hero.photo.cutout) : '/hero/placeholder-cutout.webp';
+
+const lines = nameLines(hero.name);
+const longestLine = Math.max(...lines.map((line) => line.length));
+const TIME_ZONE = 'America/Sao_Paulo';
+const clock = new Intl.DateTimeFormat('en-GB', { timeZone: TIME_ZONE, hour: '2-digit', minute: '2-digit' });
+const now = clock.format(new Date());
 ---
-<header>
-  <h1 class="text-4xl font-bold">{hero.name}</h1>
-  <p class="text-xl">{hero.title[lang]}</p>
-  <p class="mt-4 max-w-2xl">{hero.pitch[lang]}</p>
-  <p class="mt-2 text-sm">{hero.location[lang]}</p>
-  {statsLine && <p class="mt-2 text-sm">{statsLine}</p>}
-  <p class="mt-4 flex gap-4">
-    {hero.whatsappUrl && <a class="underline" href={hero.whatsappUrl}>{labels.whatsapp}</a>}
-    {hero.cv && <a class="underline" href={assetUrl(hero.cv[lang])}>{labels.downloadCv}</a>}
-  </p>
-</header>
+<section class="hero" data-hero>
+  <div class="field">
+    <div class="stage">
+      <p class="bigname" style={`--chars: ${longestLine}`} data-name aria-hidden="true">
+        {lines.filter(Boolean).map((line) => <span>{line}</span>)}
+      </p>
+      <div class="cardwrap">
+        <div class="card" data-card>
+          <div class="face">
+            <img class="photo" src={card} alt={labels.photoAlt} width="400" height="400" fetchpriority="high" />
+            <div class="sheen"></div>
+            <div class="edge"></div>
+          </div>
+          <div class="pop"><img class="photo" src={cutout} alt="" width="400" height="400" data-cutout /></div>
+        </div>
+        <div class="shadow" data-shadow></div>
+      </div>
+    </div>
+    <div class="text">
+      <h1 class="role"><span class="sr-only">{hero.name}, </span>{hero.title[lang]}</h1>
+      <p class="pitch">{hero.pitch[lang]}</p>
+      <p class="loc">
+        <span>{hero.location[lang]}</span>
+        <span class="time"><time data-clock data-tz={TIME_ZONE}>{now}</time> {labels.localTime}</span>
+      </p>
+      {(hero.whatsappUrl || hero.cv) && (
+        <div class="cta">
+          {hero.whatsappUrl && (
+            <a class="btn main" href={hero.whatsappUrl} data-umami-event="whatsapp-click" data-umami-event-locale={lang}>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg>
+              {labels.whatsapp}
+            </a>
+          )}
+          {hero.cv && (
+            <a class="btn soft" href={assetUrl(hero.cv[lang])} download data-umami-event="cv-download" data-umami-event-locale={lang}>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v12" /><path d="m6 11 6 6 6-6" /><path d="M5 20h14" /></svg>
+              {labels.downloadCv}
+            </a>
+          )}
+        </div>
+      )}
+      {statsLine && <p class="stats">{statsLine}</p>}
+    </div>
+  </div>
+</section>
+
+<script>
+  // Hero motion: card tilt toward the cursor with sheen and moving shadow, name counter-drift, entrance.
+  // Without JS or under prefers-reduced-motion the static layout (head already popped out) is the final state.
+  type Spring = { x: number; v: number; t: number; step(): void };
+  const spring = (x: number, k = 0.075, d = 0.8): Spring => ({
+    x, v: 0, t: x,
+    step() {
+      this.v = (this.v + (this.t - this.x) * k) * d;
+      this.x += this.v;
+    },
+  });
+
+  const POP_PX = 56; // how far the head lifts off the card
+  const PERSPECTIVE_PX = 1200; // matches .cardwrap perspective
+  const MAX_TILT_DEG = 13;
+  const NAME_DRIFT_X_PX = 22;
+  const NAME_DRIFT_Y_PX = 12;
+  const HEAD_LIFT_DELAY_MS = 650; // the head lifts once the card has landed
+  const CLOCK_TICK_MS = 20_000;
+
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  const card = document.querySelector<HTMLElement>('[data-card]');
+  const shadow = document.querySelector<HTMLElement>('[data-shadow]');
+  const name = document.querySelector<HTMLElement>('[data-name]');
+  const head = document.querySelector<HTMLImageElement>('[data-cutout]');
+  const clock = document.querySelector<HTMLElement>('[data-clock]');
+
+  if (clock) {
+    const format = new Intl.DateTimeFormat('en-GB', { timeZone: clock.dataset.tz, hour: '2-digit', minute: '2-digit' });
+    const tick = () => { clock.textContent = format.format(new Date()); };
+    tick();
+    setInterval(tick, CLOCK_TICK_MS);
+  }
+
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (hero && card && shadow && name && head && !reduced) {
+    const s = {
+      rx: spring(22), ry: spring(-18), y: spring(70, 0.06), pz: spring(0, 0.05, 0.78),
+      nx: spring(0, 0.06, 0.82), ny: spring(0, 0.06, 0.82),
+    };
+    s.rx.t = s.ry.t = s.y.t = 0;
+    const springs = Object.values(s);
+    let hover = false;
+    let visible = true;
+
+    const paint = () => {
+      const { x: rx } = s.rx;
+      const { x: ry } = s.ry;
+      const { x: pz } = s.pz;
+      const { x: y } = s.y;
+      card.style.transform = `translateY(${y}px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+      card.style.setProperty('--pz', `${pz}px`);
+      card.style.setProperty('--ps', ((PERSPECTIVE_PX - pz) / PERSPECTIVE_PX).toFixed(4));
+      card.style.setProperty('--sx', `${50 + ry * 3.2}%`);
+      card.style.setProperty('--sy', `${42 - rx * 3.2}%`);
+      card.style.setProperty('--dsx', `${(-ry * 0.9).toFixed(1)}px`);
+      shadow.style.setProperty('--shx', `${(-ry * 2.2).toFixed(1)}px`);
+      shadow.style.setProperty('--shs', (1 - Math.abs(rx) / 70 - y / 400).toFixed(3));
+      // The name sits deeper than the card, so it drifts the other way.
+      name.style.translate = `${(-s.nx.x * NAME_DRIFT_X_PX).toFixed(1)}px ${(-s.ny.x * NAME_DRIFT_Y_PX).toFixed(1)}px`;
+    };
+
+    hero.classList.add('motion');
+    const start = () => requestAnimationFrame(() => requestAnimationFrame(() => {
+      hero.classList.add('is-in');
+      setTimeout(() => { s.pz.t = POP_PX; }, HEAD_LIFT_DELAY_MS);
+    }));
+    head.decode().then(start, start);
+
+    new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }).observe(hero);
+
+    if (matchMedia('(pointer: fine)').matches) {
+      hero.addEventListener('pointermove', (e) => {
+        const r = card.getBoundingClientRect();
+        const h = hero.getBoundingClientRect();
+        const clamp = (v: number) => Math.max(-1, Math.min(1, v));
+        const cx = clamp((e.clientX - (r.left + r.width / 2)) / (r.width * 1.2));
+        const cy = clamp((e.clientY - (r.top + r.height / 2)) / (r.height * 1.2));
+        hover = true;
+        s.ry.t = cx * MAX_TILT_DEG;
+        s.rx.t = -cy * MAX_TILT_DEG;
+        s.nx.t = (e.clientX - h.left) / h.width - 0.5;
+        s.ny.t = (e.clientY - h.top) / h.height - 0.5;
+      });
+      hero.addEventListener('pointerleave', () => {
+        hover = false;
+        s.rx.t = s.ry.t = s.nx.t = s.ny.t = 0;
+      });
+    }
+
+    const loop = (now: number) => {
+      requestAnimationFrame(loop);
+      if (!visible) return;
+      if (!hover) {
+        // idle sway
+        s.ry.t = Math.sin(now / 2600) * 4;
+        s.rx.t = Math.cos(now / 3400) * 2.2;
+      }
+      for (const sp of springs) sp.step();
+      paint();
+    };
+    requestAnimationFrame(loop);
+  }
+</script>
+
+<style>
+  .hero {
+    --gut: clamp(16px, 3.5vw, 56px);
+    --edge: 10px;
+    padding: var(--edge);
+  }
+  .field {
+    position: relative;
+    height: calc(100svh - var(--edge) * 2);
+    min-height: 640px;
+    max-height: 1100px;
+    border-radius: var(--radius-field);
+    background: var(--color-field);
+    overflow: hidden;
+  }
+  .stage {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Display name: two balanced lines, sized so the longer one fits the width (Bricolage at wdth 78 ≈ .41em/char). */
+  .bigname {
+    position: absolute;
+    top: 12%;
+    left: 1.6vw;
+    right: 0;
+    margin: 0;
+    font-weight: 800;
+    font-size: min(19.6vw, calc(220vw / var(--chars)));
+    line-height: 0.82;
+    letter-spacing: -0.035em;
+    font-stretch: 78%;
+    font-variation-settings: "opsz" 96;
+    white-space: nowrap;
+    will-change: translate;
+  }
+  .bigname span {
+    display: block;
+  }
+
+  .cardwrap {
+    position: absolute;
+    left: 6%;
+    bottom: 3%;
+    perspective: 1200px;
+    display: grid;
+    justify-items: center;
+  }
+  .card {
+    --w: clamp(260px, 27vw, 470px);
+    --h: calc(var(--w) * 1.18);
+    position: relative;
+    width: var(--w);
+    height: var(--h);
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+  .face {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    background: #2a2622;
+    transform: translateZ(0);
+  }
+  /* Card photo and cut-out share one crop so the head lines up exactly with the photo underneath. */
+  .photo {
+    position: absolute;
+    left: calc(var(--w) * -0.3);
+    top: calc(var(--w) * -0.372);
+    width: calc(var(--w) * 1.6);
+    height: auto;
+    max-width: none;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  .sheen {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(60% 50% at var(--sx, 30%) var(--sy, 20%), rgb(255 255 255 / 0.34), transparent 70%);
+    mix-blend-mode: soft-light;
+    pointer-events: none;
+  }
+  .edge {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.22), inset 0 -40px 60px -30px rgb(0 0 0 / 0.35);
+    pointer-events: none;
+  }
+  /* The head: same photo crop, clipped to the card's bottom corners but open above it, lifted towards the viewer. */
+  .pop {
+    --lift: 0.4;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    top: calc(var(--h) * -1 * var(--lift));
+    height: calc(var(--h) * (1 + var(--lift)));
+    overflow: hidden;
+    border-radius: 0 0 var(--radius-card) var(--radius-card);
+    transform: translateZ(var(--pz, 56px)) scale(var(--ps, 0.9533));
+    transform-origin: 50% 64.3%;
+    pointer-events: none;
+  }
+  .pop .photo {
+    top: calc(var(--w) * -0.372 + var(--h) * var(--lift));
+    filter: drop-shadow(var(--dsx, 0px) 16px 18px rgb(0 0 0 / 0.32));
+  }
+  .shadow {
+    width: 92%;
+    height: 40px;
+    margin-top: 22px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(0 0 0 / 0.3), transparent);
+    filter: blur(6px);
+    transform: translateX(var(--shx, 0px)) scale(var(--shs, 1));
+  }
+
+  .text {
+    position: absolute;
+    z-index: 2;
+    right: var(--gut);
+    bottom: clamp(28px, 6%, 64px);
+    width: min(540px, 36vw);
+  }
+  .role {
+    margin: 0;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 2.3vw, 2.2rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-variation-settings: "opsz" 48;
+    text-wrap: balance;
+  }
+  .pitch {
+    margin: 14px 0 0;
+    max-width: 38ch;
+    font-size: clamp(1.05rem, 1.35vw, 1.25rem);
+    line-height: 1.45;
+    text-wrap: pretty;
+  }
+  .loc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+    margin: 12px 0 0;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .time {
+    color: var(--color-ink-2);
+    font-weight: 400;
+  }
+  .time time {
+    color: var(--color-ink);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 26px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    height: 56px;
+    padding: 0 24px;
+    border-radius: 99px;
+    color: inherit;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    transition: transform 0.4s var(--ease-out-expo), background-color 0.2s, color 0.2s;
+  }
+  .btn svg {
+    width: 1.15em;
+    height: 1.15em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .btn:active {
+    transform: scale(0.97);
+  }
+  .main {
+    background: var(--color-ink);
+    color: var(--color-on-ink);
+  }
+  .main:hover {
+    background: var(--color-accent);
+    transform: translateY(-2px);
+  }
+  .soft {
+    box-shadow: inset 0 0 0 1.5px var(--color-ink);
+  }
+  .soft:hover {
+    background: color-mix(in srgb, var(--color-ink) 8%, transparent);
+    transform: translateY(-2px);
+  }
+
+  .stats {
+    margin: 22px 0 0;
+    padding-top: 16px;
+    border-top: 1.5px solid var(--color-line);
+    max-width: 46ch;
+    font-size: 15px;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Entrance (only once JS has opted in): the name rises, the card fades in while its springs drop it, text follows. */
+  .motion .bigname span {
+    transform: translateY(85%);
+    opacity: 0;
+    transition: transform 1.5s var(--ease-out-expo), opacity 0.8s var(--ease-out-expo);
+  }
+  .motion .bigname span + span {
+    transition-delay: 0.12s;
+  }
+  .motion .cardwrap {
+    opacity: 0;
+    transition: opacity 0.6s var(--ease-out-expo) 0.15s;
+  }
+  .motion .text {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.9s var(--ease-out-expo) 0.5s, transform 1s var(--ease-out-expo) 0.5s;
+  }
+  .motion.is-in .bigname span,
+  .motion.is-in .text {
+    transform: none;
+    opacity: 1;
+  }
+  .motion.is-in .cardwrap {
+    opacity: 1;
+  }
+
+  @media (max-width: 820px) {
+    .hero {
+      --edge: 8px;
+    }
+    .field {
+      height: auto;
+      min-height: 0;
+      max-height: none;
+      display: flex;
+      flex-direction: column;
+      border-radius: 28px;
+    }
+    .stage {
+      position: relative;
+      /* Tracks the name and card, which both scale with the viewport width, so the head keeps overlapping the name. */
+      height: min(96vw, 520px);
+    }
+    .bigname {
+      top: 32px;
+      left: 18px;
+      line-height: 0.86;
+    }
+    .cardwrap {
+      left: 50%;
+      bottom: 2%;
+      translate: -50% 0;
+    }
+    .card {
+      --w: min(44vw, 220px);
+    }
+    .shadow {
+      height: 26px;
+      margin-top: 12px;
+    }
+    .text {
+      position: relative;
+      right: auto;
+      bottom: auto;
+      width: auto;
+      padding: 22px 20px 28px;
+    }
+    .role {
+      font-size: 1.7rem;
+    }
+    .btn {
+      height: 52px;
+      padding: 0 20px;
+    }
+  }
+</style>

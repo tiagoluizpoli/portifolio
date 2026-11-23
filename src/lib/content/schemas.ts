@@ -15,6 +15,8 @@ export const hero = z.object({
   location: localized,
   whatsappUrl: z.url().optional(),
   cv: localized.optional(),
+  // Asset paths: the card photo and its pixel-aligned head cut-out. Absent = bundled placeholders.
+  photo: z.object({ card: text, cutout: text }).optional(),
 });
 
 export const showcaseStatus = z.enum(['production-active', 'production', 'coming-soon']);
