@@ -1,0 +1,25 @@
+---
+import { contentStore } from '../lib/content/instance';
+import { iconSvg } from '../lib/icons';
+import { type Locale, ui } from '../lib/locale';
+
+const { lang } = Astro.props as { lang: Locale };
+const { groups } = contentStore.read().skills;
+const t = ui[lang];
+---
+<section id="skills">
+  <h2 class="text-2xl font-bold">{t.nav.skills}</h2>
+  {groups.map((g) => (
+    <div class="mt-4">
+      <h3 class="font-semibold">{g.name[lang]}</h3>
+      <ul class="mt-1 flex flex-wrap gap-4">
+        {g.items.map((item) => (
+          <li class="inline-flex items-center gap-2">
+            {item.icon && <Fragment set:html={iconSvg(item.icon)} />}
+            {item.name}
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))}
+</section>

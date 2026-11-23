@@ -1,15 +1,13 @@
 import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
 import { afterAll, beforeAll, beforeEach, expect, test, vi } from 'vitest';
+import seed from '../../../scripts/seed-dev-content.json';
 import { type Database, migrateDatabase, openDatabase } from './db';
+import { type SectionKey, sectionSchemas } from './schemas';
 import { CONTENT_TTL_MS, createContentStore } from './store';
 import { content } from './table';
 
-const validHero = {
-  name: 'Tiago Luiz Seuaciuc de Poli',
-  title: { en: 'Senior Software Engineer', pt: 'Engenheiro de Software Sênior' },
-  pitch: { en: 'I build backends.', pt: 'Construo backends.' },
-  location: { en: 'São Paulo, Brazil · Remote', pt: 'São Paulo, Brasil · Remoto' },
-};
+const validHero = seed.hero;
+const sectionKeys = Object.keys(sectionSchemas) as SectionKey[];
 
 let container: StartedPostgreSqlContainer;
 let db: Database;
@@ -30,9 +28,16 @@ beforeEach(async () => {
   await db.delete(content);
 });
 
-async function putHero(data: unknown) {
-  await db.insert(content).values({ key: 'hero', data }).onConflictDoUpdate({ target: content.key, set: { data } });
+async function put(key: SectionKey, data: unknown) {
+  await db.insert(content).values({ key, data }).onConflictDoUpdate({ target: content.key, set: { data } });
 }
+
+/** Writes every Section from the seed, with `key` replaced by `data`. */
+async function putAll(key: SectionKey = 'hero', data: unknown = seed[key]) {
+  for (const k of sectionKeys) await put(k, k === key ? data : seed[k]);
+}
+
+const putHero = (data: unknown) => putAll('hero', data);
 
 test('valid content loads and is typed', async () => {
   await putHero(validHero);
@@ -42,8 +47,62 @@ test('valid content loads and is typed', async () => {
   expect(hero.name).toBe('Tiago Luiz Seuaciuc de Poli');
 });
 
-test('a missing Section row fails boot', async () => {
-  await expect(createContentStore({ db })).rejects.toMatchObject({ path: 'hero' });
+test('the approved-draft seed satisfies every schema and renders typed', async () => {
+  await putAll();
+  const store = await createContentStore({ db });
+  const c = store.read();
+  expect(c.showcase.projects[0]).toMatchObject({ name: 'Church', status: 'coming-soon' });
+  expect(c.experience.roles).toHaveLength(5);
+  expect(c.skills.groups[0].name.pt).toBe('Linguagens');
+  expect(c.about.languages).toHaveLength(2);
+  expect(c.contact.githubUrl).toContain('github.com');
+});
+
+test.each(sectionKeys)('a missing %s row fails boot', async (missing) => {
+  for (const k of sectionKeys) if (k !== missing) await put(k, seed[k]);
+  await expect(createContentStore({ db })).rejects.toMatchObject({ path: missing });
+});
+
+test('every Section schema rejects an invalid edit with the exact path', async () => {
+  const bad: [SectionKey, unknown, string][] = [
+    ['showcase', { projects: [{ ...seed.showcase.projects[0], status: 'live' }] }, 'showcase.projects.0.status'],
+    [
+      'showcase',
+      { projects: [{ ...seed.showcase.projects[0], summary: { en: 'only en' } }] },
+      'showcase.projects.0.summary.pt',
+    ],
+    [
+      'showcase',
+      {
+        projects: [
+          { ...seed.showcase.projects[0], images: Array(4).fill({ path: 'a.png', alt: { en: 'a', pt: 'a' } }) },
+        ],
+      },
+      'showcase.projects.0.images',
+    ],
+    [
+      'experience',
+      { roles: [{ ...seed.experience.roles[0], highlights: Array(3).fill({ en: 'a', pt: 'a' }) }] },
+      'experience.roles.0.highlights',
+    ],
+    ['experience', { roles: [{ ...seed.experience.roles[0], start: 'March 2026' }] }, 'experience.roles.0.start'],
+    [
+      'skills',
+      { groups: [{ name: { en: 'x', pt: 'x' }, items: [{ name: 'X', icon: 'logos:not-a-real-icon' }] }] },
+      'skills.groups.0.items.0.icon',
+    ],
+    [
+      'about',
+      { ...seed.about, languages: [{ name: { en: 'English' }, level: { en: 'a', pt: 'a' } }] },
+      'about.languages.0.name.pt',
+    ],
+    ['contact', { ...seed.contact, cv: { pt: 'cv-pt.pdf' } }, 'contact.cv.en'],
+    ['contact', { ...seed.contact, githubUrl: 'not a url' }, 'contact.githubUrl'],
+  ];
+  for (const [key, data, path] of bad) {
+    await putAll(key, data);
+    await expect(createContentStore({ db }), path).rejects.toMatchObject({ path });
+  }
 });
 
 test('a translatable field missing one locale fails with the exact path', async () => {

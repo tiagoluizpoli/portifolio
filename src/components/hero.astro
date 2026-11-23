@@ -1,5 +1,6 @@
 ---
 import { contentStore } from '../lib/content/instance';
+import { assetUrl } from '../lib/assets';
 import { type Locale, ui } from '../lib/locale';
 
 interface Props {
@@ -16,7 +17,6 @@ const statsLine = stats
       .replace('{repos}', stats.publicRepos.toLocaleString(lang))
       .replace('{languages}', new Intl.ListFormat(lang, { type: 'conjunction' }).format(stats.languages))
   : undefined;
-const assetBaseUrl = process.env.ASSET_BASE_URL ?? '';
 ---
 <header>
   <h1 class="text-4xl font-bold">{hero.name}</h1>
@@ -26,6 +26,6 @@ const assetBaseUrl = process.env.ASSET_BASE_URL ?? '';
   {statsLine && <p class="mt-2 text-sm">{statsLine}</p>}
   <p class="mt-4 flex gap-4">
     {hero.whatsappUrl && <a class="underline" href={hero.whatsappUrl}>{labels.whatsapp}</a>}
-    {hero.cv && <a class="underline" href={`${assetBaseUrl}/${hero.cv[lang]}`}>{labels.downloadCv}</a>}
+    {hero.cv && <a class="underline" href={assetUrl(hero.cv[lang])}>{labels.downloadCv}</a>}
   </p>
 </header>

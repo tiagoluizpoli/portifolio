@@ -1,0 +1,24 @@
+---
+import { contentStore } from '../lib/content/instance';
+import { type Locale, ui } from '../lib/locale';
+
+const { lang } = Astro.props as { lang: Locale };
+const about = contentStore.read().about;
+const t = ui[lang];
+---
+<section id="about">
+  <h2 class="text-2xl font-bold">{t.nav.about}</h2>
+  <p class="mt-2 max-w-2xl">{about.summary[lang]}</p>
+  {about.education.length > 0 && (
+    <>
+      <h3 class="mt-4 font-semibold">{t.education}</h3>
+      <ul>{about.education.map((e) => <li>{e.institution} · {e.degree[lang]} · {e.period[lang]}</li>)}</ul>
+    </>
+  )}
+  {about.languages.length > 0 && (
+    <>
+      <h3 class="mt-4 font-semibold">{t.languages}</h3>
+      <ul>{about.languages.map((l) => <li>{l.name[lang]} ({l.level[lang]})</li>)}</ul>
+    </>
+  )}
+</section>

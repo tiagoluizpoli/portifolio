@@ -1,0 +1,215 @@
+{
+  "hero": {
+    "name": "Tiago Luiz Seuaciuc de Poli",
+    "title": { "en": "Senior Software Engineer", "pt": "Engenheiro de Software Sênior" },
+    "pitch": {
+      "en": "I build cloud-native backends and SaaS platforms in Node.js, TypeScript and .NET, from AI document pipelines to zero-downtime migrations.",
+      "pt": "Construo backends cloud-native e plataformas SaaS em Node.js, TypeScript e .NET, de pipelines de documentos com IA a migrações sem downtime."
+    },
+    "location": { "en": "São Paulo, Brazil · Remote", "pt": "São Paulo, Brasil · Remoto" }
+  },
+  "showcase": {
+    "projects": [
+      {
+        "name": "Church",
+        "summary": {
+          "en": "Volunteer scheduling for churches: ministries plan their events, volunteers mark availability, and leaders build conflict-free schedules. Multi-tenant, invite-only, mobile-first.",
+          "pt": "Escalas de voluntários para igrejas: os ministérios planejam seus eventos, os voluntários informam a disponibilidade e os líderes montam escalas sem conflitos. Multi-tenant, só por convite, pensado para o celular."
+        },
+        "role": { "en": "Creator and sole engineer", "pt": "Criador e único engenheiro" },
+        "stack": ["TypeScript", "React", "TanStack Router", "Fastify", "tRPC", "Bun", "Drizzle", "PostgreSQL", "Better Auth", "PWA"],
+        "status": "coming-soon",
+        "now": {
+          "en": "Building the schedule builder and event planning.",
+          "pt": "Construindo o montador de escalas e o planejamento de eventos."
+        },
+        "images": []
+      }
+    ]
+  },
+  "experience": {
+    "roles": [
+      {
+        "company": "Coforge",
+        "title": { "en": "Senior Software Engineer", "pt": "Engenheiro de Software Sênior" },
+        "location": { "en": "Remote (US)", "pt": "Remoto (EUA)" },
+        "start": "2026-03",
+        "highlights": [
+          {
+            "en": "Leading a Strangler Fig migration from .NET Framework to modern .NET on a large SaaS platform, shipping incrementally with zero downtime.",
+            "pt": "Lidero uma migração Strangler Fig de .NET Framework para .NET moderno em uma grande plataforma SaaS, com entregas incrementais e sem downtime."
+          },
+          {
+            "en": "Building backend services for a sessionless architecture (distributed cache, encrypted cookies) with CQRS and feature-flagged rollouts.",
+            "pt": "Desenvolvo serviços de backend para uma arquitetura sessionless (cache distribuído, cookies criptografados) com CQRS e rollouts por feature flag."
+          }
+        ]
+      },
+      {
+        "company": "TIVIT",
+        "title": { "en": "Senior Software Engineer", "pt": "Engenheiro de Software Sênior" },
+        "location": { "en": "Remote (Rio de Janeiro)", "pt": "Remoto (Rio de Janeiro)" },
+        "start": "2023-04",
+        "end": "2026-03",
+        "highlights": [
+          {
+            "en": "Led a multi-tenant SaaS for identity validation, fraud prevention and document extraction, extending AWS Cognito for dynamic multi-tenancy.",
+            "pt": "Liderei um SaaS multi-tenant de validação de identidade, prevenção a fraudes e extração de documentos, estendendo o AWS Cognito para multi-tenancy dinâmica."
+          },
+          {
+            "en": "Built AI document pipelines (OpenAI, Azure OpenAI, Textract, Azure Document Intelligence) and face/liveness checks with Rekognition, on SQS-backed workers.",
+            "pt": "Construí pipelines de documentos com IA (OpenAI, Azure OpenAI, Textract, Azure Document Intelligence) e validação facial e de prova de vida com Rekognition, sobre workers com SQS."
+          }
+        ]
+      },
+      {
+        "company": "Kronus Tecnologia",
+        "title": { "en": "Software Engineer", "pt": "Engenheiro de Software" },
+        "kind": { "en": "Freelance", "pt": "Freelance" },
+        "location": { "en": "Remote", "pt": "Remoto" },
+        "start": "2022-01",
+        "end": "2025-09",
+        "highlights": [
+          {
+            "en": "Built full-stack web apps for business workflows, financial validation and automation.",
+            "pt": "Desenvolvi aplicações web full-stack para fluxos de negócio, validações financeiras e automação."
+          },
+          {
+            "en": "Integrated third-party credit-analysis and background-check APIs.",
+            "pt": "Integrei APIs de terceiros de análise de crédito e checagem de antecedentes."
+          }
+        ]
+      },
+      {
+        "company": "Mobdec",
+        "title": { "en": "Software Engineer", "pt": "Engenheiro de Software" },
+        "location": { "en": "Remote", "pt": "Remoto" },
+        "start": "2022-02",
+        "end": "2023-03",
+        "highlights": [
+          {
+            "en": "Designed a queue-driven, GPU-backed pipeline converting 3D files for an augmented-reality startup.",
+            "pt": "Projetei um pipeline com filas e GPU para conversão de arquivos 3D em uma startup de realidade aumentada."
+          },
+          {
+            "en": "Built Clean Architecture backend services and payment integrations.",
+            "pt": "Desenvolvi serviços de backend em Clean Architecture e integrações de pagamento."
+          }
+        ]
+      },
+      {
+        "company": "Self-employed",
+        "title": { "en": "Software Engineer", "pt": "Engenheiro de Software" },
+        "location": { "en": "Remote", "pt": "Remoto" },
+        "start": "2015-05",
+        "end": "2021-06",
+        "highlights": [
+          {
+            "en": "Built custom business systems, desktop apps and automation tools for multiple clients.",
+            "pt": "Desenvolvi sistemas de negócio, aplicações desktop e ferramentas de automação para vários clientes."
+          },
+          {
+            "en": "Wrote data-processing tools and API/database integrations that cut manual work.",
+            "pt": "Criei ferramentas de processamento de dados e integrações com APIs e bancos que reduziram trabalho manual."
+          }
+        ]
+      }
+    ]
+  },
+  "skills": {
+    "groups": [
+      {
+        "name": { "en": "Languages", "pt": "Linguagens" },
+        "items": [
+          { "name": "TypeScript", "icon": "logos:typescript-icon" },
+          { "name": "JavaScript", "icon": "logos:javascript" },
+          { "name": "C#", "icon": "logos:c-sharp" }
+        ]
+      },
+      {
+        "name": { "en": "Backend", "pt": "Backend" },
+        "items": [
+          { "name": "Node.js", "icon": "logos:nodejs-icon" },
+          { "name": ".NET", "icon": "logos:dotnet" },
+          { "name": "REST APIs", "icon": "logos:rest" },
+          { "name": "Fastify", "icon": "logos:fastify-icon" },
+          { "name": "tRPC", "icon": "logos:trpc" }
+        ]
+      },
+      {
+        "name": { "en": "Frontend", "pt": "Frontend" },
+        "items": [
+          { "name": "React", "icon": "logos:react" },
+          { "name": "Tailwind CSS", "icon": "logos:tailwindcss-icon" }
+        ]
+      },
+      {
+        "name": { "en": "Cloud & DevOps", "pt": "Cloud & DevOps" },
+        "items": [
+          { "name": "AWS", "icon": "logos:aws" },
+          { "name": "Azure", "icon": "logos:microsoft-azure" },
+          { "name": "Docker", "icon": "logos:docker-icon" },
+          { "name": "Terraform", "icon": "logos:terraform-icon" },
+          { "name": "Serverless", "icon": "logos:serverless" },
+          { "name": "CI/CD" }
+        ]
+      },
+      {
+        "name": { "en": "Data", "pt": "Dados" },
+        "items": [
+          { "name": "PostgreSQL", "icon": "logos:postgresql" },
+          { "name": "SQL Server" },
+          { "name": "MySQL", "icon": "logos:mysql" },
+          { "name": "MongoDB", "icon": "logos:mongodb-icon" },
+          { "name": "DynamoDB", "icon": "logos:aws-dynamodb" }
+        ]
+      },
+      {
+        "name": { "en": "AI", "pt": "IA" },
+        "items": [
+          { "name": "OpenAI", "icon": "logos:openai-icon" },
+          { "name": "Azure OpenAI", "icon": "logos:microsoft-azure" },
+          { "name": "Anthropic Claude", "icon": "logos:claude-icon" },
+          { "name": "Agentic AI development" },
+          { "name": "AWS Textract", "icon": "logos:aws" },
+          { "name": "AWS Rekognition", "icon": "logos:aws" },
+          { "name": "Azure Document Intelligence", "icon": "logos:microsoft-azure" }
+        ]
+      },
+      {
+        "name": { "en": "Architecture", "pt": "Arquitetura" },
+        "items": [
+          { "name": "Clean Architecture" },
+          { "name": "CQRS" },
+          { "name": "Microservices" },
+          { "name": "Distributed Systems" },
+          { "name": "Feature Flags" }
+        ]
+      }
+    ]
+  },
+  "about": {
+    "summary": {
+      "en": "Senior Software Engineer building scalable, cloud-native systems in Node.js, TypeScript, .NET and React. I've led multi-tenant SaaS platforms with custom authentication, AI-powered document processing and high-scale data pipelines, and I modernize legacy systems without stopping them. I care about software that stays maintainable and pays off for the business: Clean Architecture, SOLID and sound distributed design.",
+      "pt": "Engenheiro de Software Sênior construindo sistemas escaláveis e cloud-native em Node.js, TypeScript, .NET e React. Liderei plataformas SaaS multi-tenant com autenticação própria, processamento de documentos com IA e pipelines de dados em alta escala, e modernizo sistemas legados sem tirá-los do ar. Me importo com software que continua sustentável e gera resultado para o negócio: Clean Architecture, SOLID e um bom design de sistemas distribuídos."
+    },
+    "education": [
+      {
+        "institution": "UNIASSELVI",
+        "degree": {
+          "en": "Associate Degree in Systems Analysis and Development",
+          "pt": "Tecnólogo em Análise e Desenvolvimento de Sistemas"
+        },
+        "period": { "en": "2024 – Jul 2027 · in progress", "pt": "2024 – jul. 2027 · em andamento" }
+      }
+    ],
+    "languages": [
+      { "name": { "en": "Portuguese", "pt": "Português" }, "level": { "en": "native", "pt": "nativo" } },
+      { "name": { "en": "English", "pt": "Inglês" }, "level": { "en": "full professional", "pt": "profissional pleno" } }
+    ]
+  },
+  "contact": {
+    "linkedinUrl": "https://www.linkedin.com/in/tiago-seuaciuc",
+    "githubUrl": "https://github.com/tiagoluizpoli"
+  }
+}
