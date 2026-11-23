@@ -1,0 +1,25 @@
+---
+import { type Locale, ui } from '../lib/locale';
+import About from './about.astro';
+import Contact from './contact.astro';
+import Experience from './experience.astro';
+import Hero from './hero.astro';
+import Showcase from './showcase.astro';
+import Skills from './skills.astro';
+
+const { lang } = Astro.props as { lang: Locale };
+const { nav } = ui[lang];
+---
+<nav>
+  <ul class="flex gap-4">
+    {(Object.keys(nav) as (keyof typeof nav)[]).map((id) => <li><a href={`#${id}`}>{nav[id]}</a></li>)}
+  </ul>
+</nav>
+<main class="space-y-12">
+  <Hero lang={lang} />
+  <Showcase lang={lang} />
+  <Experience lang={lang} />
+  <Skills lang={lang} />
+  <About lang={lang} />
+</main>
+<Contact lang={lang} />
