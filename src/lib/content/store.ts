@@ -30,6 +30,8 @@ export interface ContentStore {
   isHealthy(): Promise<boolean>;
   /** Reloads and validates all Sections now, then refreshes stats. Rejects (keeping the last good copy) when content is invalid; a stats failure is only logged. */
   revalidate(): Promise<void>;
+  /** Validates `data` against the Section's schema, writes the row and reloads. Rejects with ContentError (nothing written) when invalid. */
+  saveSection(key: SectionKey, data: unknown): Promise<void>;
 }
 
 /** Invalid or missing content. `path` is the exact JSON path, e.g. `hero.title.pt`. */
@@ -106,6 +108,16 @@ export async function createContentStore({
       return current;
     },
     isHealthy: () => isReachable(db),
+    async saveSection(key, data) {
+      const parsed = sectionSchemas[key].safeParse(data);
+      if (!parsed.success) {
+        const [issue] = parsed.error.issues;
+        throw new ContentError([key, ...issue.path].join('.'), issue.message);
+      }
+      await db.insert(content).values({ key, data }).onConflictDoUpdate({ target: content.key, set: { data } });
+      current = await loadContent(db, log);
+      loadedAt = clock();
+    },
     async revalidate() {
       try {
         current = await loadContent(db, log);
