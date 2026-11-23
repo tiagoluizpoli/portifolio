@@ -15,10 +15,15 @@ const bootBeforeListen = {
   },
 };
 
+/** Bundles runtime deps into dist/ for the image (no node_modules); dev keeps them external since Vite's dev runner can't run CJS deps like `cookie` inline. */
+const bundleDepsOnBuild = {
+  name: 'bundle-deps-on-build',
+  config: (_, { command }) => (command === 'build' ? { ssr: { noExternal: true } } : undefined),
+};
+
 export default defineConfig({
   output: 'server',
   adapter: node({ mode: 'standalone' }),
   i18n: { locales: ['en', 'pt'], defaultLocale: 'en' },
-  // Bundle runtime deps so the image ships dist/ without node_modules.
-  vite: { plugins: [tailwindcss(), bootBeforeListen], ssr: { noExternal: true } },
+  vite: { plugins: [tailwindcss(), bootBeforeListen, bundleDepsOnBuild] },
 });
