@@ -1,0 +1,51 @@
+name: Deploy image to Dokploy
+description: Join the tailnet, point the Dokploy app at an image, deploy, and poll until healthy.
+inputs:
+  image: {description: Full image reference to deploy, required: true}
+  url: {description: Public URL polled after deploy, required: true}
+  dokploy-url: {required: true}
+  dokploy-api-key: {required: true}
+  application-id: {required: true}
+  ts-client-id: {required: true}
+  ts-secret: {required: true}
+runs:
+  using: composite
+  steps:
+    # Dokploy and the Development site are reachable only through the tailnet.
+    - uses: tailscale/github-action@v3
+      with:
+        oauth-client-id: ${{ inputs.ts-client-id }}
+        oauth-secret: ${{ inputs.ts-secret }}
+        tags: tag:ci
+        args: --accept-routes
+    - name: Set image and deploy
+      shell: bash
+      env:
+        IMAGE: ${{ inputs.image }}
+        DOKPLOY_URL: ${{ inputs.dokploy-url }}
+        DOKPLOY_API_KEY: ${{ inputs.dokploy-api-key }}
+        APP_ID: ${{ inputs.application-id }}
+      run: |
+        set -euo pipefail
+        api() { curl -fsS -H "x-api-key: $DOKPLOY_API_KEY" -H 'content-type: application/json' "$@"; }
+        # saveDockerProvider overwrites the registry login, so resend the one
+        # configured once in the Dokploy app (the ghcr image is private).
+        body=$(api -G --data-urlencode "applicationId=$APP_ID" "$DOKPLOY_URL/api/application.one" \
+          | jq -c --arg id "$APP_ID" --arg image "$IMAGE" \
+            '{applicationId: $id, dockerImage: $image, username, password, registryUrl}')
+        api -X POST -d "$body" "$DOKPLOY_URL/api/application.saveDockerProvider" > /dev/null
+        api -X POST -d "$(jq -cn --arg id "$APP_ID" '{applicationId: $id}')" "$DOKPLOY_URL/api/application.deploy" > /dev/null
+    - name: Poll until healthy
+      shell: bash
+      env:
+        URL: ${{ inputs.url }}
+      run: |
+        # /api/health is not on spec/v2 yet; add it here once it exists.
+        for i in $(seq 1 40); do
+          code=$(curl -s -o /dev/null -w '%{http_code}' "$URL/" || true)
+          echo "attempt $i: / -> $code"
+          [ "$code" = 200 ] && exit 0
+          sleep 15
+        done
+        echo "::error::$URL/ did not return 200 (no auto-rollback)"
+        exit 1
