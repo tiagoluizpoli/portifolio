@@ -62,7 +62,7 @@ test('unknown keys are ignored and logged', async () => {
   const store = await createContentStore({ db, log });
   expect(store.read().hero).not.toHaveProperty('tagline');
   expect(store.read().hero.title).toEqual(validHero.title);
-  const warnings = log.warn.mock.calls.flat().join('\n');
+  const warnings = JSON.stringify(log.warn.mock.calls);
   expect(warnings).toContain('hero.tagline');
   expect(warnings).toContain('hero.title.de');
 });
