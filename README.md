@@ -48,3 +48,7 @@ export default tseslint.config({
   },
 })
 ```
+
+## Dev notes
+
+shortcut: Astro 6 because the dev host CPU lacks AVX2 (Astro 7 compiler-rs SIGILLs); upgrade when the dev host changes.
