@@ -57,13 +57,13 @@ const now = clock.format(new Date());
       {(hero.whatsappUrl || hero.cv) && (
         <div class="cta">
           {hero.whatsappUrl && (
-            <a class="btn main" href={hero.whatsappUrl}>
+            <a class="btn main" href={hero.whatsappUrl} data-umami-event="whatsapp-click" data-umami-event-locale={lang}>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg>
               {labels.whatsapp}
             </a>
           )}
           {hero.cv && (
-            <a class="btn soft" href={assetUrl(hero.cv[lang])} download>
+            <a class="btn soft" href={assetUrl(hero.cv[lang])} download data-umami-event="cv-download" data-umami-event-locale={lang}>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v12" /><path d="m6 11 6 6 6-6" /><path d="M5 20h14" /></svg>
               {labels.downloadCv}
             </a>

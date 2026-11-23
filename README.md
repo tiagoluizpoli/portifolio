@@ -52,3 +52,7 @@ export default tseslint.config({
 ## Dev notes
 
 shortcut: Astro 6 because the dev host CPU lacks AVX2 (Astro 7 compiler-rs SIGILLs); upgrade when the dev host changes.
+
+## Analytics (Umami, cookieless)
+
+Set `UMAMI_WEBSITE_ID` and `UMAMI_SCRIPT_URL` at runtime to enable the tracker; unset = no script. Events: `cv-download`, `whatsapp-click` (with `locale`).
