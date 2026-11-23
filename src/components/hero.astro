@@ -9,6 +9,13 @@ interface Props {
 const { lang } = Astro.props;
 const { hero } = contentStore.read();
 const labels = ui[lang];
+const stats = contentStore.stats();
+const statsLine = stats
+  ? labels.stats
+      .replace('{contributions}', stats.contributions.toLocaleString(lang))
+      .replace('{repos}', stats.publicRepos.toLocaleString(lang))
+      .replace('{languages}', new Intl.ListFormat(lang, { type: 'conjunction' }).format(stats.languages))
+  : undefined;
 const assetBaseUrl = process.env.ASSET_BASE_URL ?? '';
 ---
 <header>
@@ -16,6 +23,7 @@ const assetBaseUrl = process.env.ASSET_BASE_URL ?? '';
   <p class="text-xl">{hero.title[lang]}</p>
   <p class="mt-4 max-w-2xl">{hero.pitch[lang]}</p>
   <p class="mt-2 text-sm">{hero.location[lang]}</p>
+  {statsLine && <p class="mt-2 text-sm">{statsLine}</p>}
   <p class="mt-4 flex gap-4">
     {hero.whatsappUrl && <a class="underline" href={hero.whatsappUrl}>{labels.whatsapp}</a>}
     {hero.cv && <a class="underline" href={`${assetBaseUrl}/${hero.cv[lang]}`}>{labels.downloadCv}</a>}

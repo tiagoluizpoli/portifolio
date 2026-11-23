@@ -1,9 +1,13 @@
 import { inArray } from 'drizzle-orm';
 import { type Database, isReachable } from './db';
 import { type Content, type SectionKey, sectionSchemas } from './schemas';
+import { type GithubStats, readStatsSnapshot, writeStats } from './stats';
 import { content } from './table';
 
 export const CONTENT_TTL_MS = 3 * 60 * 60 * 1000;
+
+export const STATS_TTL_MS = 60 * 60 * 1000;
+const STATS_RETRY_MS = 60 * 1000;
 
 export type Clock = () => number;
 export type Logger = Pick<Console, 'warn' | 'error'>;
@@ -12,12 +16,16 @@ export interface ContentStoreDeps {
   db: Database;
   clock?: Clock;
   log?: Logger;
+  /** Fetches fresh GitHub stats (unvalidated). Absent = no token configured: only the stored snapshot is used. */
+  fetchStats?: () => Promise<unknown>;
 }
 
 export interface ContentStore {
   /** Validated content from memory; never waits on Postgres. Triggers a background refresh once the TTL has passed. */
   read(): Content;
   /** True when Postgres answers. */
+  /** Last good GitHub stats, or undefined when there is no valid snapshot (the Hero hides the sentence). */
+  stats(): GithubStats | undefined;
   isHealthy(): Promise<boolean>;
 }
 
@@ -39,6 +47,7 @@ export async function createContentStore({
   db,
   clock = Date.now,
   log = console,
+  fetchStats,
 }: ContentStoreDeps): Promise<ContentStore> {
   let current = await loadContent(db, log);
   let loadedAt = clock();
@@ -56,7 +65,38 @@ export async function createContentStore({
       });
   }
 
+  // Snapshot first, then a refresh; neither can fail boot.
+  let statsSnapshot = await readStatsSnapshot(db).catch((error: unknown) => {
+    log.error('github stats snapshot unreadable; treating as absent', error);
+    return undefined;
+  });
+  let statsDueAt = clock();
+  let statsRefreshing: Promise<void> | undefined;
+
+  function refreshStats() {
+    if (!fetchStats) return;
+    statsRefreshing ??= fetchStats()
+      .then((raw) => writeStats(db, raw))
+      .then((written) => {
+        statsSnapshot = written;
+        statsDueAt = clock() + STATS_TTL_MS;
+      })
+      .catch((error: unknown) => {
+        statsDueAt = clock() + STATS_RETRY_MS;
+        log.error('github stats refresh failed; serving last snapshot', error);
+      })
+      .finally(() => {
+        statsRefreshing = undefined;
+      });
+    return statsRefreshing;
+  }
+  await refreshStats();
+
   return {
+    stats() {
+      if (clock() >= statsDueAt) refreshStats();
+      return statsSnapshot;
+    },
     read() {
       const age = clock() - loadedAt;
       if (age >= CONTENT_TTL_MS) refresh();
